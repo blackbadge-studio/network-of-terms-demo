@@ -6,6 +6,7 @@ import * as en from './locales/en.json';
 import * as nl from './locales/nl.json';
 
 import App from './App.vue';
+import {mountFeedbackWidget} from './feedback';
 import '@fontsource-variable/figtree';
 import './index.css';
 
@@ -27,4 +28,7 @@ app.use(i18n);
 app.use(router);
 app.use(client);
 
-router.isReady().then(() => app.mount('#app'));
+router.isReady().then(() => {
+  app.mount('#app');
+  mountFeedbackWidget();
+});

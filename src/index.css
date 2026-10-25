@@ -142,6 +142,13 @@ pre, code { font-family: var(--vtn-mono); font-size: 0.9em; }
   .page__title { font-size: var(--fs-4xl); }
 }
 
+/* Keep content clear of the floating feedback button (bottom-right) on small screens. */
+@media (max-width: 47.99em) {
+  .has-feedback-widget .app__main { padding-bottom: calc(var(--s-8) + 4.5rem); }
+  .has-feedback-widget .site-footer__bottom,
+  .has-feedback-widget .site-footer__mini { padding-right: 5rem; }
+}
+
 /* ---------- icons ---------- */
 .icon { width: 1em; height: 1em; flex: none; }
 .icon-text { margin-right: 0.35em; }
