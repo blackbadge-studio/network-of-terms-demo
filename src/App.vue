@@ -144,11 +144,6 @@
                 </router-link>
               </li>
               <li>
-                <router-link :to="{name: 'reconciliation'}">
-                  {{ t('faq.reconciliation') }}
-                </router-link>
-              </li>
-              <li>
                 <router-link :to="{name: 'widget'}">
                   {{ t('widget.navLabel') }}
                 </router-link>

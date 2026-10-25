@@ -4,7 +4,6 @@ import TheFaq1 from './components/TheFaq1.vue';
 import TheFaq2 from './components/TheFaq2.vue';
 import TheFaq3 from './components/TheFaq3.vue';
 import TheFaq4 from './components/TheFaq4.vue';
-import ReconciliationService from './components/ReconciliationService.vue';
 import Contact from './components/ContactInfo.vue';
 import PrivacyStatement from './components/PrivacyStatement.vue';
 import LookupForm from './components/LookupForm.vue';
@@ -61,11 +60,6 @@ export const router = createRouter({
           path: 'sources',
           name: 'sources',
           component: TerminologySources,
-        },
-        {
-          path: 'reconciliation',
-          name: 'reconciliation',
-          component: ReconciliationService,
         },
         {
           path: 'widget',

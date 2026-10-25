@@ -112,26 +112,6 @@
               <code :title="source.uri">{{ source.uri }}</code>
               <CopyButton :text="source.uri" />
             </dd>
-
-            <dt>
-              {{ reconciliationUrl(source) ? t('termSources.reconciliationUrl') : t('termSources.reconciliation') }}
-              <router-link
-                :to="{name: 'reconciliation'}"
-                :aria-label="t('faq.reconciliation')"
-              >
-                <QuestionMarkCircleIcon class="icon" />
-              </router-link>
-            </dt>
-            <dd
-              v-if="reconciliationUrl(source)"
-              class="meta__uri"
-            >
-              <code :title="reconciliationUrl(source)">{{ reconciliationUrl(source) }}</code>
-              <CopyButton :text="reconciliationUrl(source)!" />
-            </dd>
-            <dd v-else>
-              {{ t('termSources.reconciliationAvailableAtSource') }}
-            </dd>
           </dl>
 
           <div class="source-card__foot">
@@ -170,8 +150,8 @@
 import {computed, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useQuery} from 'villus';
-import {Feature, SOURCES_QUERY, Source, holderName} from '../query';
-import {ArrowRightIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, QuestionMarkCircleIcon} from '@heroicons/vue/16/solid';
+import {SOURCES_QUERY, Source, holderName} from '../query';
+import {ArrowRightIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
 import CopyButton from './CopyButton.vue';
 
 const {t, locale} = useI18n();
@@ -205,8 +185,6 @@ const terminologySources = computed(() => {
 const terminologySourceUris = computed(() => terminologySources.value.map(source => source.uri).join(','));
 
 const sortedGenres = (source: Source) => [...source.genres].sort((a, b) => a.name.localeCompare(b.name, locale.value));
-const reconciliationUrl = (source: Source) =>
-  source.features.find((feature: Feature) => feature.type === 'RECONCILIATION')?.url;
 const formatDate = (isoDate: string) => new Date(isoDate).toLocaleString(locale.value);
 const anchorId = (source: Source) => 'source-' + source.uri.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
 </script>
