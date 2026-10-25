@@ -88,25 +88,11 @@
       </svg>
       <div class="container hero__inner">
         <h1 class="hero__title">
-          {{ theme === 'mint' ? t('search.mintHeadline') : t('search.subtitle') }}
+          {{ theme === 'mint' ? t('search.mintHeadline') : t('search.heroTitle') }}
         </h1>
         <p class="hero__lead">
-          {{ theme === 'mint' ? t('search.subtitle') : t('general.messageFooter') }}
+          {{ t('search.heroLead') }}
         </p>
-        <nav
-          v-if="theme !== 'mint'"
-          class="hero__audience"
-          :aria-label="t('search.audienceLabel')"
-        >
-          <span class="hero__audience-label">{{ t('search.audienceLabel') }}</span>
-          <router-link
-            v-for="item in audiences"
-            :key="item.route"
-            :to="{name: item.route}"
-          >
-            {{ t(item.label) }} <ArrowRightIcon class="icon" />
-          </router-link>
-        </nav>
       </div>
     </section>
 
@@ -117,6 +103,21 @@
           <slot />
         </div>
       </div>
+
+      <nav
+        v-if="theme !== 'mint'"
+        class="hero__audience hero__audience--below"
+        :aria-label="t('search.audienceLabel')"
+      >
+        <span class="hero__audience-label">{{ t('search.audienceLabel') }}</span>
+        <router-link
+          v-for="item in audiences"
+          :key="item.route"
+          :to="{name: item.route}"
+        >
+          {{ t(item.label) }} <ArrowRightIcon class="icon" />
+        </router-link>
+      </nav>
 
       <nav
         v-if="theme === 'mint'"

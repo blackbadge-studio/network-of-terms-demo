@@ -124,7 +124,9 @@
     "detailTitle": "Details",
     "openDetail": "Toon details van {label}",
     "jumpToSource": "Ga naar bron",
-    "inSource": "in {source}"
+    "inSource": "in {source}",
+    "heroTitle": "Zoek termen, personen en plaatsen",
+    "heroLead": "Eén zoekopdracht over Vlaamse en internationale terminologiebronnen, rechtstreeks bij de bronhouder."
   },
   "language": {
     "label": "Language"

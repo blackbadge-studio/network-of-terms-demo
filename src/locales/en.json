@@ -124,7 +124,9 @@
     "detailTitle": "Details",
     "openDetail": "Show details of {label}",
     "jumpToSource": "Go to source",
-    "inSource": "in {source}"
+    "inSource": "in {source}",
+    "heroTitle": "Search terms, people and places",
+    "heroLead": "One search across Flemish and international terminology sources, straight from the source holder."
   },
   "language": {
     "label": "Taal"

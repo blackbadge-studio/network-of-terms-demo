@@ -255,10 +255,11 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .brand__text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand__name { font-weight: 800; font-size: 1.125rem; letter-spacing: -0.015em; }
 .brand__sub { font-size: var(--fs-xs); color: var(--vtn-muted); font-weight: 500; }
-.nav { display: none; align-items: center; gap: var(--s-1); }
+.nav { display: none; align-items: center; flex-wrap: wrap; gap: var(--s-1); }
 .nav__link {
   display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0.4rem 0.85rem;
   border-radius: var(--r-pill); color: var(--vtn-text); font-weight: 600; text-decoration: none; font-size: var(--fs-sm);
+  white-space: nowrap; flex: none;
 }
 .nav__link:hover { background: var(--vtn-mint-light); color: var(--vtn-text); }
 .nav__link.router-link-active { color: var(--vtn-primary-strong); }
@@ -277,8 +278,8 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 
 /* ---------- hero + search panel ---------- */
 .hero { background: var(--vtn-mint-light); border-bottom: 1px solid var(--vtn-mint); }
-.hero__inner { padding-block: var(--s-6) calc(var(--s-6) + 3.5rem); display: grid; gap: var(--s-4); }
-.hero__title { font-size: var(--fs-2xl); max-width: 26ch; }
+.hero__inner { padding-block: var(--s-6) calc(var(--s-6) + 3.5rem); display: grid; gap: var(--s-3); }
+.hero__title { font-size: var(--fs-2xl); max-width: 30ch; }
 .hero__lead { display: none; font-size: var(--fs-md); color: var(--vtn-text-2); max-width: 60ch; }
 @media (min-width: 40em) { .hero__lead { display: block; } }
 .hero__audience { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); font-size: var(--fs-sm); color: var(--vtn-muted); margin-top: var(--s-1); }
@@ -286,10 +287,11 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .hero__audience a { display: inline-flex; align-items: center; gap: 0.25em; color: var(--vtn-primary-strong); font-weight: 600; text-decoration: none; border-bottom: 1.5px solid transparent; }
 .hero__audience a:hover { border-bottom-color: var(--vtn-primary); color: var(--vtn-text); }
 @media (min-width: 48em) {
-  .hero__inner { padding-block: var(--s-7) calc(var(--s-7) + 3.5rem); }
+  .hero__inner { padding-block: var(--s-6) calc(var(--s-6) + 3.5rem); }
   .hero__title { font-size: var(--fs-4xl); }
   .hero__lead { font-size: var(--fs-lg); }
 }
+.hero__audience--below { margin-top: var(--s-4); padding-inline: var(--s-2); }
 
 .panel {
   margin-top: -3.5rem; position: relative; z-index: 2;
