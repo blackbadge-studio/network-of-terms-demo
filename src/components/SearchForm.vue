@@ -63,6 +63,7 @@
         <SourcePicker
           :invalid="sourcesError"
           :auto-open="pickerOpen && !sourcesError"
+          inline
         />
       </div>
       <p

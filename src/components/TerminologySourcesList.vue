@@ -73,6 +73,12 @@
             >
               {{ source.status.isAvailable ? t('termSources.statusAvailable') : t('termSources.statusUnavailable') }}
             </span>
+            <span
+              v-else
+              class="status status--none source-card__status"
+            >
+              {{ t('search.statusUnknown') }}
+            </span>
           </header>
 
           <p

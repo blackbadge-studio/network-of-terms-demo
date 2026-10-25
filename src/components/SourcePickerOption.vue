@@ -8,8 +8,8 @@
     >
     <span
       class="dot"
-      :class="{'dot--off': unavailable}"
-      :title="unavailable ? t('search.unavailable') : t('search.available')"
+      :class="{'dot--off': unavailable, 'dot--unknown': unknown}"
+      :title="unknown ? t('search.statusUnknown') : unavailable ? t('search.unavailable') : t('search.available')"
     />
     <span class="picker__name">
       {{ source.name }}<template v-if="source.alternateName"> ({{ source.alternateName }})</template>
@@ -38,5 +38,6 @@ defineEmits<{toggle: []}>();
 
 const {t} = useI18n();
 const holder = computed(() => holderName(props.source));
-const unavailable = computed(() => props.source.status !== undefined && props.source.status !== null && !props.source.status.isAvailable);
+const unknown = computed(() => props.source.status === undefined || props.source.status === null);
+const unavailable = computed(() => !unknown.value && !props.source.status!.isAvailable);
 </script>

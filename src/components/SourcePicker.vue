@@ -162,7 +162,7 @@
       >
         <span
           class="dot"
-          :class="{'dot--off': source.status && !source.status.isAvailable}"
+          :class="{'dot--off': source.status && !source.status.isAvailable, 'dot--unknown': !source.status}"
           aria-hidden="true"
         />
         {{ source.alternateName || source.name }}
@@ -193,6 +193,8 @@ const props = defineProps({
   describedBy: {type: String, default: undefined},
   /** Open the panel as soon as the picker mounts (minimaal theme: "Bronnen kiezen"). */
   autoOpen: {type: Boolean, default: false},
+  /** Render the panel in the page flow instead of as a popover (minimaal stage). */
+  inline: {type: Boolean, default: false},
 });
 
 const {t, locale} = useI18n();
@@ -285,7 +287,9 @@ function sizePanel() {
 
 function show() {
   open.value = true;
-  sizePanel();
+  if (!props.inline) {
+    sizePanel();
+  }
   nextTick(() => searchInput.value?.focus());
 }
 

@@ -234,6 +234,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 /* availability dot (●/○) used in the picker and source list */
 .dot { display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; border: 1.5px solid var(--vtn-ok); background: var(--vtn-ok); flex: none; }
 .dot--off { border-color: var(--vtn-danger); background: transparent; }
+.dot--unknown { border-color: var(--vtn-border-strong); background: var(--vtn-border-strong); }
 
 /* ---------- header ---------- */
 .site-header { background: var(--vtn-surface); border-bottom: 1px solid var(--vtn-border); position: relative; z-index: 20; }
@@ -331,6 +332,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
   box-shadow: var(--shadow-md); display: grid; grid-template-rows: auto auto minmax(0, 1fr);
   max-height: var(--picker-max-height, min(28rem, 70vh));
 }
+.picker__panel--inline { position: static; margin-top: var(--s-2); box-shadow: none; max-height: 26rem; }
 .picker__search { padding: var(--s-3) var(--s-3) var(--s-2); }
 .picker__search .input { min-height: 2.75rem; font-size: var(--fs-md); padding-block: 0.5rem; }
 .picker__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); padding: 0 var(--s-3) var(--s-2); font-size: var(--fs-sm); color: var(--vtn-muted); }
@@ -434,6 +436,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .sources { display: grid; gap: var(--s-6); }
 .sources__filters { display: grid; gap: var(--s-3); align-content: start; }
 .sources__filters h2 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--vtn-muted); }
+.sources__main { display: grid; gap: var(--s-4); align-content: start; min-width: 0; }
 .sources__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3); }
 .sources__count { font-weight: 700; font-size: var(--fs-lg); }
 .sources__list { display: grid; gap: var(--s-4); }
@@ -602,7 +605,6 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .status-panel__name small { color: var(--vtn-muted); margin-left: 0.35em; }
 .status-panel__time { font-family: var(--vtn-mono); font-size: var(--fs-xs); color: var(--vtn-text-2); font-variant-numeric: tabular-nums; }
 .status-panel__empty { padding: var(--s-4); font-size: var(--fs-xs); color: var(--vtn-muted); }
-.dot--unknown { border-color: var(--vtn-border-strong); background: var(--vtn-border-strong); }
 :root[data-theme="netwerk"] .source__time { display: inline; }
 :root[data-theme="netwerk"] .results__meta,
 :root[data-theme="netwerk"] .status,
