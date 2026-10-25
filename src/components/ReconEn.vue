@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Can I use the Network of Terms for <em>reconciliation</em>, for example in OpenRefine?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       </ul>
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What considerations are there when using the Network of Terms for reconciliation?
     </h3>
     <ul>
@@ -41,7 +41,7 @@
       <li>when reconciling in OpenRefine you must select the <strong>Reconcile against no particular type</strong> option.</li>
     </ul>
 
-    <h3 class="display-5">
+    <h3>
       What terminology resources can I use for reconciliation?
     </h3>
     <p>

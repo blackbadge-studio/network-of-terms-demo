@@ -1,9 +1,11 @@
 <template>
-  <h1 class="display-5">
-    {{ t('faq.title_r') }}
-  </h1>
-  <FaqEn4 v-if="locale === 'en'" />
-  <FaqNl4 v-else />
+  <div class="container page">
+    <h1 class="page__title">
+      {{ t('faq.title_r') }}
+    </h1>
+    <FaqEn4 v-if="locale === 'en'" />
+    <FaqNl4 v-else />
+  </div>
 </template>
 
 <script lang="ts">

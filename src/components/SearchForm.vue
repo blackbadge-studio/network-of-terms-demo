@@ -1,138 +1,178 @@
 <template>
-  <TheHome>
-    <div
+  <TheHome active="search">
+    <form
       id="search"
-      class="tab-pane show active"
       role="tabpanel"
-      aria-labelledby="search-tab"
+      aria-labelledby="tab-search"
+      novalidate
+      @submit.prevent="onSubmit"
     >
-      <form @submit.prevent="onSubmit">
-        <div class="row mt-3 mb-3">
-          <label
-            for="q"
-            class="col-lg-3 col-form-label col-form-label-lg text-end"
-          >{{ t('search.labelQuery') }}</label>
-          <div class="col-sm-12 col-lg-8">
+      <div class="panel__body-grid">
+        <div class="search-row">
+          <div class="field">
+            <label
+              for="q"
+              class="field__label"
+            >{{ t('search.labelQuery') }}</label>
             <input
               id="q"
+              ref="qInput"
               v-model="q"
-              type="text"
-              class="form-control form-control-lg"
+              type="search"
+              class="input"
               name="q"
               autocomplete="off"
+              enterkeyhint="search"
               :placeholder="t('search.placeholderQuery')"
+              :aria-invalid="qError || undefined"
               required
             >
           </div>
+          <button
+            class="btn btn--primary btn--lg"
+            type="submit"
+          >
+            <MagnifyingGlassIcon class="icon" />
+            {{ t('search.buttonSearch') }}
+            <span
+              v-if="state.loading"
+              class="dots"
+              role="status"
+              :aria-label="t('search.stateSearching')"
+            ><i /><i /><i /></span>
+          </button>
         </div>
-        <div class="row mb-3">
+
+        <div class="field">
           <label
             for="datasets"
-            class="col-lg-3 col-form-label col-form-label-lg text-end"
+            class="field__label"
           >{{ t('search.labelTermSources') }}</label>
-          <div class="col-sm-12 col-lg-8">
-            <DatasetsSelect />
-            <p class="form-text ms-1 mb-0">
-              {{ t('search.helpTermSources') }}
-              <router-link to="sources">
-                {{ t('search.termSourcesLink') }}
-              </router-link>
-            </p>
-          </div>
+          <SourcePicker
+            :invalid="sourcesError"
+            described-by="datasets-hint"
+          />
+          <p
+            v-if="sourcesError"
+            class="field__error"
+            role="alert"
+          >
+            {{ t('search.selectSourcesError') }}
+          </p>
+          <p
+            id="datasets-hint"
+            class="field__hint"
+          >
+            {{ t('search.helpTermSources') }}
+            <router-link :to="{name: 'sources'}">
+              {{ t('search.termSourcesLink') }}
+            </router-link>
+          </p>
         </div>
+
         <div
           v-if="showGenresFilter"
-          class="row mb-3"
+          class="field"
         >
-          <label
-            for="genres"
-            class="col-lg-3 col-form-label col-form-label-lg text-end"
-          >{{ t('search.labelGenres') }}</label>
-          <div class="col-sm-12 col-lg-8">
-            <GenresSelect />
-          </div>
+          <span
+            id="genres-label"
+            class="field__label"
+          >{{ t('search.labelGenres') }}</span>
+          <GenresSelect />
+          <p class="field__hint">
+            {{ t('search.placeholderGenres') }}
+          </p>
         </div>
-        <div class="form-group row">
-          <div class="d-grid col-sm-3 offset-lg-3">
-            <button
-              class="btn btn-primary btn-lg text-start"
-              type="submit"
-            >
-              {{ t('search.buttonSearch') }}<div
-                v-show="state.loading"
-                class="lds-ellipsis"
-                role="status"
-              >
-                <div /><div /><div /><div />
-              </div>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </TheHome>
-  <SearchResults
-    :q="q"
-    :datasets="state.selectedDatasets"
-    :genres="state.selectedGenres"
-  />
+
+  <div class="container">
+    <SearchResults
+      :q="submitted.q"
+      :datasets="submitted.datasets"
+      :genres="submitted.genres"
+    />
+  </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
-import DatasetsSelect from './DatasetsSelect.vue';
-import GenresSelect from './GenresSelect.vue';
-import {useClient} from 'villus';
-import state from '../store';
+import {computed, ref, watch} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import {computed, defineComponent, ref, watch} from 'vue';
+import {MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
+import state from '../store';
 import TheHome from './TheHome.vue';
+import SourcePicker from './SourcePicker.vue';
+import GenresSelect from './GenresSelect.vue';
 import SearchResults from './SearchResults.vue';
 
-export default defineComponent({
-  name: 'SearchForm',
-  components: {SearchResults, TheHome, DatasetsSelect, GenresSelect},
-  setup() {
-    const {t} = useI18n();
+const {t} = useI18n();
+const router = useRouter();
+const route = useRoute();
 
-    useClient({
-      url: import.meta.env.VITE_GRAPHQL_URL,
-    });
+const q = ref((route.query.q as string) ?? '');
+const qInput = ref<HTMLInputElement | null>(null);
+const qError = ref(false);
+const sourcesError = ref(false);
 
-    const router = useRouter();
-    const route = useRoute();
-    const q = ref(route.query.q as string);
-    const fromUrl = route.query.datasets as string;
-    state.selectedDatasets = (fromUrl ? fromUrl.split(',') : []);
-    const genresFromUrl = route.query.genres as string;
-    state.selectedGenres = (genresFromUrl ? genresFromUrl.split(',') : []);
+const fromUrl = route.query.datasets as string;
+state.selectedDatasets = fromUrl ? fromUrl.split(',') : [];
+const genresFromUrl = route.query.genres as string;
+state.selectedGenres = genresFromUrl ? genresFromUrl.split(',') : [];
 
-    const showGenresFilter = computed(() =>
-      state.sources.some(source =>
-        state.selectedDatasets.includes(source.uri)
-        && source.features.some(f => f.type === 'GENRE_FILTER'),
-      ),
-    );
+// What is searched for is what the URL says; the form only edits the next search.
+const submitted = {
+  q: (route.query.q as string) ?? '',
+  datasets: [...state.selectedDatasets],
+  genres: [...state.selectedGenres],
+};
 
-    watch(showGenresFilter, (show) => {
-      if (!show) {
-        state.selectedGenres = [];
-      }
-    });
+const showGenresFilter = computed(() =>
+  state.sources.some(source =>
+    state.selectedDatasets.includes(source.uri)
+    && source.features.some(f => f.type === 'GENRE_FILTER'),
+  ),
+);
 
-    function onSubmit() {
-      state.loading = true;
-      const query: Record<string, string> = {
-        q: q.value,
-        datasets: state.selectedDatasets.join(','),
-      };
-      if (state.selectedGenres.length > 0) {
-        query.genres = state.selectedGenres.join(',');
-      }
-      router.replace({name: 'home', query});
-    }
-
-    return {t, q, onSubmit, state, showGenresFilter};
-  },
+watch(showGenresFilter, (show) => {
+  if (!show) {
+    state.selectedGenres = [];
+  }
 });
+
+watch(() => state.selectedDatasets.length, (length) => {
+  if (length > 0) {
+    sourcesError.value = false;
+  }
+});
+
+function onSubmit() {
+  qError.value = !q.value.trim();
+  sourcesError.value = state.selectedDatasets.length === 0;
+  if (qError.value) {
+    qInput.value?.focus();
+    return;
+  }
+  if (sourcesError.value) {
+    document.getElementById('datasets')?.focus();
+    return;
+  }
+  state.loading = true;
+  const query: Record<string, string> = {
+    q: q.value.trim(),
+    datasets: state.selectedDatasets.join(','),
+  };
+  if (state.selectedGenres.length > 0) {
+    query.genres = state.selectedGenres.join(',');
+  }
+  router.replace({name: 'home', query});
+}
 </script>
+
+<style scoped>
+.panel__body-grid {
+  display: grid;
+  gap: var(--s-5);
+}
+</style>

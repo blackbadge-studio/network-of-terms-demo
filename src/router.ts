@@ -97,6 +97,7 @@ router.beforeEach((to, from, next) => {
   }
 
   i18n.global.locale = locale as 'nl' | 'en';
+  document.documentElement.lang = locale;
   next();
 });
 

@@ -1,14 +1,11 @@
 <template>
   <button
-    ref="buttonRef"
-    :class="['btn-copy', {'btn-reset': !label}]"
-    :data-clipboard-text="text"
-    @click="copied=true"
-    @mouseout="copied=false"
+    type="button"
+    :class="label ? ['btn', 'btn--secondary', 'btn--sm'] : ['copy-icon', {'is-copied': copied}]"
+    :aria-label="label ? undefined : t('search.copyUri')"
+    :title="label ? undefined : t('search.copyUri')"
+    @click="copy"
   >
-    <template v-if="label">
-      {{ t(label) }}
-    </template>
     <ClipboardDocumentCheckIcon
       v-if="copied"
       class="icon"
@@ -17,55 +14,49 @@
       v-else
       class="icon"
     />
+    <template v-if="label">
+      {{ copied ? t('search.copied') : t(label) }}
+    </template>
+    <span
+      class="sr-only"
+      aria-live="polite"
+    >{{ copied ? t('search.copied') : '' }}</span>
   </button>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref, useTemplateRef, onMounted} from 'vue';
-import ClipboardJS from 'clipboard';
+<script lang="ts" setup>
+import {onBeforeUnmount, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {ClipboardDocumentCheckIcon, ClipboardDocumentIcon} from '@heroicons/vue/16/solid';
 
-export default defineComponent({
-  name: "CopyButton",
-  components: {ClipboardDocumentIcon, ClipboardDocumentCheckIcon},
-  props: {
-    text: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  setup() {
-    const {t} = useI18n();
-    const buttonRef = useTemplateRef('buttonRef');
-
-    onMounted(() => {
-      new ClipboardJS(buttonRef.value as string);
-    });
-
-    return {t, copied: ref(false), buttonRef};
-  },
+const props = defineProps({
+  text: {type: String, required: true},
+  label: {type: String, default: ''},
 });
+
+const {t} = useI18n();
+const copied = ref(false);
+let timer: ReturnType<typeof setTimeout> | undefined;
+
+async function copy() {
+  try {
+    await navigator.clipboard.writeText(props.text);
+  } catch {
+    // Fallback for contexts without the async clipboard API.
+    const area = document.createElement('textarea');
+    area.value = props.text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand('copy');
+    document.body.removeChild(area);
+  }
+  copied.value = true;
+  clearTimeout(timer);
+  timer = setTimeout(() => { copied.value = false; }, 1800);
+}
+
+onBeforeUnmount(() => clearTimeout(timer));
 </script>
-
-<style scoped>
-.btn-reset {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  color: inherit;
-  outline: inherit;
-  box-shadow: none;
-}
-
-.btn-reset:hover {
-  background: none;
-  color: blue;
-}
-</style>

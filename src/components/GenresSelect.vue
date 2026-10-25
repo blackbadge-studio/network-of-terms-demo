@@ -1,25 +1,29 @@
 <template>
-  <select
-    id="genres"
-    v-model="state.selectedGenres"
-    class="form-control form-control-lg selectpicker"
-    :title="t('search.placeholderGenres')"
-    multiple
+  <div
+    class="chip-row"
+    role="group"
+    :aria-label="t('search.labelGenres')"
   >
-    <option
+    <label
       v-for="genre in availableGenres"
       :key="genre.uri"
-      :value="genre.uri"
+      class="chip chip-toggle"
     >
+      <input
+        v-model="state.selectedGenres"
+        type="checkbox"
+        :value="genre.uri"
+        name="genres"
+      >
       {{ genre.name }}
-    </option>
-  </select>
+    </label>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
 import state from '../store';
-import {computed, nextTick, onMounted, onUpdated, watch} from 'vue';
+import {computed, watch} from 'vue';
 import {Genre} from '../query';
 
 const {t, locale} = useI18n();
@@ -39,30 +43,12 @@ const availableGenres = computed(() => {
       }
     }
   }
-  return [...genreMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+  return [...genreMap.values()].sort((a, b) => a.name.localeCompare(b.name, locale.value));
 });
 
 // Prune selections that are no longer available.
 watch(availableGenres, (genres) => {
   const availableUris = new Set(genres.map(g => g.uri));
   state.selectedGenres = state.selectedGenres.filter(uri => availableUris.has(uri));
-  nextTick(() => {
-    $('#genres').selectpicker('refresh');
-  });
 });
-
-watch(locale, () => {
-  $('#genres').selectpicker({
-    title: t('search.placeholderGenres'),
-  });
-  $('#genres').selectpicker('refresh');
-});
-
-function initSelectpicker() {
-  $('#genres').selectpicker('show');
-  $('#genres').selectpicker('refresh');
-}
-
-onMounted(initSelectpicker);
-onUpdated(initSelectpicker);
 </script>

@@ -1,115 +1,106 @@
 <template>
-  <TheHome>
-    <div
+  <TheHome active="lookup">
+    <form
       id="lookup"
-      class="tab-pane show active"
       role="tabpanel"
-      aria-labelledby="lookup-tab"
+      aria-labelledby="tab-lookup"
+      novalidate
+      @submit.prevent="onSubmit"
     >
-      <form @submit.prevent="onSubmit">
-        <div class="row mt-3 mb-3">
-          <label
-            for="uri"
-            class="col-lg-3 col-form-label col-form-label-lg text-end"
-          >{{ t('search.labelUri') }}</label>
-          <div class="col-sm-12 col-lg-8">
+      <div class="lookup-grid">
+        <div class="search-row">
+          <div class="field">
+            <label
+              for="uri"
+              class="field__label"
+            >{{ t('search.labelUri') }}</label>
             <input
               id="uri"
+              ref="uriInput"
               v-model="uri"
               type="url"
-              class="form-control form-control-lg"
+              class="input"
               name="uri"
               autocomplete="off"
+              spellcheck="false"
+              inputmode="url"
               :placeholder="t('search.placeholderUri')"
-              required
+              :aria-invalid="uriError || undefined"
               aria-describedby="uriHelp"
+              required
             >
-            <p
-              id="uriHelp"
-              class="form-text text-muted"
-            >
-              {{ t('search.helpUri') }}&nbsp;
-              <template
-                v-for="example in examples"
-                :key="example.uri"
-              >
-                <a
-                  class="btn btn-outline-secondary btn-sm"
-                  href=""
-                  @click.prevent="uri = example.uri"
-                >{{ example.label }}</a>&nbsp;
-              </template>
-            </p>
           </div>
+          <button
+            class="btn btn--primary btn--lg"
+            type="submit"
+          >
+            <MagnifyingGlassIcon class="icon" />
+            {{ t('search.buttonLookup') }}
+            <span
+              v-if="state.loading"
+              class="dots"
+              role="status"
+              :aria-label="t('search.stateSearching')"
+            ><i /><i /><i /></span>
+          </button>
         </div>
-        <div class="form-group row mb-2">
-          <div class="d-grid col-sm-3 offset-lg-3">
-            <button
-              class="btn btn-primary btn-lg text-start"
-              type="submit"
-            >
-              {{ t('search.buttonLookup') }}<div
-                v-show="state.loading"
-                class="lds-ellipsis"
-                role="status"
-              >
-                <div /><div /><div /><div />
-              </div>
-            </button>
-          </div>
+        <div
+          id="uriHelp"
+          class="examples"
+        >
+          <span>{{ t('search.helpUri') }}:</span>
+          <button
+            v-for="example in examples"
+            :key="example.uri"
+            type="button"
+            class="chip"
+            @click="uri = example.uri"
+          >
+            {{ example.label }}
+          </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </TheHome>
-  <LookupResult
-    :uri="uri"
-  />
+
+  <div class="container">
+    <LookupResult :uri="submittedUri" />
+  </div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, ref} from 'vue';
+<script lang="ts" setup>
+import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {useClient} from 'villus';
 import {useRoute, useRouter} from 'vue-router';
+import {MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
 import state from '../store';
 import LookupResult from './LookupResult.vue';
 import TheHome from './TheHome.vue';
 
-export default defineComponent({
-  name: 'LookupForm',
-  components: {
-    TheHome,
-    LookupResult,
-  },
-  setup() {
-    const {t, tm} = useI18n();
+const {t, tm} = useI18n();
+const router = useRouter();
+const route = useRoute();
 
-    useClient({
-      url: import.meta.env.VITE_GRAPHQL_URL,
-    });
+const submittedUri = (route.query.uri as string) ?? '';
+const uri = ref(submittedUri);
+const uriInput = ref<HTMLInputElement | null>(null);
+const uriError = ref(false);
+const examples = computed(() => tm('search.examplesUri') as {uri: string, label: string}[]);
 
-    const router = useRouter();
-    const route = useRoute();
-    const uri = ref(route.query.uri as string);
-
-    function onSubmit() {
-      state.loading = true;
-      router.replace({name: 'lookup', query: {uri: uri.value}});
-    }
-
-    return {
-      t,
-      examples: computed(() => tm('search.examplesUri') as [{uri: string, label: string}]),
-      uri,
-      onSubmit,
-      state,
-    };
-  },
-});
+function onSubmit() {
+  uriError.value = !uri.value.trim();
+  if (uriError.value) {
+    uriInput.value?.focus();
+    return;
+  }
+  state.loading = true;
+  router.replace({name: 'lookup', query: {uri: uri.value.trim()}});
+}
 </script>
 
 <style scoped>
-  p#uriHelp {
-    line-height: 2.5;
-  }
+.lookup-grid {
+  display: grid;
+  gap: var(--s-4);
+}
 </style>

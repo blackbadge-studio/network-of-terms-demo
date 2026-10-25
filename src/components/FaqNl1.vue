@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Wat zijn termen?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       De extra informatie over deze term maakt duidelijk dat het een synoniem heeft, ‘schilderstuk’.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom zijn termen belangrijk?
     </h3>
     <p>
@@ -32,7 +32,7 @@
     </p>
 
     <a id="terminology-source" />
-    <h3 class="display-5">
+    <h3>
       Wat zijn terminologiebronnen?
     </h3>
     <p>
@@ -44,7 +44,7 @@
       de <a href="https://vtmk.data.momu.be/id.html">Visuele Thesaurus voor Mode en Kostuums</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom zijn terminologiebronnen belangrijk?
     </h3>
     <p>
@@ -55,7 +55,7 @@
     </p>
 
     <a id="what-is" />
-    <h3 class="display-5">
+    <h3>
       Wat is het Termennetwerk?
     </h3>
     <p>
@@ -65,7 +65,7 @@
       van Rijn’ in de Nederlandse Thesaurus van Auteursnamen.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom is het Termennetwerk belangrijk?
     </h3>
     <p>
@@ -74,7 +74,7 @@
       enkel te koppelen met het Termennetwerk, niet meer met de individuele bronnen. Dit scheelt tijd en geld.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Hoe kan ik het Termennetwerk gebruiken?
     </h3>
     <p>
@@ -93,7 +93,7 @@
       Daarmee is er een link gelegd tussen jouw erfgoedobject en de terminologiebron.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Hoe kan ik het Termennetwerk uitproberen?
     </h3>
     <p>
@@ -111,7 +111,7 @@
       werking van het Termennetwerk, maar is geen onderdeel van het Termennetwerk.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Wie maakt en beheert het Termennetwerk?
     </h3>
     <p>
@@ -119,7 +119,7 @@
       Erfgoed. De instellingen staan in voor de werking en beschikbaarheid van het Termennetwerk.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Kan ik het Termennetwerk al gebruiken?
     </h3>
     <p>
@@ -131,7 +131,7 @@
       door je leverancier. Wij ondersteunen je hier graag bij.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Hoe zijn de zoekresultaten gesorteerd?
     </h3>
     <p>
@@ -143,7 +143,7 @@
       alfabetisch weergegeven.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Ik wil een bepaalde terminologiebron gebruiken, maar die komt niet voor in het Termennetwerk.
       Kan die toegevoegd worden?
     </h3>
@@ -155,7 +155,7 @@
     </p>
 
     <a id="ServerError" />
-    <h3 class="display-5">
+    <h3>
       Ik krijg een foutmelding: “{{ t('api.ServerError') }}”. Wat betekent dit?
     </h3>
     <p>
@@ -173,7 +173,7 @@
     </p>
 
     <a id="TimeoutError" />
-    <h3 class="display-5">
+    <h3>
       Ik krijg een foutmelding: “{{ t('api.TimeoutError') }}”. Wat betekent dit?
     </h3>
     <p>
@@ -189,7 +189,7 @@
       </router-link>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>

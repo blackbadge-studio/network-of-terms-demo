@@ -1,12 +1,12 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Background
     </h3>
     <p>Does your organization have a thesaurus, term list, or other terminology source that is useful for connecting objects across organizations? And is this terminology source managed and made available in a sustainable manner? Then you can consider having this terminology source included in the NDE Network of Terms. This way, other heritage organizations can use your terms to describe their objects in a sustainable and uniform manner. Think, for example, of terms related to buildings, persons, events, and so forth.</p>
     <p>The Network of Terms is open to suggestions for new terminology sources. Whether a terminology source can be added depends on content related and technical considerations. These are outlined below.</p>
     <p>If you have any questions after reading this, please feel free to contact the Cultural Heritage Agency of the Netherlands, the coordinator of the Network of Terms, via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.</p>
-    <h3 class="display-5">
+    <h3>
       Content related requirements for Inclusion in the Network of Terms
     </h3>
     <p>Go through the following points to determine if your terminology source is suitable for inclusion in the Network of Terms.</p>
@@ -34,7 +34,7 @@
       <li>If a term has a relationship with another term in my terminology source, these relationships are indicated. For example, if a source uses the SKOS data model, relationships with other terms in the terminology source can be published via relationships such as skos:broader, skos:narrower, or skos:related.</li>
       <li>If a term has a relationship with a term from another thesaurus or terminology source, this is clearly indicated. For example, the term "gilded brass" in the Cultural Heritage Thesaurus has an skos: exactMatch relationship with the same term in the Getty's Art and Architecture Thesaurus.</li>
     </ul>
-    <h3 class="display-5">
+    <h3>
       Technical Requirements for Inclusion in the Term Network
     </h3>
     <p>The technical requirements for inclusion are described below. These can pose a challenge if your collection management system or IT environment does not yet support them. If your terminology source does not yet meet these requirements, discuss this first with your supplier and/or IT department. For advice, you can always contact the provincial digital heritage coaches or the coordinator of the Term Network.</p>
@@ -45,7 +45,7 @@
     <p><strong>Technical Requirement 2: The terminology source uses public URIs to record terms.</strong></p>
     <p>Terms can only be used to connect digital heritage if they are machine-readable. This is achieved by using URIs: unique web addresses that can be used by humans and computers to retrieve information about the term, such as definitions, labels, and related relationships. It is important that these URIs are publicly accessible without authentication, such as login credentials.</p>
     <p>An example of a URI is <a href="https://data.niod.nl/WO2_Thesaurus/events/9358">https://data.niod.nl/WO2_Thesaurus/events/9358</a> where all information about the term 'Evacuation of Breda' can be found. As described above in the 'Content related requirements' section, a URI preferably contains as much information about the term as possible, and at least enough information to make users understand what the term is about.</p>
-    <h3 class="display-5">
+    <h3>
       Additional Considerations and Preferences
     </h3>
     <p>The substantive and technical requirements described above can be further detailed in the <a href="https://netwerk-digitaal-erfgoed.github.io/requirements-terminologiebronnen/">Network of Terms requirements document</a>. In this document, you will also find more recommendations and 'nice-to-haves' to consider when offering a terminology source.</p>

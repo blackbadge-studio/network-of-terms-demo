@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       What are terms?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       The extra information about this term makes it clear that it has a synonym (in Dutch), 'schilderstuk'.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terms important?
     </h3>
     <p>
@@ -31,7 +31,7 @@
       The use of terms therefore ensures better findability.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Who assigns terms to heritage?
     </h3>
     <p>
@@ -45,7 +45,7 @@
       precisely which term is meant, so that there are never any misunderstandings about the meaning.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What are terminology resources?
     </h3>
     <p>
@@ -57,7 +57,7 @@
       <a href="https://vtmk.data.momu.be/id.html">Visual Thesaurus for Fashion and Costumes</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terminology resources important?
     </h3>
     <p>
@@ -67,7 +67,7 @@
       can be used.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What is the Network of Terms?
     </h3>
     <p>
@@ -77,7 +77,7 @@
       van Rijn' in the Dutch Thesaurus of Authors' Names.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why is the Network of Terms important?
     </h3>
     <p>
@@ -86,7 +86,7 @@
       interface with the individual sources, just one interface to the Network of Terms. This saves time and money.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       How does the Network of Terms work, technically?
     </h3>
     <p>
@@ -102,7 +102,7 @@
     <p>Schematically this looks like this:</p>
     <p><img src="../assets/tn-diagram-nl.png"></p>
 
-    <h3 class="display-5">
+    <h3>
       How does the API of the Network of Terms work?
     </h3>
     <p>
@@ -114,7 +114,7 @@
       commonly used model to structure information about terms.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       How can I try out the Network of Terms?
     </h3>
     <p>
@@ -212,7 +212,7 @@
       the page then displays the terms found in the terminology sources.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       How can I access the Network of Terms API?
     </h3>
     <p>
@@ -224,7 +224,7 @@
     </p>
     <p>https://termennetwerk-api.netwerkdigitaalerfgoed.nl/graphql</p>
 
-    <h3 class="display-5">
+    <h3>
       How can I use the Network of Terms from my collection management system?
     </h3>
     <p>
@@ -244,7 +244,7 @@
       collection management system the identifier – the URI – of the chosen term, such as <a href="https://data.rkd.nl/artists/66219">https://data.rkd.nl/artists/66219</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Who creates and manages the Network of Terms?
     </h3>
     <p>
@@ -252,7 +252,7 @@
       Heritage. The settings are responsible for the operation and availability of the Network of Terms.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Can I already use the Network of Terms?
     </h3>
     <p>
@@ -264,7 +264,7 @@
       collection managers can work with it. We are happy to support you in this.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>

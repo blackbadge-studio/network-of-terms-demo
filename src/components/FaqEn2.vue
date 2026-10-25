@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       What are terms?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       The extra information about this term makes it clear that it has a synonym (in Dutch), 'schilderstuk'.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terms important?
     </h3>
     <p>
@@ -31,7 +31,7 @@
       The use of terms therefore ensures better findability.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What are terminology resources?
     </h3>
     <p>
@@ -43,7 +43,7 @@
       <a href="https://vtmk.data.momu.be/id.html">Visual Thesaurus for Fashion and Costumes</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terminology resources important?
     </h3>
     <p>
@@ -53,7 +53,7 @@
       can be used.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What is the Network of Terms?
     </h3>
     <p>
@@ -63,7 +63,7 @@
       van Rijn' in the Dutch Thesaurus of Authors' Names.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why is the Network of Terms important?
     </h3>
     <p>
@@ -72,7 +72,7 @@
       interface with the individual sources, just one interface to the Network of Terms. This saves time and money.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Who creates and manages the Network of Terms?
     </h3>
     <p>
@@ -80,7 +80,7 @@
       Heritage. The settings are responsible for the operation and availability of the Network of Terms.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       My terminology resource is not listed in the Network of Terms. What does it mean if I use my source
       add?
     </h3>
@@ -95,7 +95,7 @@
       system to the Network of Terms. You are and remain the owner.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What conditions must my source meet in order to be added to the
       Network of Terms?
     </h3>
@@ -106,7 +106,7 @@
       are available and can be used for a long time.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>

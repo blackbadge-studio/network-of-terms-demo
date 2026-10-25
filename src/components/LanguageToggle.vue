@@ -1,30 +1,22 @@
 <template>
-  <li class="nav-item dropdown">
-    <a
-      id="navbarDropdownMenuLink"
-      class="nav-link dropdown-toggle"
-      href="#"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >{{ t('language.label') }}</a>
-    <div
-      class="dropdown-menu"
-      aria-labelledby="navbarDropdownMenuLink"
+  <div
+    class="lang"
+    role="group"
+    :aria-label="t('language.label')"
+  >
+    <button
+      v-for="lang in languages"
+      :key="lang.code"
+      type="button"
+      class="lang__btn"
+      :aria-pressed="locale === lang.code"
+      :lang="lang.code"
+      :title="lang.name"
+      @click="switchLocale(lang.code)"
     >
-      <a
-        href=""
-        :class="{active: locale === 'en'}"
-        class="dropdown-item"
-        @click.prevent="switchLocale('en')"
-      >English</a>
-      <a
-        href=""
-        :class="{active: locale === 'nl'}"
-        class="dropdown-item"
-        @click.prevent="switchLocale('nl')"
-      >Nederlands</a>
-    </div>
-  </li>
+      {{ lang.code.toUpperCase() }}
+    </button>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -35,11 +27,12 @@ const router = useRouter();
 const route = useRoute();
 const {t, locale} = useI18n();
 
-const switchLocale = (locale: string) => {
-  router.replace({params: {...route.params, locale}, query: route.query});
-}
+const languages = [
+  {code: 'nl', name: 'Nederlands'},
+  {code: 'en', name: 'English'},
+];
+
+const switchLocale = (code: string) => {
+  router.replace({params: {...route.params, locale: code}, query: route.query});
+};
 </script>
-
-<style scoped>
-
-</style>

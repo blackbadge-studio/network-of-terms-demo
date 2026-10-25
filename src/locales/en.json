@@ -9,7 +9,14 @@
     "documentation": "Documentation",
     "byline": "a meemoo service",
     "sourceCode": "Source code",
-    "poc": "Proof of concept — work in progress"
+    "poc": "Proof of concept — work in progress",
+    "menu": "Menu",
+    "close": "Close",
+    "skipToContent": "Skip to content",
+    "mainNav": "Main navigation",
+    "footerService": "This service",
+    "footerMore": "More",
+    "externalLink": "opens in a new window"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -46,7 +53,7 @@
         "label": "Groningen"
       }
     ],
-    "placeholderQuery": "For example: Rembrandt, Amsterdam or painting",
+    "placeholderQuery": "For example: Ghent, painting or Permeke",
     "placeholderDatasets": "Select one or more terminology sources",
     "selectAll": "Select all",
     "selectNone": "Select none",
@@ -68,7 +75,38 @@
     "sourceNotFound": "No terminology source can provide this URI",
     "termFound": "Found term",
     "labelGenres": "Subjects",
-    "placeholderGenres": "Optionally filter by subject"
+    "placeholderGenres": "Optionally filter by subject",
+    "audienceLabel": "Frequently asked questions for",
+    "pickerLabel": "Choose terminology sources",
+    "sourcesSelected": "no sources selected | {n} source selected | {n} sources selected",
+    "searchSources": "Search a source by name or holder",
+    "noSourcesMatch": "No sources match “{q}”",
+    "removeSource": "Remove {name}",
+    "pickerAll": "All",
+    "pickerNone": "None",
+    "pickerAllInGroup": "All",
+    "pickerOf": "{selected} of {total}",
+    "selectSourcesError": "Choose at least one terminology source.",
+    "available": "Available",
+    "unavailable": "Currently unavailable",
+    "resultsFor": "Results for “{q}”",
+    "resultsSummary": "no terms | {n} term | {n} terms",
+    "inSources": "in {n} source | in {n} source | in {n} sources",
+    "stateResults": "no results | {n} result | {n} results",
+    "stateNone": "No results",
+    "stateUnreachable": "Unreachable",
+    "stateTimeout": "Timed out",
+    "stateSearching": "Searching…",
+    "retry": "Retry",
+    "retrying": "Retrying…",
+    "whyError": "What does this mean?",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "detailOf": "View details of {label}",
+    "uri": "URI",
+    "copied": "Copied",
+    "responseTime": "{ms} ms",
+    "typeBadge": "Type"
   },
   "language": {
     "label": "Taal"
@@ -87,12 +125,23 @@
     "reconciliationAvailableAtSource": "Available at the source",
     "statusAvailable": "Available",
     "statusUnavailable": "Unavailable",
-    "lastChecked": "Last checked"
+    "lastChecked": "Last checked",
+    "filterTitle": "Filter by subject",
+    "clearFilter": "Clear filter",
+    "holder": "Source holder",
+    "status": "Status"
   },
   "api": {
     "ServerError": "The terminology source is unavailable",
     "TimeoutError": "The terminology source did not respond in time",
     "NotFoundError": "No term found with this URI",
     "Error": "An error occurred"
+  },
+  "types": {
+    "CONCEPT": "Concept",
+    "PERSON": "Person",
+    "ORGANIZATION": "Organisation",
+    "PLACE": "Place",
+    "EVENT": "Event"
   }
 }

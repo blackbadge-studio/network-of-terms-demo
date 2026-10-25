@@ -1,9 +1,11 @@
 <template>
-  <h1 class="display-5">
-    {{ t('faq.reconciliation') }}
-  </h1>
-  <ReconEn v-if="locale === 'en'" />
-  <ReconNl v-else />
+  <div class="container page">
+    <h1>
+      {{ t('faq.reconciliation') }}
+    </h1>
+    <ReconEn v-if="locale === 'en'" />
+    <ReconNl v-else />
+  </div>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
-</style>

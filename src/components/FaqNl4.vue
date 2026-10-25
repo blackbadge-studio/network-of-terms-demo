@@ -1,12 +1,12 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Achtergrond
     </h3>
     <p>Heeft jouw organisatie een thesaurus, termenlijst of andere terminologiebron die handig is voor het verbinden van collecties van verschillende organisaties? En wordt deze terminologiebron op een duurzame manier beheerd en beschikbaar gesteld? Overweeg dan om deze terminologiebron op te laten nemen in het NDE Termennetwerk. Zo kunnen andere erfgoedorganisaties jouw termen gebruiken om hun objecten op een duurzame en uniforme manier te beschrijven. Denk bijvoorbeeld aan termen over gebouwen, personen, gebeurtenissen, enzovoort.</p>
     <p>Het Termennetwerk staat open voor suggesties voor nieuwe bronnen. Of een terminologiebron kan worden toegevoegd, hangt af van enkele inhoudelijke en technische afwegingen die in deze handleiding aan bod komen.</p>
     <p>Heb je na het lezen nog vragen? Aarzel dan niet om contact op te nemen met de Rijksdienst voor het Cultureel Erfgoed, de coördinator van het Termennetwerk, via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.</p>
-    <h3 class="display-5">
+    <h3>
       Inhoudelijke voorwaarden voor opname binnen het Termennetwerk
     </h3>
     <p>Loop de volgende punten na om erachter te komen of jouw terminologiebron inhoudelijk geschikt is voor het Termennetwerk.</p>
@@ -34,7 +34,7 @@
       <li>Als een term een relatie heeft met een andere term in mijn terminologiebron, zijn deze kenbaar gemaakt. Bijvoorbeeld: als een bron het datamodel SKOS gebruikt, kunnen relaties met andere termen in de terminologiebron via relaties als skos:broader, skos:narrower of skos:related gepubliceerd worden.</li>
       <li>Als een term een relatie heeft met een term uit een andere thesaurus of terminologiebron, is dit duidelijk gemaakt. Bijvoorbeeld: de term klatergoud in de Cultuurhistorische Thesaurus heeft een skos:exactMatch relatie met dezelfde term in de Art and Architecture Thesaurus van Getty.</li>
     </ul>
-    <h3 class="display-5">
+    <h3>
       Technische voorwaarden voor opname binnen het Termennetwerk
     </h3>
     <p>De technische eisen voor opname worden hieronder beschreven. Deze kunnen een uitdaging vormen als je collectiebeheersysteem of IT-omgeving dit nog niet ondersteunt. Voldoet je terminologiebron nog niet aan deze vereisten, bespreek dit dan eerst met je leverancier en/of IT-afdeling. Voor advies kun je altijd contact opnemen met de provinciale digitaal-erfgoed-coaches of de coördinator van het Termennetwerk.</p>
@@ -45,7 +45,7 @@
     <p><strong>Technische voorwaarde 2: De terminologiebron gebruikt openbare URI’s om termen vast te leggen</strong></p>
     <p>Termen kunnen alleen worden gebruikt om erfgoed met elkaar te verbinden als ze machineleesbaar zijn. Dit wordt bereikt door het gebruik van URI’s: unieke webadressen die door mensen en computers kunnen worden gebruikt om informatie over de term op te halen, zoals definities, labels en verbonden relaties. Het is belangrijk dat deze URI's openbaar toegankelijk zijn, zonder dat er authenticatie nodig is, zoals inloggegevens.</p>
     <p>Een voorbeeld van een URI is <a href="https://data.niod.nl/WO2_Thesaurus/events/9358">https://data.niod.nl/WO2_Thesaurus/events/9358</a> waarop alle informatie over de term ‘Evacuatie van Breda’ kan worden gevonden. Zoals hierboven beschreven bij ‘Inhoudelijke voorwaarden’, bevat een URI bij voorkeur zoveel mogelijk informatie over de term en in ieder geval voldoende informatie om gebruikers duidelijk te maken waar de term over gaat.</p>
-    <h3 class="display-5">
+    <h3>
       Aanvullende overwegingen en voorkeuren
     </h3>
     <p>De hierboven beschreven inhoudelijke en technische voorwaarden zijn in meer detail na te lezen in het <a href="https://netwerk-digitaal-erfgoed.github.io/requirements-terminologiebronnen/">document met requirements van het Termennetwerk</a>. In dit document vind je daarnaast meer aanbevelingen en ‘nice-to-haves’ die je kunt overwegen als je een terminologiebron wilt aanbieden.</p>

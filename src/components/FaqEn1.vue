@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       What are terms?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       The extra information about this term makes it clear that it has a synonym (in Dutch), 'schilderstuk'.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terms important?
     </h3>
     <p>
@@ -32,7 +32,7 @@
     </p>
 
     <a id="terminology-source" />
-    <h3 class="display-5">
+    <h3>
       What are terminology resources?
     </h3>
     <p>
@@ -44,7 +44,7 @@
       <a href="https://vtmk.data.momu.be/id.html">Visual Thesaurus for Fashion and Costumes</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why are terminology resources important?
     </h3>
     <p>
@@ -54,7 +54,7 @@
       can be used.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       What is the Network of Terms?
     </h3>
     <p>
@@ -64,7 +64,7 @@
       van Rijn' in the Dutch Thesaurus of Authors' Names.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Why is the Network of Terms important?
     </h3>
     <p>
@@ -73,7 +73,7 @@
       interface with the individual sources, just one interface to the Network of Terms. This saves time and money.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       How can I use the Network of Terms?
     </h3>
     <p>
@@ -92,7 +92,7 @@
       This creates a link between your heritage object and the terminology source.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       How can I try out the Network of Terms?
     </h3>
     <p>
@@ -110,7 +110,7 @@
       operation of the Network of Terms, but is not part of the Network of Terms.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Who creates and manages the Network of Terms?
     </h3>
     <p>
@@ -118,7 +118,7 @@
       Heritage. Theses organisations are responsible for the operation and availability of the Network of Terms.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Can I already use the Network of Terms?
     </h3>
     <p>
@@ -130,7 +130,7 @@
       by your supplier. We are happy to support you in this.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       I want to use a particular terminology source, but it is not in the Network of Terms.
       Can it be added?
     </h3>
@@ -142,7 +142,7 @@
     </p>
 
     <a id="ServerError" />
-    <h3 class="display-5">
+    <h3>
       I'm getting an error: "{{ t('api.ServerError') }}". What does this mean?
     </h3>
     <p>
@@ -160,7 +160,7 @@
     </p>
 
     <a id="TimeoutError" />
-    <h3 class="display-5">
+    <h3>
       I'm getting an error: "{{ t('api.TimeoutError') }}". What does this mean?
     </h3>
     <p>
@@ -176,7 +176,7 @@
       </router-link>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>

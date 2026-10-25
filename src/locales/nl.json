@@ -9,7 +9,14 @@
     "documentation": "Documentatie",
     "byline": "een dienst van meemoo",
     "sourceCode": "Broncode",
-    "poc": "Proof of concept — in opbouw"
+    "poc": "Proof of concept — in opbouw",
+    "menu": "Menu",
+    "close": "Sluiten",
+    "skipToContent": "Ga naar de inhoud",
+    "mainNav": "Hoofdnavigatie",
+    "footerService": "Deze dienst",
+    "footerMore": "Meer",
+    "externalLink": "opent in een nieuw venster"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -46,7 +53,7 @@
         "label": "Groningen"
       }
     ],
-    "placeholderQuery": "Bijvoorbeeld: fietsen, schilderij of Amsterdam",
+    "placeholderQuery": "Bijvoorbeeld: Gent, schilderij of Permeke",
     "placeholderDatasets": "Selecteer een of meer terminologiebronnen",
     "selectAll": "Selecteer alle",
     "selectNone": "Selecteer geen",
@@ -68,7 +75,38 @@
     "sourceNotFound": "Geen terminologiebron gevonden voor deze URI",
     "termFound": "Term gevonden",
     "labelGenres": "Onderwerpen",
-    "placeholderGenres": "Optioneel filteren op onderwerp"
+    "placeholderGenres": "Optioneel filteren op onderwerp",
+    "audienceLabel": "Veelgestelde vragen voor",
+    "pickerLabel": "Terminologiebronnen kiezen",
+    "sourcesSelected": "geen bronnen geselecteerd | {n} bron geselecteerd | {n} bronnen geselecteerd",
+    "searchSources": "Zoek een bron op naam of bronhouder",
+    "noSourcesMatch": "Geen bronnen gevonden voor “{q}”",
+    "removeSource": "Verwijder {name}",
+    "pickerAll": "Alles",
+    "pickerNone": "Geen",
+    "pickerAllInGroup": "Alle",
+    "pickerOf": "{selected} van {total}",
+    "selectSourcesError": "Kies minstens één terminologiebron.",
+    "available": "Beschikbaar",
+    "unavailable": "Momenteel niet beschikbaar",
+    "resultsFor": "Resultaten voor “{q}”",
+    "resultsSummary": "geen termen | {n} term | {n} termen",
+    "inSources": "in {n} bron | in {n} bron | in {n} bronnen",
+    "stateResults": "geen resultaten | {n} resultaat | {n} resultaten",
+    "stateNone": "Geen resultaten",
+    "stateUnreachable": "Niet bereikbaar",
+    "stateTimeout": "Time-out",
+    "stateSearching": "Zoeken…",
+    "retry": "Opnieuw proberen",
+    "retrying": "Bezig…",
+    "whyError": "Wat betekent dit?",
+    "showMore": "Meer tonen",
+    "showLess": "Minder tonen",
+    "detailOf": "Bekijk details van {label}",
+    "uri": "URI",
+    "copied": "Gekopieerd",
+    "responseTime": "{ms} ms",
+    "typeBadge": "Type"
   },
   "language": {
     "label": "Language"
@@ -87,12 +125,23 @@
     "reconciliationAvailableAtSource": "Beschikbaar bij de bron",
     "statusAvailable": "Beschikbaar",
     "statusUnavailable": "Niet beschikbaar",
-    "lastChecked": "Laatst gecontroleerd"
+    "lastChecked": "Laatst gecontroleerd",
+    "filterTitle": "Filter op onderwerp",
+    "clearFilter": "Wis filter",
+    "holder": "Bronhouder",
+    "status": "Status"
   },
   "api": {
     "ServerError": "De terminologiebron is niet bereikbaar",
     "TimeoutError": "De terminologiebron reageerde niet op tijd",
     "NotFoundError": "Geen term gevonden met deze URI",
     "Error": "Er is een fout opgetreden"
+  },
+  "types": {
+    "CONCEPT": "Concept",
+    "PERSON": "Persoon",
+    "ORGANIZATION": "Organisatie",
+    "PLACE": "Plaats",
+    "EVENT": "Gebeurtenis"
   }
 }

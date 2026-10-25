@@ -1,9 +1,11 @@
 <template>
-  <h1 class="display-5">
-    {{ t('general.privacy') }}
-  </h1>
-  <PrivacyEn v-if="locale === 'en'" />
-  <PrivacyNl v-else />
+  <div class="container page">
+    <h1 class="page__title">
+      {{ t('general.privacy') }}
+    </h1>
+    <PrivacyEn v-if="locale === 'en'" />
+    <PrivacyNl v-else />
+  </div>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
-</style>

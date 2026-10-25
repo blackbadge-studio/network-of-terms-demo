@@ -1,206 +1,206 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-start">
-      <div class="col-3">
-        <p>{{ t('termSources.selectGenres') }}</p>
-        <div
+  <div class="sources">
+    <aside class="sources__filters">
+      <h2>{{ t('termSources.filterTitle') }}</h2>
+      <div
+        class="chip-row"
+        role="group"
+        :aria-label="t('termSources.filterTitle')"
+      >
+        <label
           v-for="genre in genres"
           :key="genre.uri"
-          class="mt-1"
+          class="chip chip-toggle"
         >
           <input
-            :id="genre.uri"
             v-model="selectedGenres"
             :value="genre.uri"
-            autocomplete="off"
-            class="btn-check"
-            name="genres"
             type="checkbox"
+            name="genres"
           >
-          <label
-            :for="genre.uri"
-            class="btn btn-outline-primary"
-          >{{ genre.name }}</label><br>
-        </div>
+          {{ genre.name }}
+        </label>
       </div>
-      <div class="col-9">
-        <p>
+      <button
+        v-if="selectedGenres.length > 0"
+        type="button"
+        class="link-btn"
+        style="justify-self: start; font-size: var(--fs-sm)"
+        @click="selectedGenres = []"
+      >
+        {{ t('termSources.clearFilter') }}
+      </button>
+    </aside>
+
+    <div class="sources__main">
+      <div class="sources__bar">
+        <p
+          class="sources__count"
+          aria-live="polite"
+        >
           {{ t('termSources.matchingSources', terminologySources.length) }}
-          <router-link
-            :to="{
-              name: 'home', query: {datasets: terminologySourceUris}
-            }"
-            class="btn btn-primary btn-md ms-1"
-          >
-            {{ t('termSources.search') }}
-            <ArrowRightCircleIcon class="icon" />
-          </router-link>
         </p>
-        <div class="list-group">
-          <div
-            v-for="source in terminologySources"
-            :key="source.uri"
-            class="list-group-item list-group-item-action"
-            style="text-decoration: none"
+        <router-link
+          :to="{name: 'home', query: {datasets: terminologySourceUris}}"
+          class="btn btn--primary"
+        >
+          {{ t('termSources.search') }}
+          <ArrowRightIcon class="icon" />
+        </router-link>
+      </div>
+
+      <div class="sources__list">
+        <article
+          v-for="source in terminologySources"
+          :id="anchorId(source)"
+          :key="source.uri"
+          class="source-card"
+        >
+          <header class="source-card__head">
+            <h3 class="source-card__title">
+              {{ source.name }}
+              <small v-if="source.alternateName">({{ source.alternateName }})</small>
+            </h3>
+            <span
+              v-if="holderName(source)"
+              class="source-card__holder"
+            >{{ holderName(source) }}</span>
+            <span
+              v-if="source.status"
+              class="status source-card__status"
+              :class="source.status.isAvailable ? 'status--ok' : 'status--error'"
+              :title="t('termSources.lastChecked') + ': ' + formatDate(source.status.lastChecked)"
+            >
+              {{ source.status.isAvailable ? t('termSources.statusAvailable') : t('termSources.statusUnavailable') }}
+            </span>
+          </header>
+
+          <p
+            v-if="source.description"
+            class="source-card__desc"
           >
-            <div class="d-flex pb-1 w-100 justify-content-between">
-              <h5 class="mb-1">
-                {{ source.name }}
-                <small class="text-muted">{{ source.creators[0].alternateName }}</small>
-                <span
-                  v-if="source.status"
-                  class="badge rounded-pill ms-2"
-                  :class="source.status.isAvailable ? 'text-bg-success' : 'text-bg-danger'"
-                  :title="t('termSources.lastChecked') + ': ' + formatDate(source.status.lastChecked)"
-                >
-                  {{ source.status.isAvailable ? '●' : '○' }} {{ source.status.isAvailable ? t('termSources.statusAvailable') : t('termSources.statusUnavailable') }}
-                </span>
-              </h5>
-              <div>
-                <a
-                  :href="source.mainEntityOfPage"
-                  class="btn btn-sm btn-primary ml-2"
-                >
-                  {{ t('search.viewAtSource') }}
-                  <ArrowTopRightOnSquareIcon class="icon" />
-                </a>
-              </div>
-            </div>
-            <p>
-              {{ source.description }}
-            </p>
-            <dl class="row">
-              <dt class="col-sm-3">
-                {{ t('termSources.availableInLanguages') }}
-              </dt>
-              <dd class="col-sm-9">
-                <span
-                  v-for="language in source.inLanguage"
-                  :key="language"
-                  class="badge rounded-pill text-bg-light"
-                >
-                  {{ language }}
-                </span>
-              </dd>
+            {{ source.description }}
+          </p>
 
-              <dt class="col-sm-3">
-                {{ t('termSources.genres') }}
-              </dt>
-              <dd class="col-sm-9">
-                <span
-                  v-for="genre in source.genres.sort((a: { 'name': string}, b: {'name': string}) => a.name.localeCompare(b.name))"
-                  :key="genre.uri"
-                  class="badge rounded-pill text-bg-secondary"
-                >
-                  {{ genre.name }}
-                </span>
-              </dd>
+          <dl class="meta">
+            <dt>{{ t('termSources.availableInLanguages') }}</dt>
+            <dd class="chip-row">
+              <span
+                v-for="language in source.inLanguage"
+                :key="language"
+                class="chip chip--tag chip--lang"
+              >{{ language }}</span>
+            </dd>
 
-              <dt class="col-sm-3">
-                {{ t('termSources.uri') }}
-              </dt>
-              <dd class="col-sm-9">
-                <span class="scrollable-inline-text text-muted me-1">{{ source.uri }}</span>
-                <CopyButton :text="source.uri" />
-              </dd>
+            <dt>{{ t('termSources.genres') }}</dt>
+            <dd class="chip-row">
+              <span
+                v-for="genre in sortedGenres(source)"
+                :key="genre.uri"
+                class="chip chip--tag"
+              >{{ genre.name }}</span>
+            </dd>
 
-              <dt class="col-sm-3">
-                {{ reconciliationUrl(source) ? t('termSources.reconciliationUrl') : t('termSources.reconciliation') }}
-                <router-link :to="{name: 'reconciliation'}">
-                  <QuestionMarkCircleIcon class="icon" />
-                </router-link>
-              </dt>
-              <dd
-                v-if="reconciliationUrl(source)"
-                class="col-sm-7"
+            <dt>{{ t('termSources.uri') }}</dt>
+            <dd class="meta__uri">
+              <code :title="source.uri">{{ source.uri }}</code>
+              <CopyButton :text="source.uri" />
+            </dd>
+
+            <dt>
+              {{ reconciliationUrl(source) ? t('termSources.reconciliationUrl') : t('termSources.reconciliation') }}
+              <router-link
+                :to="{name: 'reconciliation'}"
+                :aria-label="t('faq.reconciliation')"
               >
-                <span class="scrollable-inline-text text-muted me-1">{{ reconciliationUrl(source)! }}</span>
-                <CopyButton
-                  :text="reconciliationUrl(source)!"
-                />
-              </dd>
-              <dd
-                v-else
-                class="col-sm-9"
-              >
-                {{ t('termSources.reconciliationAvailableAtSource') }}
-              </dd>
-            </dl>
+                <QuestionMarkCircleIcon class="icon" />
+              </router-link>
+            </dt>
+            <dd
+              v-if="reconciliationUrl(source)"
+              class="meta__uri"
+            >
+              <code :title="reconciliationUrl(source)">{{ reconciliationUrl(source) }}</code>
+              <CopyButton :text="reconciliationUrl(source)!" />
+            </dd>
+            <dd v-else>
+              {{ t('termSources.reconciliationAvailableAtSource') }}
+            </dd>
+          </dl>
+
+          <div class="source-card__foot">
+            <router-link
+              :to="{name: 'home', query: {datasets: source.uri}}"
+              class="btn btn--secondary btn--sm"
+            >
+              <MagnifyingGlassIcon class="icon" />
+              {{ t('search.buttonSearch') }}
+            </router-link>
+            <a
+              v-if="source.mainEntityOfPage"
+              :href="source.mainEntityOfPage"
+              target="_blank"
+              rel="noopener"
+              class="btn btn--ghost btn--sm"
+            >
+              {{ t('search.viewAtSource') }}
+              <ArrowTopRightOnSquareIcon class="icon" />
+            </a>
           </div>
-        </div>
+        </article>
+
+        <p
+          v-if="terminologySources.length === 0"
+          class="empty"
+        >
+          {{ t('termSources.matchingSources', 0) }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, reactive, ref} from 'vue';
+<script lang="ts" setup>
+import {computed, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {useClient, useQuery} from 'villus';
-import {Feature, Source} from '../query';
-import {ArrowRightCircleIcon, ArrowTopRightOnSquareIcon, QuestionMarkCircleIcon} from '@heroicons/vue/16/solid';
+import {useQuery} from 'villus';
+import {Feature, SOURCES_QUERY, Source, holderName} from '../query';
+import {ArrowRightIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, QuestionMarkCircleIcon} from '@heroicons/vue/16/solid';
 import CopyButton from './CopyButton.vue';
 
-export default defineComponent({
-  name: 'TerminologySourcesList',
-  components: {ArrowRightCircleIcon, ArrowTopRightOnSquareIcon, CopyButton, QuestionMarkCircleIcon},
-  async setup() {
-    const {t, locale} = useI18n();
-    useClient({
-      url: import.meta.env.VITE_GRAPHQL_URL,
-    });
-    const variables = reactive({locale: locale}); // Use query variables to cache per locale and re-fetch when locale changes.
-    const headers = reactive({'Accept-Language': locale});
-    const {data} = await useQuery({
-      query: 'query Sources { sources { name alternateName mainEntityOfPage description uri creators { uri alternateName } inLanguage genres { uri name } features { type url } status { isAvailable lastChecked } } }',
-      context: {
-        headers,
-      },
-      variables,
-    });
-
-    const selectedGenres = ref([] as string[]);
-    const allGenres = reactive([...data.value.sources.reduce((acc: Map<string, string>, source: Source) => {
-      source.genres.forEach((source => acc.set(source.uri, source.name)));
-      return acc;
-    }, new Map<string, string>())].sort().map(([uri, name]) => ({name, uri})));
-
-    const terminologySources = computed(() => {
-      if (selectedGenres.value.length == 0) {
-        return data.value.sources;
-      }
-      return data.value.sources.filter((source: Source) => source.genres.some(genre => selectedGenres.value.includes(genre.uri)));
-    });
-    const terminologySourceUris = computed(() => terminologySources.value.map((source: Source) => source.uri).join(','));
-
-    const reconciliationFeature = (source: Source) =>
-      source.features.find((feature: Feature) => feature.type === 'RECONCILIATION');
-
-    const reconciliationUrl = (source: Source) => reconciliationFeature(source)?.url;
-
-    const formatDate = (isoDate: string) => {
-      return new Date(isoDate).toLocaleString(locale.value);
-    };
-
-    return {t, selectedGenres, terminologySources, terminologySourceUris, genres: allGenres, reconciliationUrl, formatDate};
-  },
+const {t, locale} = useI18n();
+const variables = reactive({locale}); // Cache per locale and re-fetch when locale changes.
+const headers = reactive({'Accept-Language': locale});
+const {data} = await useQuery<{sources: Source[]}>({
+  query: SOURCES_QUERY,
+  context: {headers},
+  variables,
 });
+
+const sources = computed<Source[]>(() =>
+  [...(data.value?.sources ?? [])].sort((a, b) => a.name.localeCompare(b.name, locale.value)),
+);
+
+const selectedGenres = ref([] as string[]);
+const genres = computed(() => {
+  const map = new Map<string, string>();
+  for (const source of sources.value) {
+    source.genres.forEach(genre => map.set(genre.uri, genre.name));
+  }
+  return [...map].map(([uri, name]) => ({uri, name})).sort((a, b) => a.name.localeCompare(b.name, locale.value));
+});
+
+const terminologySources = computed(() => {
+  if (selectedGenres.value.length === 0) {
+    return sources.value;
+  }
+  return sources.value.filter(source => source.genres.some(genre => selectedGenres.value.includes(genre.uri)));
+});
+const terminologySourceUris = computed(() => terminologySources.value.map(source => source.uri).join(','));
+
+const sortedGenres = (source: Source) => [...source.genres].sort((a, b) => a.name.localeCompare(b.name, locale.value));
+const reconciliationUrl = (source: Source) =>
+  source.features.find((feature: Feature) => feature.type === 'RECONCILIATION')?.url;
+const formatDate = (isoDate: string) => new Date(isoDate).toLocaleString(locale.value);
+const anchorId = (source: Source) => 'source-' + source.uri.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
 </script>
-
-<style scoped>
-a.btn {
-  text-decoration: none;
-}
-
-.badge {
-  margin-right: 0.2em;
-}
-
-.scrollable-inline-text {
-  display: inline-block !important;
-  max-width: 95%;
-  overflow-x: auto;
-  white-space: nowrap;
-  vertical-align: bottom;
-}
-</style>

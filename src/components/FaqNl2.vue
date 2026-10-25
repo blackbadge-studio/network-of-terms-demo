@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Wat zijn termen?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       De extra informatie over deze term maakt duidelijk dat het een synoniem heeft, ‘schilderstuk’.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom zijn termen belangrijk?
     </h3>
     <p>
@@ -31,7 +31,7 @@
       Gebruik van termen zorgt dus voor betere vindbaarheid.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Wat zijn terminologiebronnen?
     </h3>
     <p>
@@ -43,7 +43,7 @@
       de <a href="https://vtmk.data.momu.be/id.html">Visuele Thesaurus voor Mode en Kostuums</a>.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom zijn terminologiebronnen belangrijk?
     </h3>
     <p>
@@ -53,7 +53,7 @@
       gebruikt kunnen worden.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Wat is het Termennetwerk?
     </h3>
     <p>
@@ -63,7 +63,7 @@
       van Rijn’ in de Nederlandse Thesaurus van Auteursnamen.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Waarom is het Termennetwerk belangrijk?
     </h3>
     <p>
@@ -72,7 +72,7 @@
       enkel te koppelen met het Termennetwerk, niet meer met de individuele bronnen. Dit scheelt tijd en geld.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Wie maakt en beheert het Termennetwerk?
     </h3>
     <p>
@@ -80,7 +80,7 @@
       Erfgoed. De instellingen staan in voor de werking en beschikbaarheid van het Termennetwerk.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Mijn terminologiebron komt niet voor in het Termennetwerk. Wat betekent het als ik mijn bron
       toevoeg?
     </h3>
@@ -95,7 +95,7 @@
       systeem naar het Termennetwerk. Jij bent en blijft de eigenaar.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Aan welke voorwaarden moet mijn bron voldoen om toegevoegd te kunnen worden aan het
       Termennetwerk?
     </h3>
@@ -106,7 +106,7 @@
       beschikbaar zijn en voor lange tijd gebruikt kunnen worden.
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>

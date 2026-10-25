@@ -1,94 +1,81 @@
 <template>
-  <div class="homecover">
-    <h1 class="display-4 text-center home">
-      {{ t('search.subtitle') }}
-    </h1>
-    <div class="hometargets">
-      <router-link
-        :to="{name: 'faq1'}"
-        href="#faq1"
+  <section class="hero">
+    <div class="container hero__inner">
+      <h1 class="hero__title">
+        {{ t('search.subtitle') }}
+      </h1>
+      <p class="hero__lead">
+        {{ t('general.messageFooter') }}
+      </p>
+      <nav
+        class="hero__audience"
+        :aria-label="t('search.audienceLabel')"
       >
-        {{ t('faq.voor_c') }}
-      </router-link>
-      <router-link
-        :to="{name: 'faq2'}"
-        href="#faq2"
-      >
-        {{ t('faq.voor_b') }}
-      </router-link>
-      <router-link
-        :to="{name: 'faq4'}"
-        href="#faq4"
-      >
-        {{ t('faq.voor_r') }}
-      </router-link>
-      <router-link
-        :to="{name: 'faq3'}"
-        href="#faq3"
-      >
-        {{ t('faq.voor_o') }}
-      </router-link>
+        <span class="hero__audience-label">{{ t('search.audienceLabel') }}</span>
+        <router-link :to="{name: 'faq1'}">
+          {{ t('faq.voor_c') }} <ArrowRightIcon class="icon" />
+        </router-link>
+        <router-link :to="{name: 'faq2'}">
+          {{ t('faq.voor_b') }} <ArrowRightIcon class="icon" />
+        </router-link>
+        <router-link :to="{name: 'faq4'}">
+          {{ t('faq.voor_r') }} <ArrowRightIcon class="icon" />
+        </router-link>
+        <router-link :to="{name: 'faq3'}">
+          {{ t('faq.voor_o') }} <ArrowRightIcon class="icon" />
+        </router-link>
+      </nav>
     </div>
-  </div>
-  <div>
-    <ul
-      class="nav nav-tabs mt-5"
-      role="tablist"
-    >
-      <li class="nav-item">
+  </section>
+
+  <div class="container">
+    <div class="panel">
+      <div
+        class="panel__tabs"
+        role="tablist"
+      >
         <router-link
           id="tab-search"
-          exact-active-class="active"
           :to="{name: 'home'}"
-          class="nav-link"
-          href="#search"
+          class="panel__tab"
+          :class="{'is-active': active === 'search'}"
           role="tab"
+          :aria-selected="active === 'search'"
           aria-controls="search"
         >
+          <MagnifyingGlassIcon class="icon" />
           {{ t('search.tabSearch') }}
         </router-link>
-      </li>
-      <li class="nav-item">
         <router-link
           id="tab-lookup"
-          exact-active-class="active"
           :to="{name: 'lookup'}"
-          href="#lookup"
+          class="panel__tab"
+          :class="{'is-active': active === 'lookup'}"
           role="tab"
-          class="nav-link"
+          :aria-selected="active === 'lookup'"
           aria-controls="lookup"
         >
+          <LinkIcon class="icon" />
           {{ t('search.tabLookup') }}
         </router-link>
-      </li>
-    </ul>
-
-    <div class="tab-content">
-      <slot><RouterView /></slot>
+      </div>
+      <div class="panel__body">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
-import {defineComponent} from 'vue';
+import {ArrowRightIcon, LinkIcon, MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
 
-export default defineComponent({
-  name: 'TheHome',
-  setup() {
-    const {t} = useI18n();
-    return {t};
+defineProps({
+  active: {
+    type: String as () => 'search' | 'lookup',
+    default: 'search',
   },
 });
+
+const {t} = useI18n();
 </script>
-
-<style scoped>
-.nav-tabs {
-  font-size: 1.25rem;
-}
-
-a {
-  text-decoration: none;
-  color: var(--vtn-primary);
-}
-</style>

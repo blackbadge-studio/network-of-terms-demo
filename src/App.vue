@@ -1,161 +1,163 @@
 <template>
-  <div class="flex-wrapper">
-    <nav class="navbar navbar-expand-sm vtn-nav">
-      <div class="container">
-        <router-link
-          :to="{name: 'home'}"
-          class="navbar-brand vtn-brand"
-        >
-          <span class="vtn-brand__mark">Vlaams Termennetwerk</span>
-          <span class="vtn-brand__sub">{{ t('general.byline') }}</span>
-        </router-link>
-        <button
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          class="navbar-toggler"
-          data-bs-target="#navbarSupportedContent"
-          data-bs-toggle="collapse"
-          type="button"
-        >
-          <span class="navbar-toggler-icon" />
-        </button>
-        <div
-          id="navbarSupportedContent"
-          class="collapse navbar-collapse"
-        >
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <router-link
-                :to="{name: 'sources'}"
-                class="nav-link"
-              >
-                {{ t('termSources.title') }}
-              </router-link>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                id="faqDropdownMenuLink"
-                class="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-                href="#"
-                role="button"
-                aria-expanded="false"
-              >{{ t('faq.title') }}</a>
-              <ul
-                class="dropdown-menu"
-                aria-labelledby="navbarDropdownMenuLink"
-              >
-                <router-link
-                  :to="{name: 'faq1'}"
-                  class="dropdown-item"
-                >
-                  {{ t('faq.voor_c') }}
-                </router-link>
-                <router-link
-                  :to="{name: 'faq2'}"
-                  class="dropdown-item"
-                >
-                  {{ t('faq.voor_b') }}
-                </router-link>
-                <router-link
-                  :to="{name: 'faq4'}"
-                  class="dropdown-item"
-                >
-                  {{ t('faq.voor_r') }}
-                </router-link>
-                <router-link
-                  :to="{name: 'faq3'}"
-                  class="dropdown-item"
-                >
-                  {{ t('faq.voor_o') }}
-                </router-link>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                :href="apiUrl"
-              >API</a>
-            </li>
-            <LanguageToggle />
-          </ul>
+  <div class="app">
+    <a
+      href="#main"
+      class="skip-link"
+    >{{ t('general.skipToContent') }}</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <div class="site-header__row">
+          <router-link
+            :to="{name: 'home'}"
+            class="brand"
+          >
+            <span
+              class="brand__mark"
+              aria-hidden="true"
+            />
+            <span class="brand__text">
+              <span class="brand__name">Vlaams Termennetwerk</span>
+              <span class="brand__sub">{{ t('general.byline') }}</span>
+            </span>
+          </router-link>
+          <button
+            type="button"
+            class="nav__toggle"
+            aria-controls="site-nav"
+            :aria-expanded="menuOpen"
+            @click="menuOpen = !menuOpen"
+          >
+            <Bars3Icon
+              v-if="!menuOpen"
+              class="icon"
+            />
+            <XMarkIcon
+              v-else
+              class="icon"
+            />
+            {{ menuOpen ? t('general.close') : t('general.menu') }}
+          </button>
         </div>
+        <nav
+          id="site-nav"
+          class="nav"
+          :class="{'nav--open': menuOpen}"
+          :aria-label="t('general.mainNav')"
+        >
+          <router-link
+            :to="{name: 'home'}"
+            class="nav__link"
+            exact-active-class="router-link-active"
+            @click="menuOpen = false"
+          >
+            {{ t('search.tabSearch') }}
+          </router-link>
+          <router-link
+            :to="{name: 'sources'}"
+            class="nav__link"
+            @click="menuOpen = false"
+          >
+            {{ t('termSources.title') }}
+          </router-link>
+          <router-link
+            :to="{name: 'faq'}"
+            class="nav__link"
+            @click="menuOpen = false"
+          >
+            {{ t('faq.title') }}
+          </router-link>
+          <a
+            class="nav__link"
+            :href="apiUrl"
+          >API <ArrowTopRightOnSquareIcon
+            class="icon"
+            style="width: .8em; height: .8em; margin-left: .2em;"
+          /></a>
+          <LanguageToggle />
+        </nav>
       </div>
-    </nav>
+    </header>
 
-    <div class="container px-3 pt-3 pb-md-4 mx-auto">
+    <main
+      id="main"
+      class="app__main"
+      tabindex="-1"
+    >
       <router-view :key="$route.fullPath" />
-    </div>
-    <br>
-    <footer class="vtn-footer">
+    </main>
+
+    <footer class="site-footer">
       <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <p class="vtn-footer__title">
+        <div class="site-footer__inner">
+          <div class="site-footer__brand">
+            <p class="site-footer__title">
               Vlaams Termennetwerk
             </p>
             <p>{{ t('general.messageFooter') }}</p>
+            <span class="site-footer__poc">{{ t('general.poc') }}</span>
           </div>
-          <div class="col-md-4">
-            <p>
-              <router-link :to="{name: 'sources'}">
-                {{ t('termSources.title') }}
-              </router-link>
-            </p>
-            <p>
-              <a :href="apiUrl">GraphQL API</a> <ArrowTopRightOnSquareIcon class="icon" />
-            </p>
-            <p>
-              <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }}</a> <ArrowTopRightOnSquareIcon class="icon" />
-            </p>
+          <div>
+            <h2>{{ t('general.footerService') }}</h2>
+            <ul>
+              <li>
+                <router-link :to="{name: 'sources'}">
+                  {{ t('termSources.title') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'faq'}">
+                  {{ t('faq.title') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'reconciliation'}">
+                  {{ t('faq.reconciliation') }}
+                </router-link>
+              </li>
+              <li>
+                <a :href="apiUrl">GraphQL API <ArrowTopRightOnSquareIcon class="icon" /></a>
+              </li>
+            </ul>
           </div>
-          <div class="col-md-4">
-            <p>
-              <router-link :to="{name: 'privacy'}">
-                {{ t('general.privacy') }}
-              </router-link>
-            </p>
-            <p>
-              <router-link :to="{name: 'contact'}">
-                Contact
-              </router-link>
-            </p>
-            <p class="vtn-footer__poc">
-              {{ t('general.poc') }}
-            </p>
+          <div>
+            <h2>{{ t('general.footerMore') }}</h2>
+            <ul>
+              <li>
+                <router-link :to="{name: 'contact'}">
+                  Contact
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'privacy'}">
+                  {{ t('general.privacy') }}
+                </router-link>
+              </li>
+              <li>
+                <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
+              </li>
+            </ul>
           </div>
+        </div>
+        <div class="site-footer__bottom">
+          <span>© {{ new Date().getFullYear() }} meemoo</span>
+          <span>Vlaams Termennetwerk – {{ t('general.byline') }}</span>
         </div>
       </div>
     </footer>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import {ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRoute} from 'vue-router';
-import {computed, defineComponent} from 'vue';
 import LanguageToggle from './components/LanguageToggle.vue';
-import {ArrowTopRightOnSquareIcon} from '@heroicons/vue/16/solid';
+import {ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon} from '@heroicons/vue/16/solid';
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    LanguageToggle,
-    ArrowTopRightOnSquareIcon,
-  },
-  setup() {
-    const {t, locale} = useI18n();
-    const route = useRoute();
+const {t} = useI18n();
+const route = useRoute();
+const menuOpen = ref(false);
+watch(() => route.fullPath, () => { menuOpen.value = false; });
 
-    const currentLocation = computed(() => {
-      const {...rest} = route;
-      return rest;
-    });
-
-    const apiUrl = (import.meta.env.VITE_GRAPHQL_URL as string).replace(/\/graphql$/, '/graphiql');
-
-    return {t, locale, currentLocation, apiUrl};
-  },
-});
+const apiUrl = (import.meta.env.VITE_GRAPHQL_URL as string).replace(/\/graphql$/, '/graphiql');
 </script>

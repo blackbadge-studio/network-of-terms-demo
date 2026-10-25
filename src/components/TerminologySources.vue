@@ -1,28 +1,27 @@
 <template>
-  <div class="content">
-    <h1 class="display-5 mb-3">
+  <div class="container page">
+    <h1 class="page__title">
       {{ t('termSources.title') }}
     </h1>
-    <p class="mb-5">
+    <p class="page__lead">
       {{ t('termSources.intro') }}
     </p>
     <suspense>
       <TerminologySourcesList />
+      <template #fallback>
+        <div class="sources__list">
+          <div class="skeleton skeleton--block" />
+          <div class="skeleton skeleton--block" />
+          <div class="skeleton skeleton--block" />
+        </div>
+      </template>
     </suspense>
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
 import TerminologySourcesList from './TerminologySourcesList.vue';
 
-export default defineComponent({
-  name: 'TerminologySources',
-  components: {TerminologySourcesList},
-  setup() {
-    const {t} = useI18n();
-    return {t};
-  },
-});
+const {t} = useI18n();
 </script>

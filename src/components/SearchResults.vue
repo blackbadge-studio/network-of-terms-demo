@@ -1,141 +1,106 @@
 <template>
-  <div v-if="q && data">
-    <div
-      v-for="dataset in data.terms"
-      :key="dataset.source.uri"
-      class="container mb-5 mt-5"
-    >
-      <SourceHeader :source="dataset.source" />
-      <template v-if="'terms' in dataset.result">
-        <p class="text-center text-muted">
-          {{ t('search.termsFound', dataset.result.terms.length) }} (in {{ dataset.responseTimeMs }} ms)
-        </p>
-        <TermResult
-          v-for="term in dataset.result.terms"
-          :key="term.uri"
-          :term="term"
-        />
-      </template>
-      <template v-else>
-        <div
-          class="text-center alert alert-danger"
-          role="alert"
-        >
-          <ExclamationCircleIcon class="icon icon-text" />
-          <router-link
-            :to="{name: 'faq1', hash: `#${dataset.result.__typename}`}"
-            class="alert-link"
-          >
-            {{ t('api.' + dataset.result.__typename, t('api.Error')) }}
-          </router-link>
-        </div>
-      </template>
+  <section
+    v-if="q && datasets.length > 0"
+    class="results"
+    aria-live="polite"
+    :aria-busy="isFetching && !data"
+  >
+    <div class="results__bar">
+      <h2 class="results__summary">
+        <template v-if="data">
+          {{ t('search.resultsSummary', totalTerms) }} {{ t('search.inSources', sourcesWithTerms) }}
+        </template>
+        <template v-else>
+          {{ t('search.stateSearching') }}
+        </template>
+      </h2>
+      <span class="results__meta">{{ t('search.resultsFor', {q}) }}</span>
     </div>
-  </div>
+
+    <template v-if="data">
+      <SourceResults
+        v-for="entry in data.terms"
+        :key="entry.source.uri"
+        :entry="entry"
+        :q="q"
+        :languages="languages"
+        :genres="genres"
+      />
+    </template>
+
+    <template v-else-if="isFetching">
+      <article
+        v-for="uri in datasets"
+        :key="uri"
+        class="source"
+      >
+        <SourceHeader
+          :source="pendingSource(uri)"
+          state="loading"
+        />
+        <div class="term-list">
+          <div class="skeleton skeleton--block" />
+          <div class="skeleton skeleton--block" />
+        </div>
+      </article>
+    </template>
+
+    <p
+      v-else-if="error"
+      class="source__notice source__notice--error"
+      role="alert"
+    >
+      <ExclamationCircleIcon class="icon" />
+      {{ t('api.Error') }}
+    </p>
+  </section>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import {computed, PropType, reactive, watch} from 'vue';
 import {useQuery} from 'villus';
 import {useI18n} from 'vue-i18n';
-import {defineComponent, reactive} from 'vue';
-import {TermsQueryResult} from '../query';
-import TermResult from './TermResult.vue';
+import {ExclamationCircleIcon} from '@heroicons/vue/16/solid';
+import {Source, TERMS_QUERY, TermsQueryResult} from '../query';
+import SourceResults from './SourceResults.vue';
 import SourceHeader from './SourceHeader.vue';
-import {ExclamationCircleIcon} from '@heroicons/vue/24/outline';
 import state from '../store';
 
-export default defineComponent({
-  name: 'SearchResults',
-  components: {SourceHeader, TermResult, ExclamationCircleIcon},
-  props: {
-    q: {
-      type: String,
-      default: null,
-    },
-    datasets: {
-      type: Array,
-      default: () => [],
-    },
-    genres: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  setup(props) {
-    const {t, locale} = useI18n();
-
-    if (!props.q || !props.datasets) {
-      return {
-        data: null,
-        t,
-      };
-    }
-
-    const {data, isFetching} = useQuery<TermsQueryResult>({
-      query: `query Terms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID]) {
-                terms (sources: $sources query: $query languages: $languages genres: $genres) {
-                  source {
-                    name
-                    uri
-                    alternateName
-                    description
-                    creators {
-                      name
-                      alternateName
-                    }
-                  }
-                  result {
-                    ... on TranslatedTerms {
-                      terms {
-                        uri
-                        prefLabel { language value }
-                        altLabel { language value }
-                        hiddenLabel { language value }
-                        scopeNote { language value }
-                        seeAlso
-                        broader {
-                          uri
-                          prefLabel { language value }
-                        }
-                        narrower {
-                          uri
-                          prefLabel { language value }
-                        }
-                        related {
-                          uri
-                          prefLabel { language value }
-                        }
-                        exactMatch {
-                          uri
-                          prefLabel { language value }
-                        }
-                      }
-                    }
-                    ... on Error {
-                      __typename
-                      message
-                    }
-                  }
-                  responseTimeMs
-                }
-              }`,
-      variables: {
-        sources: props.datasets,
-        query: props.q,
-        languages: [...new Set([locale.value, 'nl', 'en'])],
-        ...(props.genres.length > 0 ? {genres: props.genres} : {}),
-      },
-      context: {
-        headers: reactive({'Accept-Language': locale}),
-      },
-    });
-
-    return {data, isFetching, t};
-  },
-  watch: {
-    isFetching(newState) {
-      state.loading = newState;
-    },
-  },
+const props = defineProps({
+  q: {type: String, default: ''},
+  datasets: {type: Array as PropType<string[]>, default: () => []},
+  genres: {type: Array as PropType<string[]>, default: () => []},
 });
+
+const {t, locale} = useI18n();
+const languages = [...new Set([locale.value, 'nl', 'en'])];
+
+const {data, isFetching, error} = useQuery<TermsQueryResult>({
+  query: TERMS_QUERY,
+  variables: {
+    sources: props.datasets,
+    query: props.q,
+    languages,
+    ...(props.genres.length > 0 ? {genres: props.genres} : {}),
+  },
+  context: {
+    headers: reactive({'Accept-Language': locale}),
+  },
+  skip: () => !props.q || props.datasets.length === 0,
+});
+
+watch(isFetching, (fetching) => {
+  state.loading = fetching;
+}, {immediate: true});
+
+const totalTerms = computed(() =>
+  data.value?.terms.reduce((sum, entry) => sum + ('terms' in entry.result ? entry.result.terms.length : 0), 0) ?? 0,
+);
+const sourcesWithTerms = computed(() =>
+  data.value?.terms.filter(entry => 'terms' in entry.result && entry.result.terms.length > 0).length ?? 0,
+);
+
+const pendingSource = (uri: string): Source =>
+  state.sources.find(source => source.uri === uri)
+  ?? {__typename: 'Source', uri, name: uri.replace(/^https?:\/\//, ''), alternateName: '', description: '', features: [], genres: []};
 </script>

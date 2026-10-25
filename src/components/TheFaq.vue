@@ -1,9 +1,11 @@
 <template>
-  <h1 class="display-5">
-    {{ t('faq.subtitle') }}
-  </h1>
-  <FaqEn v-if="locale === 'en'" />
-  <FaqNl v-else />
+  <div class="container page">
+    <h1 class="page__title">
+      {{ t('faq.subtitle') }}
+    </h1>
+    <FaqEn v-if="locale === 'en'" />
+    <FaqNl v-else />
+  </div>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
-</style>

@@ -1,31 +1,31 @@
 <template>
-  <dt class="mb-1 mt-3">
-    {{ caption }}
-  </dt>
-  <dd v-if="lookupLink">
-    <router-link
-      v-for="term in terms"
-      :key="term.uri"
-      class="btn btn-outline-secondary mr-2 mb-2"
-      :to="{
-        name: 'lookup', query: {uri: term.uri}
-      }"
-    >
-      {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
-    </router-link>
-  </dd>
-  <dd v-if="!lookupLink">
-    <a
-      v-for="term in terms"
-      :key="term.uri"
-      :href="term.uri"
-      class="btn btn-outline-secondary mr-2 mb-2"
-      target="_blank"
-    >
-      {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
-      <ArrowTopRightOnSquareIcon class="icon" />
-    </a>
-  </dd>
+  <div class="relation">
+    <span class="relation__caption">{{ caption }}</span>
+    <ul class="relation__list">
+      <li
+        v-for="term in terms"
+        :key="term.uri"
+      >
+        <router-link
+          v-if="lookupLink"
+          class="chip"
+          :to="{name: 'lookup', query: {uri: term.uri}}"
+        >
+          {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
+        </router-link>
+        <a
+          v-else
+          class="chip"
+          :href="term.uri"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
+          <ArrowTopRightOnSquareIcon class="icon" />
+        </a>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -34,23 +34,14 @@ import {RelatedTerm, filterLanguageStrings} from '../query';
 import {ArrowTopRightOnSquareIcon} from '@heroicons/vue/16/solid';
 
 defineProps({
-  caption: {
-    type: String,
-    required: true,
-  },
-  terms: {
-    type: Object as PropType<RelatedTerm[]>,
-    required: true,
-  },
-  lookupLink: {
-    type: Boolean,
-    default: true,
-  },
-})
+  caption: {type: String, required: true},
+  terms: {type: Array as PropType<RelatedTerm[]>, required: true},
+  lookupLink: {type: Boolean, default: true},
+});
 </script>
 
 <style scoped>
-.btn {
-  margin-right: .5em;
-}
+.relation__list { list-style: none; }
+.relation__list li { max-width: 100%; }
+.chip { max-width: 100%; }
 </style>

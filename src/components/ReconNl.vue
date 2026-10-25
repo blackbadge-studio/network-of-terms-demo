@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h3 class="display-5">
+    <h3>
       Kan ik het Termennetwerk gebruiken voor <em>reconciliation</em>, bijvoorbeeld in OpenRefine?
     </h3>
     <p>
@@ -20,7 +20,7 @@
       </ul>
     </p>
 
-    <h3 class="display-5">
+    <h3>
       Welke aandachtspunten zijn er bij het gebruik van het Termennetwerk voor reconciliation?
     </h3>
     <ul>
@@ -41,7 +41,7 @@
       <li>bij het reconciliëren in OpenRefine moet je de optie <strong>Reconcile against no particular type</strong> selecteren.</li>
     </ul>
 
-    <h3 class="display-5">
+    <h3>
       Wat betekent het getal tussen haakjes achter elk zoekresultaat?
     </h3>
     <p>
@@ -60,7 +60,7 @@
       <li>en een term met naam ‘borosilicaatglas’ en alternatief label ‘boraxglas’ ook score 55%.</li>
     </ul>
 
-    <h3 class="display-5">
+    <h3>
       Welke terminologiebronnen kan ik gebruiken voor reconciliation?
     </h3>
     <p>
