@@ -24,6 +24,9 @@ export function mountFeedbackWidget() {
   script.dataset.key = key;
   script.dataset.accent = accent;
   script.dataset.label = 'Feedback';
+  // All four UI themes are light, so the widget uses its light theme and the studio mark.
+  script.dataset.theme = 'light';
+  script.dataset.icon = 'bbs';
   script.dataset.version = import.meta.env.VITE_APP_VERSION || __BUILD_TIME__;
   document.body.appendChild(script);
   // Lets the layout keep content clear of the floating button on small screens.
