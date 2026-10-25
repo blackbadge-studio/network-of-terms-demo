@@ -1,12 +1,15 @@
 {
   "general": {
-    "nde": "Dutch Digital Heritage Network",
-    "messageFooter": "The Network of Terms is the result of collaboration within the Digital Heritage Network, in collaboration with CLARIAH, and is managed and maintained by the Cultural Heritage Agency of the Netherlands.",
+    "nde": "meemoo",
+    "messageFooter": "The Flemish Network of Terms is a federated search service on top of terminology sources of Flemish and international source holders. It builds on the Dutch Network of Terms of the Dutch Digital Heritage Network.",
     "privacy": "Privacy statement",
-    "volg": "Follow the Digital Heritage Network via",
+    "volg": "Follow meemoo via",
     "news": "News",
     "status": "Status",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "byline": "a meemoo service",
+    "sourceCode": "Source code",
+    "poc": "Proof of concept — work in progress"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -17,14 +20,14 @@
     "voor_o": "for heritage software developers",
     "voor_r": "for terminology source providers",
     "reconciliation": "Reconciliation",
-    "title_b":"Frequently Asked Questions about the Network of Terms for managers of heritage collections",
-    "title_c":"Frequently asked questions about the Network of Terms for collection administrators at heritage institutions",
-    "title_o":"Frequently Asked Questions about the Network of Terms for heritage software developers",
-    "title_r":"Manual for connecting a terminology source to the the Network of Terms"
+    "title_b": "Frequently Asked Questions about the Network of Terms for managers of heritage collections",
+    "title_c": "Frequently asked questions about the Network of Terms for collection administrators at heritage institutions",
+    "title_o": "Frequently Asked Questions about the Network of Terms for heritage software developers",
+    "title_r": "Manual for connecting a terminology source to the the Network of Terms"
   },
   "search": {
-    "title": "Network of Terms",
-    "subtitle": "Searching shared thesauri, classification systems,     and reference lists",
+    "title": "Vlaams Termennetwerk",
+    "subtitle": "Search terms, persons and places across Flemish and international terminology sources",
     "tabSearch": "Search terms",
     "tabLookup": "Look up term",
     "placeholderUri": "For example: http://vocab.getty.edu/aat/300033618",

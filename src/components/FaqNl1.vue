@@ -167,7 +167,9 @@
       Mocht het probleem dan nog steeds optreden, kun je dat melden bij de
       <router-link
         :to="{name: 'sources'}"
-      >aanbieder van de bron</router-link>.
+      >
+        aanbieder van de bron
+      </router-link>.
     </p>
 
     <a id="TimeoutError" />
@@ -182,7 +184,9 @@
       Probeer je zoekopdracht later opnieuw of neem contact op met de
       <router-link
         :to="{name: 'sources'}"
-      >aanbieder van de bron</router-link>.
+      >
+        aanbieder van de bron
+      </router-link>.
     </p>
 
     <h3 class="display-5">

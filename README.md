@@ -31,3 +31,13 @@ $ npm run dev
 ```
 
 
+
+## Vlaams Termennetwerk (proof of concept)
+
+This branch restyles the demonstrator as the Flemish search interface on top of the
+Black Badge Studio fork of the Network of Terms API, with meemoo's brand tokens
+(`src/index.css`). Runs on Laravel Cloud as a Node app:
+
+- Build: `npm ci --audit false` then `npm run build`
+- Start: `npm start` (serves `dist/` with SPA fallback on `PORT`)
+- Env: `VITE_GRAPHQL_URL` is read at build time; `.env.production` points at the POC API.

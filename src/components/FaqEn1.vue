@@ -154,7 +154,9 @@
       If the problem persists, you can report it to the
       <router-link
         :to="{name: 'sources'}"
-      >source provider</router-link>.
+      >
+        source provider
+      </router-link>.
     </p>
 
     <a id="TimeoutError" />
@@ -169,7 +171,9 @@
       Please retry your search request later or contact the
       <router-link
         :to="{name: 'sources'}"
-      >source provider</router-link>.
+      >
+        source provider
+      </router-link>.
     </p>
 
     <h3 class="display-5">

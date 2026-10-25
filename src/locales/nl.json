@@ -1,12 +1,15 @@
 {
   "general": {
-    "nde": "Netwerk Digitaal Erfgoed",
-    "messageFooter": "Het Termennetwerk is het resultaat van de samenwerking binnen het Netwerk Digitaal Erfgoed, in samenwerking met CLARIAH, en wordt beheerd en onderhouden door de Rijksdienst voor het Cultureel Erfgoed.",
+    "nde": "meemoo",
+    "messageFooter": "Het Vlaams Termennetwerk is een federatieve zoekdienst bovenop terminologiebronnen van Vlaamse en internationale bronhouders. Het bouwt voort op het Nederlandse Termennetwerk van het Netwerk Digitaal Erfgoed.",
     "privacy": "Privacyverklaring",
-    "volg": "Volg het Netwerk Digitaal Erfgoed via",
+    "volg": "Volg meemoo via",
     "news": "Nieuws",
     "status": "Status",
-    "documentation": "Documentatie"
+    "documentation": "Documentatie",
+    "byline": "een dienst van meemoo",
+    "sourceCode": "Broncode",
+    "poc": "Proof of concept — in opbouw"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -17,14 +20,14 @@
     "voor_o": "voor ontwikkelaars van erfgoedsoftware",
     "voor_r": "voor aanbieders van terminologiebronnen",
     "reconciliation": "Reconciliatie",
-    "title_b":"Veelgestelde vragen over het Termennetwerk voor beheerders van terminologiebronnen",
-    "title_c":"Veelgestelde vragen over het Termennetwerk voor collectiebeheerders bij erfgoedinstellingen",
-    "title_o":"Veelgestelde vragen over het Termennetwerk voor ontwikkelaars van erfgoedsoftware",
-    "title_r":"Handleiding terminologiebron aansluiten op het Termennetwerk"
+    "title_b": "Veelgestelde vragen over het Termennetwerk voor beheerders van terminologiebronnen",
+    "title_c": "Veelgestelde vragen over het Termennetwerk voor collectiebeheerders bij erfgoedinstellingen",
+    "title_o": "Veelgestelde vragen over het Termennetwerk voor ontwikkelaars van erfgoedsoftware",
+    "title_r": "Handleiding terminologiebron aansluiten op het Termennetwerk"
   },
   "search": {
-    "title": "Termen­netwerk",
-    "subtitle": "Zoeken in gemeenschappelijke thesauri, classificatiesystemen en referentielijsten",
+    "title": "Vlaams Termennetwerk",
+    "subtitle": "Zoek termen, personen en plaatsen in Vlaamse en internationale terminologiebronnen",
     "tabSearch": "Zoeken met woorden",
     "tabLookup": "Zoeken met URI",
     "placeholderUri": "Bijvoorbeeld: http://vocab.getty.edu/aat/300033618",
@@ -75,7 +78,7 @@
     "selectGenres": "Selecteer een of meer onderwerpen:",
     "matchingSources": "geen overeenkomstige bronnen | {n} overeenkomstige bron | {n} overeenkomstige bronnen",
     "search": "Zoeken in deze bronnen",
-    "intro": "Dit is de lijst van terminologiebronnen die je via het Termennetwerk kunt raadplegen.",
+    "intro": "Dit is de lijst van terminologiebronnen die je via het Vlaams Termennetwerk kunt raadplegen.",
     "availableInLanguages": "Beschikbaar in talen",
     "genres": "Onderwerpen",
     "uri": "URI",

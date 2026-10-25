@@ -89,6 +89,6 @@ export default defineComponent({
 
 a {
   text-decoration: none;
-  color: #021b78;
+  color: var(--vtn-primary);
 }
 </style>
