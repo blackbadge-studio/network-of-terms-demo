@@ -10,8 +10,17 @@
       class="notice notice--info"
       role="note"
     >
-      <span class="status status--info">{{ t('widget.statusBadge') }}</span>
-      <span>{{ t('widget.statusText') }}</span>
+      <span class="status status--ok">{{ locale === 'en' ? 'Beta' : 'Bèta' }}</span>
+      <span v-if="locale === 'en'">
+        The widget is live as a beta. Try it, style it and copy the code in the
+        <router-link :to="{name: 'widget-v2'}">configurator (widget v2)</router-link>;
+        this page documents the attributes, events and custom properties.
+      </span>
+      <span v-else>
+        De widget is beschikbaar als bèta. Probeer, stileer en kopieer hem in de
+        <router-link :to="{name: 'widget-v2'}">configurator (widget v2)</router-link>;
+        deze pagina documenteert de attributen, events en custom properties.
+      </span>
     </p>
     <WidgetEn v-if="locale === 'en'" />
     <WidgetNl v-else />

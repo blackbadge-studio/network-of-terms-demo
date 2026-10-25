@@ -12,6 +12,7 @@ import TerminologySources from './components/TerminologySources.vue';
 import {i18n} from './main';
 import TheMain from './components/TheMain.vue';
 import TheWidget from './components/TheWidget.vue';
+import TheWidgetV2 from './components/TheWidgetV2.vue';
 import SearchForm from './components/SearchForm.vue';
 
 export const router = createRouter({
@@ -70,6 +71,11 @@ export const router = createRouter({
           path: 'widget',
           name: 'widget',
           component: TheWidget,
+        },
+        {
+          path: 'widget-v2',
+          name: 'widget-v2',
+          component: TheWidgetV2,
         },
         {
           path: 'contact',

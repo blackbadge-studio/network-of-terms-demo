@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build && npm run build:widget",
     "lint": "eslint src",
     "fix": "eslint src --fix",
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "build:widget": "vite build --config vite.widget.config.ts"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
