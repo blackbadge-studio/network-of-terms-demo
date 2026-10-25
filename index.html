@@ -21,6 +21,15 @@
   <meta property="twitter:description" content="Zoek termen, personen en plaatsen in Vlaamse en internationale terminologiebronnen.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="author" content="meemoo">
+  <script>
+    // Apply the saved visual theme before first paint (see src/theme.ts).
+    (function () {
+      var themes = ['helder', 'mint', 'netwerk', 'minimaal'];
+      var theme = 'helder';
+      try { var stored = localStorage.getItem('vtn-theme'); if (themes.indexOf(stored) !== -1) { theme = stored; } } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <div id="app"></div>

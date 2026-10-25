@@ -1,6 +1,65 @@
 <template>
   <TheHome active="lookup">
+    <!-- minimaal: one large URI field -->
     <form
+      v-if="isMinimal"
+      id="lookup"
+      class="stage__form"
+      novalidate
+      @submit.prevent="onSubmit"
+    >
+      <label
+        for="uri"
+        class="sr-only"
+      >{{ t('search.labelUri') }}</label>
+      <div class="stage__search">
+        <input
+          id="uri"
+          ref="uriInput"
+          v-model="uri"
+          type="url"
+          class="input"
+          name="uri"
+          autocomplete="off"
+          spellcheck="false"
+          inputmode="url"
+          :placeholder="t('search.placeholderUri')"
+          :aria-invalid="uriError || undefined"
+          aria-describedby="uriHelp"
+          required
+        >
+        <button
+          class="btn btn--primary stage__submit"
+          type="submit"
+          :aria-label="t('search.buttonLookup')"
+        >
+          <MagnifyingGlassIcon class="icon" />
+        </button>
+      </div>
+      <div
+        id="uriHelp"
+        class="stage__row"
+      >
+        <span>{{ t('search.helpUri') }}:</span>
+        <button
+          v-for="example in examples"
+          :key="example.uri"
+          type="button"
+          class="chip"
+          @click="uri = example.uri"
+        >
+          {{ example.label }}
+        </button>
+      </div>
+      <div class="stage__links">
+        <router-link :to="{name: 'home'}">
+          {{ t('search.tabSearch') }}
+        </router-link>
+      </div>
+    </form>
+
+    <form
+      v-else
       id="lookup"
       role="tabpanel"
       aria-labelledby="tab-lookup"
@@ -74,12 +133,14 @@ import {useI18n} from 'vue-i18n';
 import {useRoute, useRouter} from 'vue-router';
 import {MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
 import state from '../store';
+import {useTheme} from '../theme';
 import LookupResult from './LookupResult.vue';
 import TheHome from './TheHome.vue';
 
 const {t, tm} = useI18n();
 const router = useRouter();
 const route = useRoute();
+const {isMinimal} = useTheme();
 
 const submittedUri = (route.query.uri as string) ?? '';
 const uri = ref(submittedUri);

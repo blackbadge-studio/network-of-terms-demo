@@ -10,6 +10,10 @@
     >{{ holder }}</span>
     <span class="source__state">
       <span
+        v-if="responseTimeMs && state !== 'loading'"
+        class="source__time"
+      >{{ t('search.responseTime', {ms: responseTimeMs}) }}</span>
+      <span
         class="status"
         :class="`status--${state}`"
         :title="responseTimeMs ? t('search.responseTime', {ms: responseTimeMs}) : undefined"

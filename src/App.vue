@@ -81,6 +81,7 @@
             style="width: .8em; height: .8em; margin-left: .2em;"
           /></a>
           <LanguageToggle />
+          <ThemeSwitcher />
         </nav>
       </div>
     </header>
@@ -93,7 +94,33 @@
       <router-view :key="$route.fullPath" />
     </main>
 
-    <footer class="site-footer">
+    <footer
+      v-if="isMinimal"
+      class="site-footer site-footer--mini"
+    >
+      <div class="container site-footer__mini">
+        <span>Vlaams Termennetwerk · {{ t('general.byline') }}</span>
+        <nav :aria-label="t('general.footerMore')">
+          <router-link :to="{name: 'sources'}">
+            {{ t('termSources.title') }}
+          </router-link>
+          <router-link :to="{name: 'faq'}">
+            {{ t('faq.title') }}
+          </router-link>
+          <router-link :to="{name: 'privacy'}">
+            {{ t('general.privacy') }}
+          </router-link>
+          <router-link :to="{name: 'contact'}">
+            Contact
+          </router-link>
+        </nav>
+        <span class="site-footer__poc">{{ t('general.poc') }}</span>
+      </div>
+    </footer>
+    <footer
+      v-else
+      class="site-footer"
+    >
       <div class="container">
         <div class="site-footer__inner">
           <div class="site-footer__brand">
@@ -164,11 +191,14 @@ import {ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRoute} from 'vue-router';
 import LanguageToggle from './components/LanguageToggle.vue';
+import ThemeSwitcher from './components/ThemeSwitcher.vue';
+import {useTheme} from './theme';
 import {ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon} from '@heroicons/vue/16/solid';
 
 const {t} = useI18n();
 const route = useRoute();
 const menuOpen = ref(false);
+const {isMinimal} = useTheme();
 watch(() => route.fullPath, () => { menuOpen.value = false; });
 
 const apiUrl = (import.meta.env.VITE_GRAPHQL_URL as string).replace(/\/graphql$/, '/graphiql');

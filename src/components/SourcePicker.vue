@@ -188,9 +188,11 @@ import state from '../store';
 import {SOURCES_QUERY, Source, holderName} from '../query';
 import SourcePickerOption from './SourcePickerOption.vue';
 
-defineProps({
+const props = defineProps({
   invalid: {type: Boolean, default: false},
   describedBy: {type: String, default: undefined},
+  /** Open the panel as soon as the picker mounts (minimaal theme: "Bronnen kiezen"). */
+  autoOpen: {type: Boolean, default: false},
 });
 
 const {t, locale} = useI18n();
@@ -314,7 +316,12 @@ function onDocumentPointerDown(event: PointerEvent) {
   }
 }
 
-onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown));
+onMounted(() => {
+  document.addEventListener('pointerdown', onDocumentPointerDown);
+  if (props.autoOpen) {
+    show();
+  }
+});
 onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPointerDown));
 
 function toggle(uri: string) {

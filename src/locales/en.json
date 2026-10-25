@@ -106,7 +106,25 @@
     "uri": "URI",
     "copied": "Copied",
     "responseTime": "{ms} ms",
-    "typeBadge": "Type"
+    "typeBadge": "Type",
+    "mintHeadline": "Find the right term, in one go, across all sources",
+    "netwerkHeadline": "Search the network of Flemish terminology sources",
+    "netwerkOneLiner": "Every query goes live to the source holder; there is no central database.",
+    "sourceStatus": "Source status",
+    "sourcesAvailable": "{n} of {total} sources available",
+    "statusUnknown": "Status unknown",
+    "responseTime_": "Response time",
+    "noSearchYet": "Response times appear after a search.",
+    "typesLabel": "Type",
+    "typeAll": "All",
+    "typesNotLive": "The type filter follows once the API supports it.",
+    "chooseSources": "Choose sources ({n})",
+    "hideSources": "Hide sources",
+    "closeDetail": "Close details",
+    "detailTitle": "Details",
+    "openDetail": "Show details of {label}",
+    "jumpToSource": "Go to source",
+    "inSource": "in {source}"
   },
   "language": {
     "label": "Taal"
@@ -142,7 +160,12 @@
     "PERSON": "Person",
     "ORGANIZATION": "Organisation",
     "PLACE": "Place",
-    "EVENT": "Event"
+    "EVENT": "Event",
+    "CONCEPT_pl": "Concepts",
+    "PERSON_pl": "People",
+    "ORGANIZATION_pl": "Organisations",
+    "PLACE_pl": "Places",
+    "EVENT_pl": "Events"
   },
   "widget": {
     "title": "Search widget",
@@ -150,5 +173,25 @@
     "statusBadge": "In preparation",
     "statusText": "The widget does not exist yet. This page describes the intended integration; the snippet and attributes are the planned API.",
     "navLabel": "Search widget"
+  },
+  "theme": {
+    "label": "Appearance",
+    "current": "Current appearance: {name}",
+    "helder": {
+      "name": "Clear",
+      "description": "Institutional: white, teal and a clear hierarchy."
+    },
+    "mint": {
+      "name": "Mint",
+      "description": "Playful: soft gradients, rounded shapes and a network illustration."
+    },
+    "netwerk": {
+      "name": "Network",
+      "description": "Data: thin lines, a grid and live source status next to the search."
+    },
+    "minimaal": {
+      "name": "Minimal",
+      "description": "Search-engine style: one large search field, compact results."
+    }
   }
 }

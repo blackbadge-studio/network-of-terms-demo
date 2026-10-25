@@ -16,11 +16,22 @@
       v-if="state === 'ok'"
       class="term-list"
     >
-      <TermResult
-        v-for="term in terms"
-        :key="term.uri"
-        :term="term"
-      />
+      <template v-if="compact">
+        <TermRow
+          v-for="term in terms"
+          :key="term.uri"
+          :term="term"
+          :active="term.uri === selectedUri"
+          @select="$emit('select', {term, source: entry.source})"
+        />
+      </template>
+      <template v-else>
+        <TermResult
+          v-for="term in terms"
+          :key="term.uri"
+          :term="term"
+        />
+      </template>
     </div>
 
     <p
@@ -57,16 +68,21 @@ import {computed, PropType, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useQuery} from 'villus';
 import {ExclamationTriangleIcon} from '@heroicons/vue/16/solid';
-import {TERMS_QUERY, TermsEntry, TermsQueryResult, sourceState} from '../query';
+import {Source, TERMS_QUERY, Term, TermsEntry, TermsQueryResult, sourceState} from '../query';
 import SourceHeader from './SourceHeader.vue';
 import TermResult from './TermResult.vue';
+import TermRow from './TermRow.vue';
+import store from '../store';
 
 const props = defineProps({
   entry: {type: Object as PropType<TermsEntry>, required: true},
   q: {type: String, required: true},
   languages: {type: Array as PropType<string[]>, required: true},
   genres: {type: Array as PropType<string[]>, default: () => []},
+  compact: {type: Boolean, default: false},
+  selectedUri: {type: String, default: undefined},
 });
+defineEmits<{select: [payload: {term: Term, source: Source}]}>();
 
 const {t, locale} = useI18n();
 
@@ -89,6 +105,7 @@ async function retry() {
   const {data} = await execute();
   if (data?.terms?.[0]) {
     override.value = data.terms[0];
+    store.responseTimes = {...store.responseTimes, [props.entry.source.uri]: data.terms[0].responseTimeMs};
   }
 }
 

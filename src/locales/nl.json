@@ -106,7 +106,25 @@
     "uri": "URI",
     "copied": "Gekopieerd",
     "responseTime": "{ms} ms",
-    "typeBadge": "Type"
+    "typeBadge": "Type",
+    "mintHeadline": "Vind de juiste term, in één keer, in alle bronnen",
+    "netwerkHeadline": "Zoek in het netwerk van Vlaamse terminologiebronnen",
+    "netwerkOneLiner": "Elke zoekvraag gaat live naar de bronhouder; er is geen centrale databank.",
+    "sourceStatus": "Bronstatus",
+    "sourcesAvailable": "{n} van {total} bronnen beschikbaar",
+    "statusUnknown": "Status onbekend",
+    "responseTime_": "Reactietijd",
+    "noSearchYet": "Reactietijden verschijnen na een zoekopdracht.",
+    "typesLabel": "Type",
+    "typeAll": "Alles",
+    "typesNotLive": "Typefilter volgt zodra de API dit ondersteunt.",
+    "chooseSources": "Bronnen kiezen ({n})",
+    "hideSources": "Bronnen verbergen",
+    "closeDetail": "Details sluiten",
+    "detailTitle": "Details",
+    "openDetail": "Toon details van {label}",
+    "jumpToSource": "Ga naar bron",
+    "inSource": "in {source}"
   },
   "language": {
     "label": "Language"
@@ -142,7 +160,12 @@
     "PERSON": "Persoon",
     "ORGANIZATION": "Organisatie",
     "PLACE": "Plaats",
-    "EVENT": "Gebeurtenis"
+    "EVENT": "Gebeurtenis",
+    "CONCEPT_pl": "Concepten",
+    "PERSON_pl": "Personen",
+    "ORGANIZATION_pl": "Organisaties",
+    "PLACE_pl": "Plaatsen",
+    "EVENT_pl": "Gebeurtenissen"
   },
   "widget": {
     "title": "Zoekwidget",
@@ -150,5 +173,25 @@
     "statusBadge": "In voorbereiding",
     "statusText": "De widget bestaat nog niet. Deze pagina beschrijft de geplande integratie; de snippet en attributen zijn de geplande API.",
     "navLabel": "Zoekwidget"
+  },
+  "theme": {
+    "label": "Weergave",
+    "current": "Huidige weergave: {name}",
+    "helder": {
+      "name": "Helder",
+      "description": "Institutioneel: wit, teal en een duidelijke hiërarchie."
+    },
+    "mint": {
+      "name": "Mint",
+      "description": "Speels: zachte verlopen, ronde vormen en een netwerkillustratie."
+    },
+    "netwerk": {
+      "name": "Netwerk",
+      "description": "Data: dunne lijnen, raster en live bronstatus naast het zoekveld."
+    },
+    "minimaal": {
+      "name": "Minimaal",
+      "description": "Zoekmachine-stijl: één groot zoekveld, compacte resultaten."
+    }
   }
 }
