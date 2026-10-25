@@ -66,6 +66,13 @@
           >
             {{ t('faq.title') }}
           </router-link>
+          <router-link
+            :to="{name: 'widget'}"
+            class="nav__link"
+            @click="menuOpen = false"
+          >
+            {{ t('widget.navLabel') }}
+          </router-link>
           <a
             class="nav__link"
             :href="apiUrl"
@@ -112,6 +119,11 @@
               <li>
                 <router-link :to="{name: 'reconciliation'}">
                   {{ t('faq.reconciliation') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'widget'}">
+                  {{ t('widget.navLabel') }}
                 </router-link>
               </li>
               <li>

@@ -271,6 +271,15 @@
       The Network of Terms is managed and maintained by the Cultural Heritage Agency of the Netherlands.<br>
       We can be reached at <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
     </p>
+    <a id="widget" />
+    <h3>
+      Can I embed the search in my own website or management system?
+    </h3>
+    <p>
+      Yes, that is what the <router-link :to="{name: 'widget'}">
+        search widget
+      </router-link> is for: one script tag that renders the federated search on another site and returns the chosen term as an event. The widget is in preparation; the page describes the planned integration.
+    </p>
   </div>
 </template>
 

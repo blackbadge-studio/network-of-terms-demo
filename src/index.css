@@ -465,6 +465,14 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .content img { border: 1px solid var(--vtn-border); border-radius: var(--r-md); }
 .content strong { font-weight: 700; }
 .content em { font-style: italic; }
+.notice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); padding: var(--s-3) var(--s-4); border-radius: var(--r-md); border: 1px solid var(--vtn-border); background: var(--vtn-surface-2); font-size: var(--fs-sm); color: var(--vtn-text-2); max-width: var(--prose); margin-bottom: var(--s-6); }
+.notice--info { background: var(--vtn-info-bg); border-color: #b9dfea; }
+.table-wrap { overflow-x: auto; max-width: 100%; }
+.content table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+.content th, .content td { text-align: left; vertical-align: top; padding: var(--s-2) var(--s-3); border-bottom: 1px solid var(--vtn-border); }
+.content th { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--vtn-muted); background: var(--vtn-surface-2); }
+.content td code, .content p code, .content li code { background: var(--vtn-surface-2); padding: 0.05em 0.35em; border-radius: 4px; white-space: nowrap; }
+.content td:last-child { white-space: nowrap; }
 .faq-index { display: grid; gap: var(--s-3); list-style: none; padding: 0; }
 .faq-index a { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-4); border: 1px solid var(--vtn-border); border-radius: var(--r-md); text-decoration: none; font-weight: 600; color: var(--vtn-text); }
 .faq-index a:hover { border-color: var(--vtn-primary); background: var(--vtn-mint-light); }

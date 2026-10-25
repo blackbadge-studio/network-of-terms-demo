@@ -143,5 +143,12 @@
     "ORGANIZATION": "Organisation",
     "PLACE": "Place",
     "EVENT": "Event"
+  },
+  "widget": {
+    "title": "Search widget",
+    "lead": "Embed the federated search of the Flemish Network of Terms on your own website or in your collection management system.",
+    "statusBadge": "In preparation",
+    "statusText": "The widget does not exist yet. This page describes the intended integration; the snippet and attributes are the planned API.",
+    "navLabel": "Search widget"
   }
 }

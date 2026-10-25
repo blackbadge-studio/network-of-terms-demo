@@ -11,6 +11,7 @@ import LookupForm from './components/LookupForm.vue';
 import TerminologySources from './components/TerminologySources.vue';
 import {i18n} from './main';
 import TheMain from './components/TheMain.vue';
+import TheWidget from './components/TheWidget.vue';
 import SearchForm from './components/SearchForm.vue';
 
 export const router = createRouter({
@@ -64,6 +65,11 @@ export const router = createRouter({
           path: 'reconciliation',
           name: 'reconciliation',
           component: ReconciliationService,
+        },
+        {
+          path: 'widget',
+          name: 'widget',
+          component: TheWidget,
         },
         {
           path: 'contact',

@@ -284,6 +284,15 @@
       Het Termennetwerk wordt beheerd en onderhouden door de Rijksdienst voor het Cultureel Erfgoed.<br>
       Wij zijn bereikbaar via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
     </p>
+    <a id="widget" />
+    <h3>
+      Kan ik de zoekfunctie inbedden in mijn eigen website of beheersysteem?
+    </h3>
+    <p>
+      Ja, dat is de bedoeling van de <router-link :to="{name: 'widget'}">
+        zoekwidget
+      </router-link>: één script-tag die de federatieve zoekfunctie op een andere site toont en de gekozen term als gebeurtenis teruggeeft. De widget is in voorbereiding; de pagina beschrijft de geplande integratie.
+    </p>
   </div>
 </template>
 
