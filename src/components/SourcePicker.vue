@@ -180,7 +180,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue';
+import {computed, nextTick, onBeforeUnmount, onMounted, PropType, reactive, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useQuery} from 'villus';
 import {ChevronDownIcon, XMarkIcon} from '@heroicons/vue/16/solid';
@@ -195,6 +195,21 @@ const props = defineProps({
   autoOpen: {type: Boolean, default: false},
   /** Render the panel in the page flow instead of as a popover (minimaal stage). */
   inline: {type: Boolean, default: false},
+  /** Optional own selection (v-model); without it the picker edits the shared search selection. */
+  modelValue: {type: Array as PropType<string[]>, default: undefined},
+});
+const emit = defineEmits<{'update:modelValue': [value: string[]]}>();
+
+// The selection lives either in the caller's v-model or in the shared store.
+const selection = computed<string[]>({
+  get: () => props.modelValue ?? state.selectedDatasets,
+  set: (value) => {
+    if (props.modelValue !== undefined) {
+      emit('update:modelValue', value);
+    } else {
+      state.selectedDatasets = value;
+    }
+  },
 });
 
 const {t, locale} = useI18n();
@@ -217,8 +232,8 @@ watch(data, (newData) => {
 const sources = computed(() =>
   [...state.sources].sort((a, b) => a.name.localeCompare(b.name, locale.value)),
 );
-const selected = computed(() => state.selectedDatasets);
-const selectedSet = computed(() => new Set(state.selectedDatasets));
+const selected = computed(() => selection.value);
+const selectedSet = computed(() => new Set(selection.value));
 const selectedSources = computed(() =>
   sources.value.filter(source => selectedSet.value.has(source.uri)),
 );
@@ -329,24 +344,24 @@ onMounted(() => {
 onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPointerDown));
 
 function toggle(uri: string) {
-  state.selectedDatasets = selectedSet.value.has(uri)
-    ? state.selectedDatasets.filter(item => item !== uri)
-    : [...state.selectedDatasets, uri];
+  selection.value = selectedSet.value.has(uri)
+    ? selection.value.filter(item => item !== uri)
+    : [...selection.value, uri];
 }
 
 function setGroup(group: Group, checked: boolean) {
   const uris = group.sources.map(source => source.uri);
-  state.selectedDatasets = checked
-    ? [...new Set([...state.selectedDatasets, ...uris])]
-    : state.selectedDatasets.filter(uri => !uris.includes(uri));
+  selection.value = checked
+    ? [...new Set([...selection.value, ...uris])]
+    : selection.value.filter(uri => !uris.includes(uri));
 }
 
 function selectAll() {
-  state.selectedDatasets = sources.value.map(source => source.uri);
+  selection.value = sources.value.map(source => source.uri);
 }
 
 function selectNone() {
-  state.selectedDatasets = [];
+  selection.value = [];
 }
 
 function toggleGroup(uri: string) {

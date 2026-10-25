@@ -16,7 +16,8 @@
     "mainNav": "Hoofdnavigatie",
     "footerService": "Deze dienst",
     "footerMore": "Meer",
-    "externalLink": "opent in een nieuw venster"
+    "externalLink": "opent in een nieuw venster",
+    "footerDevelopers": "Voor ontwikkelaars"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -189,5 +190,113 @@
       "name": "Minimaal",
       "description": "Zoekmachine-stijl: één groot zoekveld, compacte resultaten."
     }
+  },
+  "simulator": {
+    "title": "Simulator",
+    "navLabel": "Simulator",
+    "lead": "Voer gesimuleerde zoeksessies uit tegen de GraphQL API en verzamel testdata over reactietijden en bronstatus.",
+    "banner": "Alleen voor test- en demodoeleinden. Elk verzoek draagt de header X-Simulation: 1; er worden geen persoonsgegevens gelogd.",
+    "gateTitle": "Ontwikkelaarstool",
+    "gateText": "Voer de toegangssleutel in om de simulator te openen.",
+    "gateLabel": "Toegangssleutel",
+    "gateButton": "Openen",
+    "gateError": "Onjuiste sleutel.",
+    "settings": "Instellingen",
+    "terms": "Zoektermen",
+    "termsHint": "Eén zoekterm per regel.",
+    "presets": "Voorbeeldsets",
+    "preset": {
+      "vlaams": "Vlaamse erfgoedtermen",
+      "personen": "Personen",
+      "plaatsen": "Plaatsen",
+      "materialen": "Materialen",
+      "catalogus": "Willekeurig uit catalogus"
+    },
+    "sources": "Bronnen",
+    "types": "Types",
+    "typesHint": "Wordt alleen meegestuurd als de API het argument types ondersteunt.",
+    "lang": "Taal",
+    "tempo": "Tempo",
+    "tempoPreset": {
+      "rustig": "Rustig",
+      "normaal": "Normaal",
+      "snel": "Snel",
+      "stress": "Stress",
+      "custom": "Aangepast"
+    },
+    "tempoDesc": {
+      "rustig": "1 per 5 s · 1 tegelijk",
+      "normaal": "1 per 2 s · 2 tegelijk",
+      "snel": "1 per 0,5 s · 4 tegelijk",
+      "stress": "geen pauze · 8 tegelijk",
+      "custom": "zelf instellen"
+    },
+    "intervalMs": "Interval (ms)",
+    "concurrency": "Gelijktijdig",
+    "jitterMs": "Jitter (ms)",
+    "size": "Omvang",
+    "sizeCount": "Aantal zoekopdrachten",
+    "sizeDuration": "Duur (minuten)",
+    "stopOnError": "Stop na eerste fout",
+    "limit": "Max. resultaten per bron",
+    "surprise": "Verras me",
+    "reset": "Reset",
+    "start": "Start sessie",
+    "stop": "Stop",
+    "running": "Sessie loopt",
+    "tabLog": "Logboek",
+    "tabResults": "Resultaten",
+    "tabHistory": "Geschiedenis",
+    "progress": "{done} van {total} verzoeken",
+    "progressTime": "{done} verzoeken · {elapsed}",
+    "status": {
+      "pending": "wachtend",
+      "running": "bezig",
+      "done": "klaar",
+      "timeout": "time-out",
+      "error": "fout",
+      "aborted": "afgebroken"
+    },
+    "emptyLog": "Nog geen verzoeken. Stel de sessie in en klik op Start sessie.",
+    "noRun": "Nog geen resultaten. Start een sessie of kies een run uit de geschiedenis.",
+    "kpi": {
+      "requests": "Verzoeken",
+      "results": "Resultaten",
+      "timeouts": "Time-outs",
+      "errors": "Fouten",
+      "duration": "Duur"
+    },
+    "perSource": "Per bron",
+    "colSource": "Bron",
+    "colRequests": "Verzoeken",
+    "colSuccess": "Succes",
+    "colAvgResults": "Gem. resultaten",
+    "colP50": "p50 (ms)",
+    "colP95": "p95 (ms)",
+    "colMax": "max (ms)",
+    "sparkline": "Reactietijd per verzoek, gemeten in de browser (ms)",
+    "sparklineMax": "max {ms} ms",
+    "capabilities": "De API accepteerde: ",
+    "capTypes": "types",
+    "capLimit": "limit",
+    "capNone": "geen van de optionele argumenten (types, limit)",
+    "exportNdjson": "Exporteer NDJSON",
+    "exportCsv": "Exporteer CSV",
+    "historyEmpty": "Nog geen runs bewaard.",
+    "historyHint": "De laatste {n} runs blijven in deze browser bewaard; alleen de recentste bewaren hun losse verzoeken.",
+    "deleteRun": "Verwijder",
+    "deleteAll": "Alles wissen",
+    "view": "Bekijk",
+    "current": "huidige",
+    "stoppedBy": {
+      "finished": "voltooid",
+      "user": "gestopt",
+      "error": "gestopt na fout"
+    },
+    "validation": {
+      "terms": "Geef minstens één zoekterm op.",
+      "sources": "Kies minstens één bron."
+    },
+    "runName": "Run {date} · {tempo} · {n}"
   }
 }

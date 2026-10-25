@@ -16,7 +16,8 @@
     "mainNav": "Main navigation",
     "footerService": "This service",
     "footerMore": "More",
-    "externalLink": "opens in a new window"
+    "externalLink": "opens in a new window",
+    "footerDevelopers": "For developers"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -189,5 +190,113 @@
       "name": "Minimal",
       "description": "Search-engine style: one large search field, compact results."
     }
+  },
+  "simulator": {
+    "title": "Simulator",
+    "navLabel": "Simulator",
+    "lead": "Run simulated search sessions against the GraphQL API and collect test data on response times and source status.",
+    "banner": "For test and demo purposes only. Every request carries the header X-Simulation: 1; no personal data is logged.",
+    "gateTitle": "Developer tool",
+    "gateText": "Enter the access key to open the simulator.",
+    "gateLabel": "Access key",
+    "gateButton": "Open",
+    "gateError": "Wrong key.",
+    "settings": "Settings",
+    "terms": "Search terms",
+    "termsHint": "One term per line.",
+    "presets": "Example sets",
+    "preset": {
+      "vlaams": "Flemish heritage terms",
+      "personen": "People",
+      "plaatsen": "Places",
+      "materialen": "Materials",
+      "catalogus": "Random from catalogue"
+    },
+    "sources": "Sources",
+    "types": "Types",
+    "typesHint": "Only sent when the API supports the types argument.",
+    "lang": "Language",
+    "tempo": "Tempo",
+    "tempoPreset": {
+      "rustig": "Calm",
+      "normaal": "Normal",
+      "snel": "Fast",
+      "stress": "Stress",
+      "custom": "Custom"
+    },
+    "tempoDesc": {
+      "rustig": "1 per 5 s · 1 at a time",
+      "normaal": "1 per 2 s · 2 at a time",
+      "snel": "1 per 0.5 s · 4 at a time",
+      "stress": "no pause · 8 at a time",
+      "custom": "set yourself"
+    },
+    "intervalMs": "Interval (ms)",
+    "concurrency": "Concurrency",
+    "jitterMs": "Jitter (ms)",
+    "size": "Size",
+    "sizeCount": "Number of searches",
+    "sizeDuration": "Duration (minutes)",
+    "stopOnError": "Stop after first error",
+    "limit": "Max results per source",
+    "surprise": "Surprise me",
+    "reset": "Reset",
+    "start": "Start session",
+    "stop": "Stop",
+    "running": "Session running",
+    "tabLog": "Log",
+    "tabResults": "Results",
+    "tabHistory": "History",
+    "progress": "{done} of {total} requests",
+    "progressTime": "{done} requests · {elapsed}",
+    "status": {
+      "pending": "pending",
+      "running": "running",
+      "done": "done",
+      "timeout": "timeout",
+      "error": "error",
+      "aborted": "aborted"
+    },
+    "emptyLog": "No requests yet. Configure the session and click Start session.",
+    "noRun": "No results yet. Start a session or pick a run from the history.",
+    "kpi": {
+      "requests": "Requests",
+      "results": "Results",
+      "timeouts": "Timeouts",
+      "errors": "Errors",
+      "duration": "Duration"
+    },
+    "perSource": "Per source",
+    "colSource": "Source",
+    "colRequests": "Requests",
+    "colSuccess": "Success",
+    "colAvgResults": "Avg results",
+    "colP50": "p50 (ms)",
+    "colP95": "p95 (ms)",
+    "colMax": "max (ms)",
+    "sparkline": "Response time per request, measured in the browser (ms)",
+    "sparklineMax": "max {ms} ms",
+    "capabilities": "The API accepted: ",
+    "capTypes": "types",
+    "capLimit": "limit",
+    "capNone": "neither optional argument (types, limit)",
+    "exportNdjson": "Export NDJSON",
+    "exportCsv": "Export CSV",
+    "historyEmpty": "No runs saved yet.",
+    "historyHint": "The last {n} runs stay in this browser; only the most recent keep their individual requests.",
+    "deleteRun": "Delete",
+    "deleteAll": "Clear all",
+    "view": "View",
+    "current": "current",
+    "stoppedBy": {
+      "finished": "finished",
+      "user": "stopped",
+      "error": "stopped after error"
+    },
+    "validation": {
+      "terms": "Enter at least one search term.",
+      "sources": "Choose at least one source."
+    },
+    "runName": "Run {date} · {tempo} · {n}"
   }
 }

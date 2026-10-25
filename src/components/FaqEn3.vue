@@ -280,6 +280,15 @@
         search widget
       </router-link> is for: one script tag that renders the federated search on another site and returns the chosen term as an event. The widget is in preparation; the page describes the planned integration.
     </p>
+    <a id="simulator" />
+    <h3>
+      How do I test the performance and stability of the API?
+    </h3>
+    <p>
+      With the <router-link :to="{name: 'simulator'}">
+        simulator
+      </router-link>, a developer tool that runs simulated search sessions against the API and collects response times and status per source. Simulated traffic carries the header <code>X-Simulation: 1</code>.
+    </p>
   </div>
 </template>
 

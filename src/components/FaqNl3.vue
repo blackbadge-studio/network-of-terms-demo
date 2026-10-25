@@ -293,6 +293,15 @@
         zoekwidget
       </router-link>: één script-tag die de federatieve zoekfunctie op een andere site toont en de gekozen term als gebeurtenis teruggeeft. De widget is in voorbereiding; de pagina beschrijft de geplande integratie.
     </p>
+    <a id="simulator" />
+    <h3>
+      Hoe test ik de prestaties en stabiliteit van de API?
+    </h3>
+    <p>
+      Met de <router-link :to="{name: 'simulator'}">
+        simulator
+      </router-link>, een ontwikkelaarstool die gesimuleerde zoeksessies tegen de API uitvoert en reactietijden en bronstatus per bron verzamelt. Gesimuleerd verkeer draagt de header <code>X-Simulation: 1</code>.
+    </p>
   </div>
 </template>
 

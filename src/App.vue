@@ -148,8 +148,21 @@
                   {{ t('widget.navLabel') }}
                 </router-link>
               </li>
+            </ul>
+          </div>
+          <div>
+            <h2>{{ t('general.footerDevelopers') }}</h2>
+            <ul>
               <li>
                 <a :href="apiUrl">GraphQL API <ArrowTopRightOnSquareIcon class="icon" /></a>
+              </li>
+              <li>
+                <router-link :to="{name: 'simulator'}">
+                  {{ t('simulator.navLabel') }}
+                </router-link>
+              </li>
+              <li>
+                <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
               </li>
             </ul>
           </div>
@@ -165,9 +178,6 @@
                 <router-link :to="{name: 'privacy'}">
                   {{ t('general.privacy') }}
                 </router-link>
-              </li>
-              <li>
-                <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
               </li>
             </ul>
           </div>
