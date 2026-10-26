@@ -815,3 +815,97 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
   .sim-acc__toggle .sim-acc__id, .sim-acc__toggle .sim-acc__reqs { grid-column: 2 / -1; }
   .sim-acc__toggle .sim-log__ms { display: none; }
 }
+
+/* ---------- Bladeren: hierarchical tree (bestek F5.1) ---------- */
+.browse__controls { margin: 0 0 1.5rem; max-width: 34rem; }
+.browse__select { width: 100%; }
+.browse {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) { .browse { grid-template-columns: 1fr; } }
+.browse__tree {
+  background: var(--vtn-surface);
+  border: 1px solid var(--vtn-border);
+  border-radius: 16px;
+  padding: 1.25rem 1rem 1rem;
+}
+.browse__heading { font-size: 1.05rem; margin: 0 0 .25rem .25rem; }
+.browse__detail { position: sticky; top: 1rem; }
+.tree__hint { margin: 0 0 .75rem .25rem; font-size: .8rem; color: var(--vtn-muted); }
+.tree, .tree__group { list-style: none; margin: 0; padding: 0; }
+.tree__group:not(.tree__group--root) {
+  margin-left: 1.05rem;
+  padding-left: .6rem;
+  border-left: 1px dashed var(--vtn-border-strong);
+}
+.tree__item { margin: 0; }
+.tree__item:focus { outline: none; }
+.tree__item:focus-visible > .tree__row {
+  outline: 2px solid var(--vtn-primary);
+  outline-offset: 1px;
+}
+.tree__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .25rem .4rem;
+  min-height: 2.1rem;
+  padding: .1rem .35rem;
+  border-radius: 8px;
+}
+.tree__row:hover { background: var(--vtn-surface-2); }
+.tree__item.is-selected > .tree__row,
+.tree__row.is-selected { background: var(--vtn-mint-light); box-shadow: inset 3px 0 0 var(--vtn-primary); }
+.tree__toggle, .tree__leaf {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vtn-text-2);
+  cursor: pointer;
+  padding: 0;
+}
+.tree__toggle:hover { background: var(--vtn-surface-3); color: var(--vtn-text); }
+.tree__leaf { cursor: default; }
+.tree__leaf::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--vtn-border-strong); }
+.tree__chev { width: 1rem; height: 1rem; transition: transform .15s ease; }
+.tree__chev.is-open { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .tree__chev { transition: none; } }
+.tree__label {
+  border: 0;
+  background: none;
+  padding: .2rem .1rem;
+  font: inherit;
+  font-size: .95rem;
+  color: var(--vtn-text);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.tree__label:hover { color: var(--vtn-primary-strong); text-decoration: underline; text-underline-offset: 3px; }
+.tree__also {
+  font-size: .78rem;
+  color: var(--vtn-muted);
+  padding: .05rem .5rem;
+  border-radius: 999px;
+  background: var(--vtn-surface-2);
+}
+.tree__also a { color: var(--vtn-primary-strong); }
+.tree__loading, .tree__empty, .tree__error {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin: .2rem 0 .4rem 2.2rem;
+  font-size: .85rem;
+  color: var(--vtn-muted);
+}
+.tree__error { color: var(--vtn-warn); }
+.tree__error .btn { margin-left: .25rem; }

@@ -122,6 +122,13 @@
               <MagnifyingGlassIcon class="icon" />
               {{ t('search.buttonSearch') }}
             </router-link>
+            <router-link
+              v-if="source.features?.some(feature => feature.type === 'HIERARCHY')"
+              :to="{name: 'browse', query: {bron: source.uri}}"
+              class="btn btn--secondary btn--sm"
+            >
+              {{ t('browse.navLabel') }}
+            </router-link>
             <a
               v-if="source.mainEntityOfPage"
               :href="source.mainEntityOfPage"

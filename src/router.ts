@@ -14,6 +14,7 @@ import TheWidget from './components/TheWidget.vue';
 import TheSimulator from './components/TheSimulator.vue';
 import TheWidgetV2 from './components/TheWidgetV2.vue';
 import SearchForm from './components/SearchForm.vue';
+import TheBrowse from './components/TheBrowse.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -61,6 +62,11 @@ export const router = createRouter({
           path: 'sources',
           name: 'sources',
           component: TerminologySources,
+        },
+        {
+          path: 'bladeren',
+          name: 'browse',
+          component: TheBrowse,
         },
         {
           path: 'widget',

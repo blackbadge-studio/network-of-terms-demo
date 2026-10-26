@@ -372,5 +372,23 @@
       "failures": "Gefaalde en foutieve scenario's",
       "none": "geen"
     }
+  },
+  "browse": {
+    "navLabel": "Bladeren",
+    "title": "Bladeren in een thesaurus",
+    "lead": "Verken de structuur van een terminologiebron: begin bij de topbegrippen en klap niveau per niveau open. Zo vind je een term ook als je de juiste benaming nog niet kent.",
+    "source": "Terminologiebron",
+    "choose": "Kies een bron met een hiërarchie",
+    "noSources": "Er zijn nog geen bronnen met een hiërarchie beschikbaar.",
+    "notAvailable": "Bladeren is nog niet beschikbaar in deze versie van de API.",
+    "pathNote": "Dit begrip staat op meer dan één plaats in de hiërarchie; we tonen het eerste pad.",
+    "tree": "Hiërarchie van {source}",
+    "top": "Topbegrippen",
+    "alsoUnder": "ook onder:",
+    "detailEmpty": "Kies een begrip in de boom om de details te zien.",
+    "empty": "Geen nauwere begrippen.",
+    "keyboardHint": "Pijltjes: rechts opent, links sluit, omhoog/omlaag beweegt, Enter toont het begrip.",
+    "loading": "Laden…",
+    "retry": "Opnieuw proberen"
   }
 }

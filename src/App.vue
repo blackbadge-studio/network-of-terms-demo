@@ -67,6 +67,13 @@
             {{ t('faq.title') }}
           </router-link>
           <router-link
+            :to="{name: 'browse'}"
+            class="nav__link"
+            @click="menuOpen = false"
+          >
+            {{ t('browse.navLabel') }}
+          </router-link>
+          <router-link
             :to="{name: 'widget'}"
             class="nav__link"
             @click="menuOpen = false"

@@ -372,5 +372,23 @@
       "failures": "Failed and errored scenarios",
       "none": "none"
     }
+  },
+  "browse": {
+    "navLabel": "Browse",
+    "title": "Browse a thesaurus",
+    "lead": "Explore the structure of a terminology source: start at the top concepts and expand level by level, to find a term even when you don't know its exact name.",
+    "source": "Terminology source",
+    "choose": "Choose a source with a hierarchy",
+    "noSources": "No sources with a hierarchy are available yet.",
+    "notAvailable": "Browsing is not available in this version of the API.",
+    "pathNote": "This concept sits at more than one place in the hierarchy; the first path is shown.",
+    "tree": "Hierarchy of {source}",
+    "top": "Top concepts",
+    "alsoUnder": "also under:",
+    "detailEmpty": "Choose a concept in the tree to see its details.",
+    "empty": "No narrower concepts.",
+    "keyboardHint": "Arrows: right opens, left closes, up/down moves, Enter shows the concept.",
+    "loading": "Loading…",
+    "retry": "Try again"
   }
 }
