@@ -36,16 +36,29 @@
         class="sim-log__row"
       >
         <span class="sim-log__id">#{{ record.id }}</span>
-        <span class="sim-log__term">{{ record.term }}</span>
+        <span
+          class="sim-log__term"
+          :title="record.term"
+        >
+          <span class="chip chip--tag sim-log__kind">{{ t(`simulator.kind.${record.kind ?? 'search'}`) }}</span>
+          {{ record.term }}
+        </span>
         <span
           class="status"
           :class="statusClass(record.status)"
         >{{ t(`simulator.status.${record.status}`) }}</span>
-        <span class="sim-log__ms">{{ record.ms !== null ? `${record.ms} ms` : '' }}</span>
+        <span class="sim-log__ms">
+          {{ record.ms !== null ? `${record.ms} ms` : '' }}
+          <span
+            v-if="record.cached === true"
+            class="chip chip--tag"
+            :title="t('simulator.cached')"
+          >{{ t('simulator.cached') }}</span>
+        </span>
         <span class="sim-log__sources">
           <span
-            v-for="entry in record.perSource"
-            :key="entry.source"
+            v-for="(entry, index) in record.perSource"
+            :key="entry.source + index"
             class="status"
             :class="`status--${entry.status}`"
             :title="`${entry.name}: ${entry.apiMs ?? '–'} ms`"

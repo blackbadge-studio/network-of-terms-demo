@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   VITE_FEEDBACK_WIDGET_KEY?: string;
   /** Override for the feedback widget script URL (defaults to app.blackbadge.studio). */
   VITE_FEEDBACK_WIDGET_SCRIPT?: string;
+  /** Base URL serving /tests/scenarios.json and /tests/runner.mjs; defaults to the API base. */
+  VITE_TESTS_BASE?: string;
   /** Version reported to the feedback widget; falls back to the build time. */
   VITE_APP_VERSION?: string;
 }

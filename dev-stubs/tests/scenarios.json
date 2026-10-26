@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "generated": "2026-10-26T01:30:00Z",
+  "areas": [
+    {"id": "federatief", "title": "Federatief zoeken"},
+    {"id": "meerdere-bronnen", "title": "Meerdere bronnen"},
+    {"id": "timeouts", "title": "Time-outs"},
+    {"id": "uri-lookup", "title": "URI-lookup"},
+    {"id": "termdetail", "title": "Termdetail"},
+    {"id": "hierarchie", "title": "Hiërarchie"},
+    {"id": "bronstatus", "title": "Bronstatus"},
+    {"id": "performantie", "title": "Performantie"},
+    {"id": "api-documentatie", "title": "API-documentatie"},
+    {"id": "integratie", "title": "Integratie"},
+    {"id": "vlaamse-instantie", "title": "Vlaamse instantie"},
+    {"id": "gebruik-vlaanderen", "title": "Gebruik in Vlaanderen"},
+    {"id": "nl-functionaliteit", "title": "NL-functionaliteit behouden"}
+  ],
+  "scenarios": [
+    {"id": "API-01", "area": "federatief", "title": "Eén zoekopdracht levert resultaten per bron", "requirement": ["F2.1"], "kind": "graphql", "query": "{ terms(sources:[\"https://data.rkd.nl/rkdartists\",\"https://www.wikidata.org#vlaanderen-personen\"], query:\"Rubens\", languages:[nl]) { source { uri } result { __typename ... on TranslatedTerms { terms { uri } } } responseTimeMs } }", "expect": {"path": "data.terms.length", "equals": 2}},
+    {"id": "API-02", "area": "meerdere-bronnen", "title": "Vier bronnen in één aanroep", "requirement": ["F2.2"], "kind": "graphql", "query": "{ terms(sources:[\"https://data.rkd.nl/rkdartists\",\"https://www.wikidata.org#vlaanderen-personen\",\"https://www.wikidata.org#vlaanderen-plaatsen\",\"https://stad.gent/id/conceptscheme/concept\"], query:\"Gent\", languages:[nl]) { source { uri } result { __typename } } }", "expect": {"path": "data.terms.length", "equals": 4}},
+    {"id": "API-03", "area": "timeouts", "title": "Te korte timeoutMs geeft TimeoutError, geen crash", "requirement": ["F2.5"], "kind": "graphql", "query": "{ terms(sources:[\"https://www.wikidata.org#vlaanderen-personen\"], query:\"Rubens\", languages:[nl], timeoutMs: 1) { result { __typename } } }", "expect": {"path": "data.terms.0.result.__typename", "equals": "TimeoutError"}},
+    {"id": "API-04", "area": "uri-lookup", "title": "Lookup van een Wikidata-URI geeft een PLACE", "requirement": ["F3.1"], "kind": "graphql", "query": "{ lookup(uris:[\"http://www.wikidata.org/entity/Q1296\"], languages:[nl]) { result { __typename ... on TranslatedTerm { resultType } } } }", "expect": {"path": "data.lookup.0.result.resultType", "equals": "PLACE"}},
+    {"id": "API-05", "area": "uri-lookup", "title": "Onbekende URI geeft NotFoundError", "requirement": ["F3.2"], "kind": "graphql", "query": "{ lookup(uris:[\"https://example.org/term/1\"], languages:[nl]) { source { __typename } result { __typename } } }", "expect": {"path": "data.lookup.0.result.__typename", "equals": "NotFoundError"}},
+    {"id": "API-06", "area": "termdetail", "title": "Termdetail bevat prefLabel en resultType", "requirement": ["F4.1"], "kind": "graphql", "query": "{ lookup(uris:[\"http://www.wikidata.org/entity/Q5599\"], languages:[nl]) { result { ... on TranslatedTerm { prefLabel { value } resultType } } } }", "expect": {"path": "data.lookup.0.result.resultType", "equals": "PERSON"}},
+    {"id": "API-07", "area": "hierarchie", "title": "Gentse thesaurusterm heeft broader/narrower velden", "requirement": ["F4.3"], "kind": "graphql", "query": "{ lookup(uris:[\"https://stad.gent/id/concept/570024444\"], languages:[nl]) { result { __typename ... on TranslatedTerm { broader { uri } narrower { uri } } } } }", "expect": {"path": "data.lookup.0.result.__typename", "equals": "TranslatedTerm"}},
+    {"id": "API-08", "area": "bronstatus", "title": "Sources-query geeft status per bron", "requirement": ["F5.1"], "kind": "graphql", "query": "{ sources { uri status { isAvailable } } }", "expect": {"path": "data.sources.length", "min": 1}},
+    {"id": "API-09", "area": "performantie", "title": "Zoekopdracht over RKD binnen 5 s", "requirement": ["NF1.1"], "kind": "graphql", "query": "{ terms(sources:[\"https://data.rkd.nl/rkdartists\"], query:\"Ensor\", languages:[nl]) { responseTimeMs } }", "expect": {"path": "data.terms.0.responseTimeMs", "max": 5000}},
+    {"id": "API-10", "area": "api-documentatie", "title": "GraphiQL is bereikbaar", "requirement": ["F6.1"], "kind": "http", "method": "GET", "path": "/graphiql", "expect": {"status": 200}},
+    {"id": "API-11", "area": "integratie", "title": "Health endpoint geeft versie", "requirement": ["F6.2"], "kind": "http", "method": "GET", "path": "/health", "expect": {"status": 200, "jsonPath": "version"}},
+    {"id": "API-12", "area": "vlaamse-instantie", "title": "Catalogus bevat Vlaamse bronnen (Gent, VTMK)", "requirement": ["V1.1"], "kind": "graphql", "query": "{ sources { uri } }", "expect": {"path": "data.sources", "containsUri": "https://stad.gent/id/conceptscheme/concept"}},
+    {"id": "API-13", "area": "gebruik-vlaanderen", "title": "Nederlandstalige labels voor Vlaamse plaats", "requirement": ["V2.1"], "kind": "graphql", "query": "{ lookup(uris:[\"http://www.wikidata.org/entity/Q12994\"], languages:[nl]) { result { ... on TranslatedTerm { prefLabel { language value } } } } }", "expect": {"path": "data.lookup.0.result.prefLabel.0.language", "equals": "nl"}},
+    {"id": "API-14", "area": "nl-functionaliteit", "title": "Getty AAT (NL-bron) blijft bevraagbaar", "requirement": ["V3.1"], "kind": "graphql", "query": "{ terms(sources:[\"http://vocab.getty.edu/aat\"], query:\"schilderij\", languages:[nl]) { result { __typename } } }", "expect": {"path": "data.terms.0.result.__typename", "equals": "TranslatedTerms"}}
+  ]
+}

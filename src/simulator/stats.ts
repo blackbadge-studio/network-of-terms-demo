@@ -12,12 +12,16 @@ export const percentile = (values: number[], p: number): number | null => {
 export const summarize = (records: RequestRecord[], durationMs: number): RunSummary => ({
   requests: records.filter(record => record.status !== 'pending' && record.status !== 'running').length,
   results: records.reduce((sum, record) => sum + record.perSource.reduce((s, entry) => s + entry.results, 0), 0),
-  timeouts: records.reduce((sum, record) => sum + record.perSource.filter(entry => entry.status === 'timeout').length, 0),
+  timeouts: records.reduce((sum, record) => sum + (record.perSource.length > 0
+    ? record.perSource.filter(entry => entry.status === 'timeout').length
+    : (record.status === 'timeout' ? 1 : 0)), 0),
   // Per-source errors, plus requests that failed before any source answered.
   errors: records.reduce((sum, record) => sum + (record.perSource.length > 0
     ? record.perSource.filter(entry => entry.status === 'error').length
     : (record.status === 'error' ? 1 : 0)), 0),
   aborted: records.filter(record => record.status === 'aborted').length,
+  cacheHits: records.filter(record => record.cached === true).length,
+  cacheKnown: records.filter(record => record.cached !== null && record.cached !== undefined).length,
   durationMs: Math.round(durationMs),
 });
 
@@ -34,21 +38,27 @@ export interface SourceStats {
   p50: number | null;
   p95: number | null;
   max: number | null;
+  /** Result-type distribution across all results of this source. */
+  types: Record<string, number>;
 }
 
 export const perSourceStats = (records: RequestRecord[]): SourceStats[] => {
-  const map = new Map<string, {name: string, times: number[], ok: number, none: number, timeouts: number, errors: number, results: number, requests: number}>();
+  const map = new Map<string, {name: string, times: number[], ok: number, none: number, timeouts: number, errors: number, results: number, requests: number, types: Record<string, number>}>();
   for (const record of records) {
     for (const entry of record.perSource) {
-      let bucket = map.get(entry.source);
+      const key = entry.source || entry.name;
+      let bucket = map.get(key);
       if (!bucket) {
-        bucket = {name: entry.name, times: [], ok: 0, none: 0, timeouts: 0, errors: 0, results: 0, requests: 0};
-        map.set(entry.source, bucket);
+        bucket = {name: entry.name, times: [], ok: 0, none: 0, timeouts: 0, errors: 0, results: 0, requests: 0, types: {}};
+        map.set(key, bucket);
       }
       bucket.requests++;
       bucket.results += entry.results;
       if (entry.apiMs !== null) {
         bucket.times.push(entry.apiMs);
+      }
+      for (const [type, count] of Object.entries(entry.types ?? {})) {
+        bucket.types[type] = (bucket.types[type] ?? 0) + count;
       }
       if (entry.status === 'ok') bucket.ok++;
       else if (entry.status === 'none') bucket.none++;
@@ -69,7 +79,28 @@ export const perSourceStats = (records: RequestRecord[]): SourceStats[] => {
     p50: percentile(bucket.times, 50),
     p95: percentile(bucket.times, 95),
     max: bucket.times.length > 0 ? Math.max(...bucket.times) : null,
+    types: bucket.types,
   })).sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export interface CompareRow {
+  source: string;
+  name: string;
+  a: SourceStats | null;
+  b: SourceStats | null;
+}
+
+/** Side-by-side per-source stats of two runs, keyed by source. */
+export const compareRuns = (runA: SimRun, runB: SimRun): CompareRow[] => {
+  const statsA = new Map(perSourceStats(runA.records).map(row => [row.source, row]));
+  const statsB = new Map(perSourceStats(runB.records).map(row => [row.source, row]));
+  const keys = [...new Set([...statsA.keys(), ...statsB.keys()])];
+  return keys.map(source => ({
+    source,
+    name: (statsA.get(source) ?? statsB.get(source))!.name,
+    a: statsA.get(source) ?? null,
+    b: statsB.get(source) ?? null,
+  })).sort((x, y) => x.name.localeCompare(y.name));
 };
 
 export const exportLines = (run: SimRun): ExportLine[] => {
@@ -77,12 +108,13 @@ export const exportLines = (run: SimRun): ExportLine[] => {
   const types = run.settings.types.join(',');
   const lines: ExportLine[] = [];
   for (const record of run.records) {
+    const base = {t: record.t, kind: record.kind ?? 'search', term: record.term, ms: record.ms, cached: record.cached ?? null, lang, types};
     if (record.perSource.length === 0) {
-      lines.push({t: record.t, term: record.term, source: '', ms: record.ms, apiMs: null, status: record.status, results: 0, lang, types});
+      lines.push({...base, source: '', apiMs: null, status: record.status, results: 0});
       continue;
     }
     for (const entry of record.perSource) {
-      lines.push({t: record.t, term: record.term, source: entry.source, ms: record.ms, apiMs: entry.apiMs, status: entry.status, results: entry.results, lang, types});
+      lines.push({...base, source: entry.source, apiMs: entry.apiMs, status: entry.status, results: entry.results});
     }
   }
   return lines;
@@ -97,8 +129,8 @@ const csvCell = (value: unknown) => {
 
 export const toCsv = (run: SimRun) => {
   const lines = exportLines(run);
-  const header = ['t', 'term', 'source', 'ms', 'apiMs', 'status', 'results', 'lang', 'types'];
-  return [header.join(','), ...lines.map(line => header.map(key => csvCell(line[key as keyof ExportLine])).join(','))].join('\n') + '\n';
+  const header: (keyof ExportLine)[] = ['t', 'kind', 'term', 'source', 'ms', 'apiMs', 'status', 'results', 'cached', 'lang', 'types'];
+  return [header.join(','), ...lines.map(line => header.map(key => csvCell(line[key])).join(','))].join('\n') + '\n';
 };
 
 export const downloadText = (filename: string, text: string, type: string) => {

@@ -3,6 +3,9 @@
 export type TempoId = 'rustig' | 'normaal' | 'snel' | 'stress' | 'custom';
 export type SizeMode = 'count' | 'duration';
 export type TermPresetId = 'vlaams' | 'personen' | 'plaatsen' | 'materialen' | 'catalogus';
+export type UriPresetId = 'gemengd' | 'wikidata' | 'vlaams';
+export type Workload = 'search' | 'lookup' | 'mixed';
+export type CacheMode = 'live' | 'allowed';
 
 export interface Tempo {
   /** Pause between starting two requests, in ms. */
@@ -27,10 +30,45 @@ export const TERM_PRESETS: Record<Exclude<TermPresetId, 'catalogus'>, string[]> 
   materialen: ['hout', 'zilver', 'kant', 'wol', 'linnen', 'zijde', 'brons', 'ivoor', 'glas', 'keramiek', 'papier', 'perkament', 'leer', 'steen', 'goud'],
 };
 
+/** Lookup presets: known URIs from Wikidata, the Gent thesaurus, VTMK and RKD, plus one unknown and one without a source. */
+export const URI_PRESETS: Record<UriPresetId, string[]> = {
+  gemengd: [
+    'http://www.wikidata.org/entity/Q1296',
+    'http://www.wikidata.org/entity/Q5599',
+    'https://stad.gent/id/concept/570024444',
+    'https://vtmk.data.momu.be/id/106054',
+    'https://data.rkd.nl/artists/381372',
+    'http://vocab.getty.edu/aat/300033618',
+    'http://www.wikidata.org/entity/Q999999999999',
+    'https://example.org/term/1',
+  ],
+  wikidata: [
+    'http://www.wikidata.org/entity/Q1296',
+    'http://www.wikidata.org/entity/Q5599',
+    'http://www.wikidata.org/entity/Q239',
+    'http://www.wikidata.org/entity/Q12994',
+    'http://www.wikidata.org/entity/Q12892',
+  ],
+  vlaams: [
+    'https://stad.gent/id/concept/570024444',
+    'https://stad.gent/id/concept/470009125',
+    'https://stad.gent/id/concept/570013165',
+    'https://vtmk.data.momu.be/id/106054',
+    'https://vtmk.data.momu.be/id/105840',
+    'https://vtmk.data.momu.be/id/106349',
+    'https://data.rkd.nl/artists/381372',
+    'https://data.rkd.nl/artists/461827',
+  ],
+};
+
 export const RESULT_TYPES = ['CONCEPT', 'PERSON', 'ORGANIZATION', 'PLACE', 'EVENT'] as const;
 
 export interface SimSettings {
+  workload: Workload;
   terms: string[];
+  uris: string[];
+  /** Share of search requests in a mixed workload, 0–100. */
+  mixRatio: number;
   sources: string[];
   types: string[];
   lang: 'nl' | 'en';
@@ -41,10 +79,16 @@ export interface SimSettings {
   minutes: number;
   stopOnError: boolean;
   limit: number;
+  /** Request timeout in ms (client abort and, when supported, the API's timeoutMs). */
+  timeoutMs: number;
+  cacheMode: CacheMode;
 }
 
 export const DEFAULT_SETTINGS: SimSettings = {
+  workload: 'search',
   terms: TERM_PRESETS.vlaams,
+  uris: URI_PRESETS.gemengd,
+  mixRatio: 70,
   sources: [],
   types: [],
   lang: 'nl',
@@ -55,8 +99,11 @@ export const DEFAULT_SETTINGS: SimSettings = {
   minutes: 2,
   stopOnError: false,
   limit: 20,
+  timeoutMs: 10000,
+  cacheMode: 'live',
 };
 
+export type RequestKind = 'search' | 'lookup';
 export type RequestStatus = 'pending' | 'running' | 'done' | 'timeout' | 'error' | 'aborted';
 export type SourceStatus = 'ok' | 'none' | 'timeout' | 'error';
 
@@ -67,16 +114,22 @@ export interface SourceRecord {
   results: number;
   /** Response time reported by the API for this source, ms. */
   apiMs: number | null;
+  /** Count of results per resultType (CONCEPT, PERSON, …). */
+  types: Record<string, number>;
 }
 
 export interface RequestRecord {
   id: number;
   /** ISO start time. */
   t: string;
+  kind: RequestKind;
+  /** The search term or the looked-up URI. */
   term: string;
   status: RequestStatus;
   /** Wall-clock duration measured in the browser, ms. */
   ms: number | null;
+  /** Whether the API served the response from its cache; null when it does not say. */
+  cached: boolean | null;
   message?: string;
   perSource: SourceRecord[];
 }
@@ -87,7 +140,17 @@ export interface RunSummary {
   timeouts: number;
   errors: number;
   aborted: number;
+  /** Requests the API flagged as cache hits, and how many carried a flag at all. */
+  cacheHits: number;
+  cacheKnown: number;
   durationMs: number;
+}
+
+export interface ApiCapabilities {
+  types: boolean;
+  limit: boolean;
+  timeoutMs: boolean;
+  resultType: boolean;
 }
 
 export interface SimRun {
@@ -96,8 +159,8 @@ export interface SimRun {
   startedAt: string;
   finishedAt: string | null;
   settings: SimSettings;
-  /** Which optional `terms` arguments the API accepted during this run. */
-  capabilities: {types: boolean; limit: boolean};
+  /** Which optional arguments and fields the API accepted during this run. */
+  capabilities: ApiCapabilities;
   records: RequestRecord[];
   summary: RunSummary;
   stoppedBy: 'finished' | 'user' | 'error' | null;
@@ -106,12 +169,14 @@ export interface SimRun {
 /** One export line per request × source. */
 export interface ExportLine {
   t: string;
+  kind: RequestKind;
   term: string;
   source: string;
   ms: number | null;
   apiMs: number | null;
   status: string;
   results: number;
+  cached: boolean | null;
   lang: string;
   types: string;
 }

@@ -266,7 +266,8 @@
       "results": "Results",
       "timeouts": "Timeouts",
       "errors": "Errors",
-      "duration": "Duration"
+      "duration": "Duration",
+      "cacheRate": "Cache hits"
     },
     "perSource": "Per source",
     "colSource": "Source",
@@ -299,6 +300,77 @@
       "terms": "Enter at least one search term.",
       "sources": "Choose at least one source."
     },
-    "runName": "Run {date} · {tempo} · {n}"
+    "runName": "Run {date} · {tempo} · {n}",
+    "workload": "Workload",
+    "workloads": {
+      "search": "Search",
+      "lookup": "Lookup",
+      "mixed": "Mixed"
+    },
+    "mixRatio": "Share of searches",
+    "uris": "URIs",
+    "urisHint": "One URI per line. Unknown URIs and URIs without a source belong in the set.",
+    "uriPresets": "Example sets (URI)",
+    "uriPreset": {
+      "gemengd": "Mixed (known + unknown)",
+      "wikidata": "Wikidata",
+      "vlaams": "Ghent, VTMK and RKD"
+    },
+    "timeoutMs": "Timeout per request (ms)",
+    "cacheMode": "Cache",
+    "cacheModeLabel": "cache",
+    "cacheLive": "Live (no-cache)",
+    "cacheAllowed": "Cache allowed",
+    "cached": "cache hit",
+    "cacheUnknown": "unknown",
+    "colTypes": "Types",
+    "kind": {
+      "search": "search",
+      "lookup": "lookup"
+    },
+    "compare": "Compare",
+    "compareHint": "Tick two runs to compare them.",
+    "compareTitle": "Comparison of two runs",
+    "clearCompare": "Close comparison",
+    "date": "Date",
+    "retry": "Retry",
+    "acceptance": {
+      "tab": "Acceptance tests",
+      "loading": "Loading scenarios…",
+      "loadError": "Scenarios could not be loaded from {url}",
+      "runAll": "Run all",
+      "runArea": "Run area",
+      "runOne": "Run",
+      "status": {
+        "pending": "pending",
+        "running": "running",
+        "pass": "passed",
+        "fail": "failed",
+        "error": "error",
+        "skipped": "skipped"
+      },
+      "total": "Total time",
+      "totalLabel": "Total",
+      "checks": "Checks",
+      "expected": "Expected",
+      "actual": "Actual",
+      "exportJson": "Export JSON",
+      "exportMd": "Export report (Markdown)",
+      "history": "Previous test rounds",
+      "historyHint": "The last {n} test rounds stay in this browser.",
+      "testplanNote": "The test plan and scenarios live in the repository: docs/vlaams-termennetwerk/testplan.md.",
+      "testplanLink": "Open the test plan on GitHub",
+      "scenarios": "{n} scenarios",
+      "generated": "generated",
+      "apiVersion": "API version",
+      "noResults": "No test round run yet.",
+      "reportTitle": "Test report Vlaams Termennetwerk",
+      "apiUrl": "API",
+      "uiUrl": "UI",
+      "scope": "Scope",
+      "area": "Area",
+      "failures": "Failed and errored scenarios",
+      "none": "none"
+    }
   }
 }

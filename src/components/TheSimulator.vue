@@ -142,6 +142,14 @@
             <SimResults :run="viewRun" />
           </div>
           <div
+            v-show="tab === 'acceptance'"
+            id="sim-panel-acceptance"
+            role="tabpanel"
+            aria-labelledby="sim-tab-acceptance"
+          >
+            <SimAcceptance v-if="acceptanceOpened" />
+          </div>
+          <div
             v-show="tab === 'history'"
             id="sim-panel-history"
             role="tabpanel"
@@ -170,6 +178,7 @@ import SimSettings from './simulator/SimSettings.vue';
 import SimLog from './simulator/SimLog.vue';
 import SimResults from './simulator/SimResults.vue';
 import SimHistory from './simulator/SimHistory.vue';
+import SimAcceptance from './simulator/SimAcceptance.vue';
 import {createRunner, Runner} from '../simulator/runner';
 import {summarize} from '../simulator/stats';
 import {isUnlocked, loadRuns, loadSettings, saveRuns, saveSettings, unlock} from '../simulator/storage';
@@ -208,7 +217,10 @@ const currentRun = ref<SimRun | null>(null);
 const running = ref(false);
 const progress = ref({done: 0, total: null as number | null, elapsedMs: 0});
 const validationError = ref('');
-const tab = ref<'log' | 'results' | 'history'>('log');
+const tab = ref<'log' | 'results' | 'history' | 'acceptance'>('log');
+// The acceptance tab fetches scenarios from the API; mount it on first open only.
+const acceptanceOpened = ref(false);
+watch(tab, (value) => { if (value === 'acceptance') acceptanceOpened.value = true; });
 const viewRunId = ref<string | null>(null);
 const viewRun = computed(() => runs.value.find(run => run.id === viewRunId.value) ?? currentRun.value);
 let runner: Runner | null = null;
@@ -218,6 +230,7 @@ const tabs = computed(() => [
   {id: 'log' as const, label: 'simulator.tabLog', count: currentRun.value?.records.length},
   {id: 'results' as const, label: 'simulator.tabResults', count: undefined},
   {id: 'history' as const, label: 'simulator.tabHistory', count: runs.value.length},
+  {id: 'acceptance' as const, label: 'simulator.acceptance.tab', count: undefined},
 ]);
 
 function start() {
@@ -242,7 +255,7 @@ function start() {
     startedAt: date.toISOString(),
     finishedAt: null,
     settings: snapshot,
-    capabilities: {types: false, limit: false},
+    capabilities: {types: false, limit: false, timeoutMs: false, resultType: false},
     records: [],
     summary: summarize([], 0),
     stoppedBy: null,

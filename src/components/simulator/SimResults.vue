@@ -121,6 +121,9 @@
             >
               {{ t('simulator.colMax') }}
             </th>
+            <th scope="col">
+              {{ t('simulator.colTypes') }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -157,6 +160,22 @@
             <td class="num">
               {{ row.max ?? '–' }}
             </td>
+            <td>
+              <span
+                v-if="Object.keys(row.types).length === 0"
+                class="field__hint"
+              >–</span>
+              <span
+                v-else
+                class="chip-row sim-results__types"
+              >
+                <span
+                  v-for="[type, count] in typeEntries(row.types)"
+                  :key="type"
+                  class="chip chip--tag"
+                >{{ t(`types.${type}`, type) }} {{ count }}</span>
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -164,12 +183,14 @@
 
     <p class="field__hint">
       {{ t('simulator.capabilities') }}
-      <template v-if="run.capabilities.types || run.capabilities.limit">
-        {{ [run.capabilities.types ? t('simulator.capTypes') : null, run.capabilities.limit ? t('simulator.capLimit') : null].filter(Boolean).join(', ') }}
+      <template v-if="acceptedArguments.length > 0">
+        {{ acceptedArguments.join(', ') }}
       </template>
       <template v-else>
         {{ t('simulator.capNone') }}
       </template>
+      · {{ t('simulator.cacheModeLabel') }}: {{ t(run.settings.cacheMode === 'allowed' ? 'simulator.cacheAllowed' : 'simulator.cacheLive') }}
+      · {{ t('simulator.timeoutMs') }}: {{ run.settings.timeoutMs }}
     </p>
   </div>
   <p
@@ -194,20 +215,30 @@ const props = defineProps({
 const {t} = useI18n();
 const stats = computed(() => props.run ? perSourceStats(props.run.records) : []);
 const spark = computed(() => sparklinePath(props.run?.records ?? [], 600, 80));
+const typeEntries = (types: Record<string, number>) => Object.entries(types).sort((a, b) => b[1] - a[1]);
 const formatDuration = (ms: number) => {
   const seconds = Math.round(ms / 1000);
   return seconds >= 60 ? `${Math.floor(seconds / 60)} min ${seconds % 60} s` : `${seconds} s`;
 };
+const acceptedArguments = computed(() => {
+  const caps = props.run?.capabilities;
+  if (!caps) {
+    return [];
+  }
+  return [caps.types ? 'types' : null, caps.limit ? 'limit' : null, caps.timeoutMs ? 'timeoutMs' : null, caps.resultType ? 'resultType' : null].filter(Boolean) as string[];
+});
 const kpis = computed(() => {
   const summary = props.run?.summary;
   if (!summary) {
     return [];
   }
+  const cacheRate = summary.cacheKnown > 0 ? `${Math.round((summary.cacheHits / summary.cacheKnown) * 100)}%` : t('simulator.cacheUnknown');
   return [
     {key: 'requests', value: String(summary.requests), cls: ''},
     {key: 'results', value: String(summary.results), cls: ''},
     {key: 'timeouts', value: String(summary.timeouts), cls: summary.timeouts > 0 ? 'kpi--warn' : ''},
     {key: 'errors', value: String(summary.errors), cls: summary.errors > 0 ? 'kpi--danger' : ''},
+    {key: 'cacheRate', value: cacheRate, cls: ''},
     {key: 'duration', value: formatDuration(summary.durationMs), cls: ''},
   ];
 });

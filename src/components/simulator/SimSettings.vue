@@ -5,39 +5,116 @@
   >
     <fieldset :disabled="disabled">
       <div class="field">
-        <span class="field__label">{{ t('simulator.presets') }}</span>
-        <div class="chip-row">
-          <button
-            v-for="preset in presetIds"
-            :key="preset"
-            type="button"
-            class="chip"
-            @click="applyPreset(preset)"
+        <span class="field__label">{{ t('simulator.workload') }}</span>
+        <div
+          class="chip-row"
+          role="radiogroup"
+          :aria-label="t('simulator.workload')"
+        >
+          <label
+            v-for="workload in workloads"
+            :key="workload"
+            class="chip chip-toggle"
           >
-            {{ t(`simulator.preset.${preset}`) }}
-          </button>
+            <input
+              type="radio"
+              name="sim-workload"
+              :value="workload"
+              :checked="model.workload === workload"
+              @change="update('workload', workload)"
+            >
+            {{ t(`simulator.workloads.${workload}`) }}
+          </label>
         </div>
-      </div>
-
-      <div class="field">
         <label
-          for="sim-terms"
-          class="field__label"
-        >{{ t('simulator.terms') }} <small class="field__count">({{ model.terms.length }})</small></label>
-        <textarea
-          id="sim-terms"
-          class="input sim-settings__terms"
-          rows="6"
-          spellcheck="false"
-          :value="model.terms.join('\n')"
-          @input="update('terms', splitLines(($event.target as HTMLTextAreaElement).value))"
-        />
-        <p class="field__hint">
-          {{ t('simulator.termsHint') }}
-        </p>
+          v-if="model.workload === 'mixed'"
+          class="field sim-settings__range"
+        >
+          <span class="field__hint">{{ t('simulator.mixRatio') }}: <b>{{ model.mixRatio }}%</b></span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            :value="model.mixRatio"
+            @input="update('mixRatio', Number(($event.target as HTMLInputElement).value))"
+          >
+        </label>
       </div>
 
-      <div class="field">
+      <template v-if="model.workload !== 'lookup'">
+        <div class="field">
+          <span class="field__label">{{ t('simulator.presets') }}</span>
+          <div class="chip-row">
+            <button
+              v-for="preset in presetIds"
+              :key="preset"
+              type="button"
+              class="chip"
+              @click="applyPreset(preset)"
+            >
+              {{ t(`simulator.preset.${preset}`) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label
+            for="sim-terms"
+            class="field__label"
+          >{{ t('simulator.terms') }} <small class="field__count">({{ model.terms.length }})</small></label>
+          <textarea
+            id="sim-terms"
+            class="input sim-settings__terms"
+            rows="6"
+            spellcheck="false"
+            :value="model.terms.join('\n')"
+            @input="update('terms', splitLines(($event.target as HTMLTextAreaElement).value))"
+          />
+          <p class="field__hint">
+            {{ t('simulator.termsHint') }}
+          </p>
+        </div>
+      </template>
+
+      <template v-if="model.workload !== 'search'">
+        <div class="field">
+          <span class="field__label">{{ t('simulator.uriPresets') }}</span>
+          <div class="chip-row">
+            <button
+              v-for="preset in uriPresetIds"
+              :key="preset"
+              type="button"
+              class="chip"
+              @click="update('uris', [...URI_PRESETS[preset]])"
+            >
+              {{ t(`simulator.uriPreset.${preset}`) }}
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label
+            for="sim-uris"
+            class="field__label"
+          >{{ t('simulator.uris') }} <small class="field__count">({{ model.uris.length }})</small></label>
+          <textarea
+            id="sim-uris"
+            class="input sim-settings__terms"
+            rows="6"
+            spellcheck="false"
+            :value="model.uris.join('\n')"
+            @input="update('uris', splitLines(($event.target as HTMLTextAreaElement).value))"
+          />
+          <p class="field__hint">
+            {{ t('simulator.urisHint') }}
+          </p>
+        </div>
+      </template>
+
+      <div
+        v-if="model.workload !== 'lookup'"
+        class="field"
+      >
         <label
           for="datasets"
           class="field__label"
@@ -48,7 +125,10 @@
         />
       </div>
 
-      <div class="field">
+      <div
+        v-if="model.workload !== 'lookup'"
+        class="field"
+      >
         <span class="field__label">{{ t('simulator.types') }}</span>
         <div
           class="chip-row"
@@ -232,6 +312,18 @@
               @change="update('limit', num($event, 1, 100))"
             >
           </label>
+          <label class="field">
+            <span class="field__hint">{{ t('simulator.timeoutMs') }}</span>
+            <input
+              type="number"
+              class="input input--sm"
+              min="500"
+              max="60000"
+              step="500"
+              :value="model.timeoutMs"
+              @change="update('timeoutMs', num($event, 500, 60000))"
+            >
+          </label>
         </div>
         <label class="sim-settings__switch">
           <input
@@ -241,6 +333,36 @@
           >
           {{ t('simulator.stopOnError') }}
         </label>
+      </div>
+
+      <div class="field">
+        <span class="field__label">{{ t('simulator.cacheMode') }}</span>
+        <div
+          class="chip-row"
+          role="radiogroup"
+          :aria-label="t('simulator.cacheMode')"
+        >
+          <label class="chip chip-toggle">
+            <input
+              type="radio"
+              name="sim-cache"
+              value="live"
+              :checked="model.cacheMode === 'live'"
+              @change="update('cacheMode', 'live')"
+            >
+            {{ t('simulator.cacheLive') }}
+          </label>
+          <label class="chip chip-toggle">
+            <input
+              type="radio"
+              name="sim-cache"
+              value="allowed"
+              :checked="model.cacheMode === 'allowed'"
+              @change="update('cacheMode', 'allowed')"
+            >
+            {{ t('simulator.cacheAllowed') }}
+          </label>
+        </div>
       </div>
 
       <div class="sim-settings__actions">
@@ -271,7 +393,7 @@ import {useI18n} from 'vue-i18n';
 import {ArrowUturnLeftIcon, SparklesIcon} from '@heroicons/vue/16/solid';
 import SourcePicker from '../SourcePicker.vue';
 import state from '../../store';
-import {DEFAULT_SETTINGS, RESULT_TYPES, SimSettings, TEMPO_PRESETS, TERM_PRESETS, Tempo, TempoId, TermPresetId} from '../../simulator/types';
+import {DEFAULT_SETTINGS, RESULT_TYPES, SimSettings, TEMPO_PRESETS, TERM_PRESETS, Tempo, TempoId, TermPresetId, URI_PRESETS, UriPresetId, Workload} from '../../simulator/types';
 
 const props = defineProps({
   modelValue: {type: Object as PropType<SimSettings>, required: true},
@@ -282,7 +404,9 @@ const emit = defineEmits<{'update:modelValue': [value: SimSettings]}>();
 const {t} = useI18n();
 const model = computed(() => props.modelValue);
 const presetIds: TermPresetId[] = ['vlaams', 'personen', 'plaatsen', 'materialen', 'catalogus'];
+const uriPresetIds: UriPresetId[] = ['gemengd', 'wikidata', 'vlaams'];
 const tempoIds: TempoId[] = ['rustig', 'normaal', 'snel', 'stress', 'custom'];
+const workloads: Workload[] = ['search', 'lookup', 'mixed'];
 const allSourceUris = computed(() => state.sources.map(source => source.uri));
 
 function update<K extends keyof SimSettings>(key: K, value: SimSettings[K]) {
@@ -332,9 +456,13 @@ function surprise() {
   const tempoId = (['rustig', 'normaal', 'snel'] as TempoId[])[Math.floor(Math.random() * 3)];
   const types = Math.random() < 0.5 ? [] : sample([...RESULT_TYPES], 1 + Math.floor(Math.random() * 2));
   const sources = allSourceUris.value.length > 0 ? sample(allSourceUris.value, 1 + Math.floor(Math.random() * Math.min(5, allSourceUris.value.length))) : props.modelValue.sources;
+  const workload = workloads[Math.floor(Math.random() * workloads.length)];
   emit('update:modelValue', {
     ...props.modelValue,
+    workload,
     terms: preset === 'catalogus' ? catalogueTerms() : [...TERM_PRESETS[preset]],
+    uris: [...URI_PRESETS[uriPresetIds[Math.floor(Math.random() * uriPresetIds.length)]]],
+    mixRatio: [30, 50, 70][Math.floor(Math.random() * 3)],
     tempoId,
     tempo: {...TEMPO_PRESETS[tempoId as Exclude<TempoId, 'custom'>]},
     types,

@@ -266,7 +266,8 @@
       "results": "Resultaten",
       "timeouts": "Time-outs",
       "errors": "Fouten",
-      "duration": "Duur"
+      "duration": "Duur",
+      "cacheRate": "Cache-hits"
     },
     "perSource": "Per bron",
     "colSource": "Bron",
@@ -299,6 +300,77 @@
       "terms": "Geef minstens één zoekterm op.",
       "sources": "Kies minstens één bron."
     },
-    "runName": "Run {date} · {tempo} · {n}"
+    "runName": "Run {date} · {tempo} · {n}",
+    "workload": "Werklast",
+    "workloads": {
+      "search": "Zoeken",
+      "lookup": "Lookup",
+      "mixed": "Gemengd"
+    },
+    "mixRatio": "Aandeel zoekopdrachten",
+    "uris": "URI's",
+    "urisHint": "Eén URI per regel. Onbekende URI's en URI's zonder bron horen erbij.",
+    "uriPresets": "Voorbeeldsets (URI)",
+    "uriPreset": {
+      "gemengd": "Gemengd (bekend + onbekend)",
+      "wikidata": "Wikidata",
+      "vlaams": "Gent, VTMK en RKD"
+    },
+    "timeoutMs": "Time-out per verzoek (ms)",
+    "cacheMode": "Cache",
+    "cacheModeLabel": "cache",
+    "cacheLive": "Live (no-cache)",
+    "cacheAllowed": "Cache toegestaan",
+    "cached": "cache-hit",
+    "cacheUnknown": "onbekend",
+    "colTypes": "Types",
+    "kind": {
+      "search": "zoek",
+      "lookup": "lookup"
+    },
+    "compare": "Vergelijk",
+    "compareHint": "Vink twee runs aan om ze te vergelijken.",
+    "compareTitle": "Vergelijking van twee runs",
+    "clearCompare": "Sluit vergelijking",
+    "date": "Datum",
+    "retry": "Opnieuw proberen",
+    "acceptance": {
+      "tab": "Acceptatietests",
+      "loading": "Scenario's laden…",
+      "loadError": "Scenario's konden niet geladen worden van {url}",
+      "runAll": "Alles uitvoeren",
+      "runArea": "Gebied uitvoeren",
+      "runOne": "Uitvoeren",
+      "status": {
+        "pending": "wachtend",
+        "running": "bezig",
+        "pass": "geslaagd",
+        "fail": "gefaald",
+        "error": "fout",
+        "skipped": "overgeslagen"
+      },
+      "total": "Totale tijd",
+      "totalLabel": "Totaal",
+      "checks": "Controles",
+      "expected": "Verwacht",
+      "actual": "Werkelijk",
+      "exportJson": "Exporteer JSON",
+      "exportMd": "Exporteer rapport (Markdown)",
+      "history": "Vorige testrondes",
+      "historyHint": "De laatste {n} testrondes blijven in deze browser bewaard.",
+      "testplanNote": "Testplan en scenario's staan in de repository: docs/vlaams-termennetwerk/testplan.md.",
+      "testplanLink": "Open het testplan op GitHub",
+      "scenarios": "{n} scenario's",
+      "generated": "gegenereerd",
+      "apiVersion": "API-versie",
+      "noResults": "Nog geen testronde uitgevoerd.",
+      "reportTitle": "Testrapport Vlaams Termennetwerk",
+      "apiUrl": "API",
+      "uiUrl": "UI",
+      "scope": "Bereik",
+      "area": "Gebied",
+      "failures": "Gefaalde en foutieve scenario's",
+      "none": "geen"
+    }
   }
 }
