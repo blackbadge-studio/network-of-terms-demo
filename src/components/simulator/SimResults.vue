@@ -121,6 +121,12 @@
             >
               {{ t('simulator.colMax') }}
             </th>
+            <th
+              scope="col"
+              class="num"
+            >
+              {{ t('simulator.kpi.cacheRate') }}
+            </th>
             <th scope="col">
               {{ t('simulator.colTypes') }}
             </th>
@@ -159,6 +165,9 @@
             </td>
             <td class="num">
               {{ row.max ?? '–' }}
+            </td>
+            <td class="num">
+              {{ row.cacheRate === null ? '–' : Math.round(row.cacheRate * 100) + '%' }}
             </td>
             <td>
               <span
@@ -225,7 +234,7 @@ const acceptedArguments = computed(() => {
   if (!caps) {
     return [];
   }
-  return [caps.types ? 'types' : null, caps.limit ? 'limit' : null, caps.timeoutMs ? 'timeoutMs' : null, caps.resultType ? 'resultType' : null].filter(Boolean) as string[];
+  return [caps.types ? 'types' : null, caps.limit ? 'limit' : null, caps.timeoutMs ? 'timeoutMs' : null, caps.resultType ? 'resultType' : null, caps.cached ? 'cached' : null].filter(Boolean) as string[];
 });
 const kpis = computed(() => {
   const summary = props.run?.summary;

@@ -116,6 +116,8 @@ export interface SourceRecord {
   apiMs: number | null;
   /** Count of results per resultType (CONCEPT, PERSON, …). */
   types: Record<string, number>;
+  /** The API's `cached` flag for this source entry; null when the schema has no such field. */
+  cached: boolean | null;
 }
 
 export interface RequestRecord {
@@ -128,7 +130,7 @@ export interface RequestRecord {
   status: RequestStatus;
   /** Wall-clock duration measured in the browser, ms. */
   ms: number | null;
-  /** Whether the API served the response from its cache; null when it does not say. */
+  /** True when every source entry was served from the API cache, false when none/some, null when unknown. */
   cached: boolean | null;
   message?: string;
   perSource: SourceRecord[];
@@ -140,7 +142,7 @@ export interface RunSummary {
   timeouts: number;
   errors: number;
   aborted: number;
-  /** Requests the API flagged as cache hits, and how many carried a flag at all. */
+  /** Source entries the API flagged as cache hits, and how many carried a flag at all. */
   cacheHits: number;
   cacheKnown: number;
   durationMs: number;
@@ -151,6 +153,8 @@ export interface ApiCapabilities {
   limit: boolean;
   timeoutMs: boolean;
   resultType: boolean;
+  /** `cached: Boolean!` on the terms/lookup result items. */
+  cached: boolean;
 }
 
 export interface SimRun {

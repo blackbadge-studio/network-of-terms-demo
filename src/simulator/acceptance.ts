@@ -79,9 +79,9 @@ export interface AcceptanceRun {
   stoppedBy: 'finished' | 'user' | null;
 }
 
-/** Base URL of the API (the GraphQL URL without /graphql); VITE_TESTS_BASE can point elsewhere for local stubs. */
+/** Base URL of the API (the GraphQL URL without /graphql); the scenarios and runner are served from it. */
 export const apiBaseUrl = () => (import.meta.env.VITE_GRAPHQL_URL as string).replace(/\/graphql\/?$/, '');
-export const testsBaseUrl = () => ((import.meta.env.VITE_TESTS_BASE as string | undefined) || apiBaseUrl()).replace(/\/$/, '');
+export const testsBaseUrl = () => apiBaseUrl();
 
 export async function loadManifest(signal?: AbortSignal): Promise<Manifest> {
   const response = await fetch(`${testsBaseUrl()}/tests/scenarios.json`, {signal, cache: 'no-cache'});

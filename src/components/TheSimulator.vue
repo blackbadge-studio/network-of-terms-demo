@@ -255,7 +255,7 @@ function start() {
     startedAt: date.toISOString(),
     finishedAt: null,
     settings: snapshot,
-    capabilities: {types: false, limit: false, timeoutMs: false, resultType: false},
+    capabilities: {types: false, limit: false, timeoutMs: false, resultType: false, cached: false},
     records: [],
     summary: summarize([], 0),
     stoppedBy: null,

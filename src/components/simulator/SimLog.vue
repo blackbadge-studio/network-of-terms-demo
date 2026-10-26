@@ -61,8 +61,8 @@
             :key="entry.source + index"
             class="status"
             :class="`status--${entry.status}`"
-            :title="`${entry.name}: ${entry.apiMs ?? '–'} ms`"
-          >{{ shortName(entry.name) }} {{ entry.status === 'ok' ? entry.results : '' }}</span>
+            :title="`${entry.name}: ${entry.apiMs ?? '–'} ms${entry.cached === true ? ' · ' + t('simulator.cached') : ''}`"
+          >{{ shortName(entry.name) }} {{ entry.status === 'ok' ? entry.results : '' }}<template v-if="entry.cached === true"> ⟳</template></span>
           <span
             v-if="record.message"
             class="sim-log__message"

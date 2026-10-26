@@ -33,21 +33,23 @@ export async function probeCapabilities(url: string, signal?: AbortSignal): Prom
     const response = await fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'X-Simulation': '1'},
-      body: JSON.stringify({query: '{ q: __type(name: "Query") { fields { name args { name } } } t: __type(name: "TranslatedTerm") { fields { name } } }'}),
+      body: JSON.stringify({query: '{ q: __type(name: "Query") { fields { name args { name } } } t: __type(name: "TranslatedTerm") { fields { name } } r: __type(name: "TermsQueryResult") { fields { name } } l: __type(name: "LookupQueryResult") { fields { name } } }'}),
       signal,
     });
     const json = await response.json();
     const fields: {name: string, args: {name: string}[]}[] = json?.data?.q?.fields ?? [];
     const termArgs = new Set((fields.find(field => field.name === 'terms')?.args ?? []).map(arg => arg.name));
     const termFields = new Set(((json?.data?.t?.fields ?? []) as {name: string}[]).map(field => field.name));
+    const resultFields = (key: 'r' | 'l') => new Set(((json?.data?.[key]?.fields ?? []) as {name: string}[]).map(field => field.name));
     return {
       types: termArgs.has('types'),
       limit: termArgs.has('limit'),
       timeoutMs: termArgs.has('timeoutMs'),
       resultType: termFields.has('resultType'),
+      cached: resultFields('r').has('cached') && resultFields('l').has('cached'),
     };
   } catch {
-    return {types: false, limit: false, timeoutMs: false, resultType: false};
+    return {types: false, limit: false, timeoutMs: false, resultType: false, cached: false};
   }
 }
 
@@ -74,7 +76,7 @@ function buildSearchQuery(capabilities: ApiCapabilities) {
         ... on TranslatedTerms { terms { ${termFields} } }
         ... on Error { __typename message }
       }
-      responseTimeMs
+      responseTimeMs${capabilities.cached ? ' cached' : ''}
     }
   }`;
 }
@@ -94,7 +96,7 @@ function buildLookupQuery(capabilities: ApiCapabilities) {
         ... on TranslatedTerm { uri${capabilities.resultType ? ' resultType' : ''} }
         ... on Error { message }
       }
-      responseTimeMs
+      responseTimeMs${capabilities.cached ? ' cached' : ''}
     }
   }`;
 }
@@ -118,16 +120,6 @@ const countTypes = (terms: {resultType?: string | null}[]): Record<string, numbe
   return counts;
 };
 
-/** Reads a cache flag from common response headers; null when the API does not say. */
-const cachedFlag = (response: Response): boolean | null => {
-  const value = (response.headers.get('x-cache') ?? response.headers.get('x-cache-status') ?? response.headers.get('x-vtn-cache'))?.toLowerCase();
-  if (value) {
-    return value.includes('hit');
-  }
-  const age = Number(response.headers.get('age'));
-  return Number.isFinite(age) && response.headers.has('age') ? age > 0 : null;
-};
-
 export function createRunner(url: string, settings: SimSettings, sourceNames: Map<string, string>, callbacks: RunnerCallbacks) {
   const controller = new AbortController();
   const {signal} = controller;
@@ -141,7 +133,7 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
   const startedAt = performance.now();
   const total = settings.sizeMode === 'count' ? settings.count : null;
   const durationMs = settings.minutes * 60_000;
-  let capabilities: ApiCapabilities = {types: false, limit: false, timeoutMs: false, resultType: false};
+  let capabilities: ApiCapabilities = {types: false, limit: false, timeoutMs: false, resultType: false, cached: false};
 
   const timeIsUp = () => settings.sizeMode === 'duration' && performance.now() - startedAt >= durationMs;
   const allStarted = () => total !== null && started >= total;
@@ -192,7 +184,7 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
   }
 
   function parseSearch(data: unknown): SourceRecord[] {
-    const entries = (data as {terms?: {source: {uri: string, name: string}, result: {__typename?: string, terms?: {resultType?: string | null}[]} | null, responseTimeMs: number}[]})?.terms ?? [];
+    const entries = (data as {terms?: {source: {uri: string, name: string}, result: {__typename?: string, terms?: {resultType?: string | null}[]} | null, responseTimeMs: number, cached?: boolean}[]})?.terms ?? [];
     return entries.map((entry): SourceRecord => ({
       source: entry.source.uri,
       name: entry.source.name || sourceNames.get(entry.source.uri) || entry.source.uri,
@@ -200,11 +192,12 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
       results: Array.isArray(entry.result?.terms) ? entry.result!.terms!.length : 0,
       apiMs: typeof entry.responseTimeMs === 'number' ? entry.responseTimeMs : null,
       types: Array.isArray(entry.result?.terms) ? countTypes(entry.result!.terms!) : {},
+      cached: typeof entry.cached === 'boolean' ? entry.cached : null,
     }));
   }
 
   function parseLookup(data: unknown): SourceRecord[] {
-    const entries = (data as {lookup?: {source: {__typename: string, uri?: string, name?: string}, result: {__typename: string, resultType?: string | null}, responseTimeMs: number}[]})?.lookup ?? [];
+    const entries = (data as {lookup?: {source: {__typename: string, uri?: string, name?: string}, result: {__typename: string, resultType?: string | null}, responseTimeMs: number, cached?: boolean}[]})?.lookup ?? [];
     return entries.map((entry): SourceRecord => {
       const typename = entry.result?.__typename;
       const status: SourceStatus = typename === 'TranslatedTerm' ? 'ok'
@@ -217,6 +210,7 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
         results: status === 'ok' ? 1 : 0,
         apiMs: typeof entry.responseTimeMs === 'number' ? entry.responseTimeMs : null,
         types: status === 'ok' ? countTypes([entry.result]) : {},
+        cached: typeof entry.cached === 'boolean' ? entry.cached : null,
       };
     });
   }
@@ -240,7 +234,6 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
         cache: settings.cacheMode === 'live' ? 'no-cache' : 'default',
       });
       record.ms = Math.round(performance.now() - t0);
-      record.cached = cachedFlag(response);
       const json = await response.json();
       const data = json?.data;
       if (!response.ok || !data || (kind === 'search' ? !data.terms : !data.lookup)) {
@@ -248,6 +241,8 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
         record.message = json?.errors?.[0]?.message ?? `HTTP ${response.status}`;
       } else {
         record.perSource = kind === 'search' ? parseSearch(data) : parseLookup(data);
+        const flags = record.perSource.map(entry => entry.cached).filter((flag): flag is boolean => flag !== null);
+        record.cached = flags.length > 0 ? flags.every(Boolean) : null;
         const statuses = record.perSource.map(entry => entry.status);
         record.status = statuses.includes('error') ? 'error' : statuses.includes('timeout') ? 'timeout' : 'done';
       }

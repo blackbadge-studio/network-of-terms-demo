@@ -20,8 +20,8 @@ export const summarize = (records: RequestRecord[], durationMs: number): RunSumm
     ? record.perSource.filter(entry => entry.status === 'error').length
     : (record.status === 'error' ? 1 : 0)), 0),
   aborted: records.filter(record => record.status === 'aborted').length,
-  cacheHits: records.filter(record => record.cached === true).length,
-  cacheKnown: records.filter(record => record.cached !== null && record.cached !== undefined).length,
+  cacheHits: records.reduce((sum, record) => sum + record.perSource.filter(entry => entry.cached === true).length, 0),
+  cacheKnown: records.reduce((sum, record) => sum + record.perSource.filter(entry => entry.cached === true || entry.cached === false).length, 0),
   durationMs: Math.round(durationMs),
 });
 
@@ -40,22 +40,30 @@ export interface SourceStats {
   max: number | null;
   /** Result-type distribution across all results of this source. */
   types: Record<string, number>;
+  /** Cache-hit rate for this source, null when the API gave no flag. */
+  cacheRate: number | null;
 }
 
 export const perSourceStats = (records: RequestRecord[]): SourceStats[] => {
-  const map = new Map<string, {name: string, times: number[], ok: number, none: number, timeouts: number, errors: number, results: number, requests: number, types: Record<string, number>}>();
+  const map = new Map<string, {name: string, times: number[], ok: number, none: number, timeouts: number, errors: number, results: number, requests: number, types: Record<string, number>, hits: number, known: number}>();
   for (const record of records) {
     for (const entry of record.perSource) {
       const key = entry.source || entry.name;
       let bucket = map.get(key);
       if (!bucket) {
-        bucket = {name: entry.name, times: [], ok: 0, none: 0, timeouts: 0, errors: 0, results: 0, requests: 0, types: {}};
+        bucket = {name: entry.name, times: [], ok: 0, none: 0, timeouts: 0, errors: 0, results: 0, requests: 0, types: {}, hits: 0, known: 0};
         map.set(key, bucket);
       }
       bucket.requests++;
       bucket.results += entry.results;
       if (entry.apiMs !== null) {
         bucket.times.push(entry.apiMs);
+      }
+      if (entry.cached === true || entry.cached === false) {
+        bucket.known++;
+        if (entry.cached) {
+          bucket.hits++;
+        }
       }
       for (const [type, count] of Object.entries(entry.types ?? {})) {
         bucket.types[type] = (bucket.types[type] ?? 0) + count;
@@ -80,6 +88,7 @@ export const perSourceStats = (records: RequestRecord[]): SourceStats[] => {
     p95: percentile(bucket.times, 95),
     max: bucket.times.length > 0 ? Math.max(...bucket.times) : null,
     types: bucket.types,
+    cacheRate: bucket.known > 0 ? bucket.hits / bucket.known : null,
   })).sort((a, b) => a.name.localeCompare(b.name));
 };
 
@@ -108,13 +117,13 @@ export const exportLines = (run: SimRun): ExportLine[] => {
   const types = run.settings.types.join(',');
   const lines: ExportLine[] = [];
   for (const record of run.records) {
-    const base = {t: record.t, kind: record.kind ?? 'search', term: record.term, ms: record.ms, cached: record.cached ?? null, lang, types};
+    const base = {t: record.t, kind: record.kind ?? 'search', term: record.term, ms: record.ms, lang, types};
     if (record.perSource.length === 0) {
-      lines.push({...base, source: '', apiMs: null, status: record.status, results: 0});
+      lines.push({...base, source: '', apiMs: null, status: record.status, results: 0, cached: null});
       continue;
     }
     for (const entry of record.perSource) {
-      lines.push({...base, source: entry.source, apiMs: entry.apiMs, status: entry.status, results: entry.results});
+      lines.push({...base, source: entry.source, apiMs: entry.apiMs, status: entry.status, results: entry.results, cached: entry.cached ?? null});
     }
   }
   return lines;
