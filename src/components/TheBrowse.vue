@@ -249,8 +249,9 @@ async function applyRoute() {
       await load(uri);
     }
   }
-  if (term && term !== selectedUri.value) {
-    if (open.length === 0 || !isVisible(term)) {
+  // A term that is not visible in the open tree (e.g. from "Toon in boom") gets its path walked up and expanded.
+  if (term) {
+    if (!isVisible(term)) {
       await openAt(term);
     } else {
       selectedUri.value = term;

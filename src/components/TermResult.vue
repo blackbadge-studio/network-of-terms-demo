@@ -70,6 +70,14 @@
         <ArrowTopRightOnSquareIcon class="icon" />
         <span class="sr-only">({{ t('general.externalLink') }})</span>
       </a>
+      <router-link
+        v-if="showTreeLink"
+        :to="{name: 'browse', query: {bron: sourceUri, term: term.uri}}"
+        class="btn btn--ghost btn--sm"
+      >
+        <RectangleGroupIcon class="icon" />
+        {{ t('browse.showInTree') }}
+      </router-link>
     </div>
 
     <div
@@ -102,18 +110,39 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, PropType, ref, useId} from 'vue';
+import {computed, PropType, reactive, ref, useId} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {ArrowTopRightOnSquareIcon} from '@heroicons/vue/16/solid';
+import {useRoute} from 'vue-router';
+import {useQuery} from 'villus';
+import {ArrowTopRightOnSquareIcon, RectangleGroupIcon} from '@heroicons/vue/16/solid';
 import RelatedTerms from './RelatedTerms.vue';
 import CopyButton from './CopyButton.vue';
-import {Term, filterLanguageStrings} from '../query';
+import {SOURCES_QUERY, Source, Term, filterLanguageStrings} from '../query';
+import {supportsHierarchy} from '../browse';
+import state from '../store';
 
 const props = defineProps({
   term: {type: Object as PropType<Term>, required: true},
+  /** Source of the term; enables "Toon in boom" when that source has a hierarchy. */
+  sourceUri: {type: String, default: null},
 });
 
-const {t} = useI18n();
+const {t, locale} = useI18n();
+const route = useRoute();
+
+// The source list (with features) may not be loaded on every page; villus dedupes and caches this query.
+const {data: sourcesData} = useQuery<{sources: Source[]}>({
+  query: SOURCES_QUERY,
+  variables: reactive({locale}),
+  context: {headers: reactive({'Accept-Language': locale})},
+  skip: () => state.sources.length > 0 || !props.sourceUri,
+});
+const sources = computed(() => state.sources.length > 0 ? state.sources : (sourcesData.value?.sources ?? []));
+const showTreeLink = computed(() =>
+  Boolean(props.sourceUri)
+  && route.name !== 'browse'
+  && supportsHierarchy(sources.value.find(source => source.uri === props.sourceUri)),
+);
 const noteId = useId();
 const noteExpanded = ref(false);
 

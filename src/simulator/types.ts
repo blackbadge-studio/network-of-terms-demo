@@ -5,7 +5,6 @@ export type SizeMode = 'count' | 'duration';
 export type TermPresetId = 'vlaams' | 'personen' | 'plaatsen' | 'materialen' | 'catalogus';
 export type UriPresetId = 'gemengd' | 'wikidata' | 'vlaams';
 export type Workload = 'search' | 'lookup' | 'mixed';
-export type CacheMode = 'live' | 'allowed';
 
 export interface Tempo {
   /** Pause between starting two requests, in ms. */
@@ -81,7 +80,6 @@ export interface SimSettings {
   limit: number;
   /** Request timeout in ms (client abort and, when supported, the API's timeoutMs). */
   timeoutMs: number;
-  cacheMode: CacheMode;
 }
 
 export const DEFAULT_SETTINGS: SimSettings = {
@@ -100,7 +98,6 @@ export const DEFAULT_SETTINGS: SimSettings = {
   stopOnError: false,
   limit: 20,
   timeoutMs: 10000,
-  cacheMode: 'live',
 };
 
 export type RequestKind = 'search' | 'lookup';

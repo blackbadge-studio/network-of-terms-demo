@@ -50,14 +50,14 @@
             exact-active-class="router-link-active"
             @click="menuOpen = false"
           >
-            {{ t('search.tabSearch') }}
+            {{ t('general.navSearch') }}
           </router-link>
           <router-link
             :to="{name: 'sources'}"
             class="nav__link"
             @click="menuOpen = false"
           >
-            {{ t('termSources.title') }}
+            {{ t('general.navSources') }}
           </router-link>
           <router-link
             :to="{name: 'faq'}"
@@ -98,7 +98,7 @@
       class="app__main"
       tabindex="-1"
     >
-      <router-view :key="$route.fullPath" />
+      <router-view :key="viewKey" />
     </main>
 
     <footer
@@ -199,7 +199,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRoute} from 'vue-router';
 import LanguageToggle from './components/LanguageToggle.vue';
@@ -210,6 +210,9 @@ import {ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon} from '@heroicons/vue/16
 const {t} = useI18n();
 const route = useRoute();
 const menuOpen = ref(false);
+// Search and lookup pages re-mount per query (each URL is one search). The browse page keeps its
+// tree state and only mirrors it into the URL, so it must not re-mount on every expand or select.
+const viewKey = computed(() => route.name === 'browse' ? route.path : route.fullPath);
 const {isMinimal} = useTheme();
 watch(() => route.fullPath, () => { menuOpen.value = false; });
 

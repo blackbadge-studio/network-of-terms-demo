@@ -121,12 +121,6 @@
             >
               {{ t('simulator.colMax') }}
             </th>
-            <th
-              scope="col"
-              class="num"
-            >
-              {{ t('simulator.kpi.cacheRate') }}
-            </th>
             <th scope="col">
               {{ t('simulator.colTypes') }}
             </th>
@@ -166,9 +160,6 @@
             <td class="num">
               {{ row.max ?? '–' }}
             </td>
-            <td class="num">
-              {{ row.cacheRate === null ? '–' : Math.round(row.cacheRate * 100) + '%' }}
-            </td>
             <td>
               <span
                 v-if="Object.keys(row.types).length === 0"
@@ -198,7 +189,7 @@
       <template v-else>
         {{ t('simulator.capNone') }}
       </template>
-      · {{ t('simulator.cacheModeLabel') }}: {{ t(run.settings.cacheMode === 'allowed' ? 'simulator.cacheAllowed' : 'simulator.cacheLive') }}
+      · {{ t('simulator.cacheOff') }}
       · {{ t('simulator.timeoutMs') }}: {{ run.settings.timeoutMs }}
     </p>
   </div>
@@ -241,13 +232,11 @@ const kpis = computed(() => {
   if (!summary) {
     return [];
   }
-  const cacheRate = summary.cacheKnown > 0 ? `${Math.round((summary.cacheHits / summary.cacheKnown) * 100)}%` : t('simulator.cacheUnknown');
   return [
     {key: 'requests', value: String(summary.requests), cls: ''},
     {key: 'results', value: String(summary.results), cls: ''},
     {key: 'timeouts', value: String(summary.timeouts), cls: summary.timeouts > 0 ? 'kpi--warn' : ''},
     {key: 'errors', value: String(summary.errors), cls: summary.errors > 0 ? 'kpi--danger' : ''},
-    {key: 'cacheRate', value: cacheRate, cls: ''},
     {key: 'duration', value: formatDuration(summary.durationMs), cls: ''},
   ];
 });

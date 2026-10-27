@@ -103,7 +103,10 @@
           {{ t('search.closeDetail') }}
         </button>
       </div>
-      <TermResult :term="selected.term" />
+      <TermResult
+        :term="selected.term"
+        :source-uri="selected.source.uri"
+      />
     </aside>
   </section>
 </template>

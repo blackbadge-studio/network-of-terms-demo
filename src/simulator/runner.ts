@@ -148,9 +148,6 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
       'Accept-Language': settings.lang,
       'X-Simulation': '1',
     };
-    if (settings.cacheMode === 'live') {
-      base['Cache-Control'] = 'no-cache';
-    }
     return base;
   }
 
@@ -231,7 +228,6 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
         headers: headers(),
         body: JSON.stringify(body),
         signal: requestSignal,
-        cache: settings.cacheMode === 'live' ? 'no-cache' : 'default',
       });
       record.ms = Math.round(performance.now() - t0);
       const json = await response.json();

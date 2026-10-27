@@ -17,7 +17,9 @@
     "footerService": "This service",
     "footerMore": "More",
     "externalLink": "opens in a new window",
-    "footerDevelopers": "For developers"
+    "footerDevelopers": "For developers",
+    "navSearch": "Search",
+    "navSources": "Sources"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -266,8 +268,7 @@
       "results": "Results",
       "timeouts": "Timeouts",
       "errors": "Errors",
-      "duration": "Duration",
-      "cacheRate": "Cache hits"
+      "duration": "Duration"
     },
     "perSource": "Per source",
     "colSource": "Source",
@@ -317,12 +318,7 @@
       "vlaams": "Ghent, VTMK and RKD"
     },
     "timeoutMs": "Timeout per request (ms)",
-    "cacheMode": "Cache",
-    "cacheModeLabel": "cache",
-    "cacheLive": "Live (no-cache)",
-    "cacheAllowed": "Cache allowed",
     "cached": "cache hit",
-    "cacheUnknown": "unknown",
     "colTypes": "Types",
     "kind": {
       "search": "search",
@@ -371,7 +367,8 @@
       "area": "Area",
       "failures": "Failed and errored scenarios",
       "none": "none"
-    }
+    },
+    "cacheOff": "Cache: off (every query goes live to the source)"
   },
   "browse": {
     "navLabel": "Browse",
@@ -389,6 +386,7 @@
     "empty": "No narrower concepts.",
     "keyboardHint": "Arrows: right opens, left closes, up/down moves, Enter shows the concept.",
     "loading": "Loading…",
-    "retry": "Try again"
+    "retry": "Try again",
+    "showInTree": "Show in tree"
   }
 }

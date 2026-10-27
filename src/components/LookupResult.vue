@@ -19,7 +19,10 @@
           v-if="state === 'ok'"
           class="term-list"
         >
-          <TermResult :term="entry.result" />
+          <TermResult
+            :term="entry.result"
+            :source-uri="entry.source.uri"
+          />
         </div>
         <p
           v-else

@@ -17,7 +17,9 @@
     "footerService": "Deze dienst",
     "footerMore": "Meer",
     "externalLink": "opent in een nieuw venster",
-    "footerDevelopers": "Voor ontwikkelaars"
+    "footerDevelopers": "Voor ontwikkelaars",
+    "navSearch": "Zoeken",
+    "navSources": "Bronnen"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -266,8 +268,7 @@
       "results": "Resultaten",
       "timeouts": "Time-outs",
       "errors": "Fouten",
-      "duration": "Duur",
-      "cacheRate": "Cache-hits"
+      "duration": "Duur"
     },
     "perSource": "Per bron",
     "colSource": "Bron",
@@ -317,12 +318,7 @@
       "vlaams": "Gent, VTMK en RKD"
     },
     "timeoutMs": "Time-out per verzoek (ms)",
-    "cacheMode": "Cache",
-    "cacheModeLabel": "cache",
-    "cacheLive": "Live (no-cache)",
-    "cacheAllowed": "Cache toegestaan",
     "cached": "cache-hit",
-    "cacheUnknown": "onbekend",
     "colTypes": "Types",
     "kind": {
       "search": "zoek",
@@ -371,7 +367,8 @@
       "area": "Gebied",
       "failures": "Gefaalde en foutieve scenario's",
       "none": "geen"
-    }
+    },
+    "cacheOff": "Cache: uit (elke vraag gaat live naar de bron)"
   },
   "browse": {
     "navLabel": "Bladeren",
@@ -389,6 +386,7 @@
     "empty": "Geen nauwere begrippen.",
     "keyboardHint": "Pijltjes: rechts opent, links sluit, omhoog/omlaag beweegt, Enter toont het begrip.",
     "loading": "Laden…",
-    "retry": "Opnieuw proberen"
+    "retry": "Opnieuw proberen",
+    "showInTree": "Toon in boom"
   }
 }

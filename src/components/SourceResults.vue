@@ -30,6 +30,7 @@
           v-for="term in terms"
           :key="term.uri"
           :term="term"
+          :source-uri="entry.source.uri"
         />
       </template>
     </div>

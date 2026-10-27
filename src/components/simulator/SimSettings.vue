@@ -335,36 +335,6 @@
         </label>
       </div>
 
-      <div class="field">
-        <span class="field__label">{{ t('simulator.cacheMode') }}</span>
-        <div
-          class="chip-row"
-          role="radiogroup"
-          :aria-label="t('simulator.cacheMode')"
-        >
-          <label class="chip chip-toggle">
-            <input
-              type="radio"
-              name="sim-cache"
-              value="live"
-              :checked="model.cacheMode === 'live'"
-              @change="update('cacheMode', 'live')"
-            >
-            {{ t('simulator.cacheLive') }}
-          </label>
-          <label class="chip chip-toggle">
-            <input
-              type="radio"
-              name="sim-cache"
-              value="allowed"
-              :checked="model.cacheMode === 'allowed'"
-              @change="update('cacheMode', 'allowed')"
-            >
-            {{ t('simulator.cacheAllowed') }}
-          </label>
-        </div>
-      </div>
-
       <div class="sim-settings__actions">
         <button
           type="button"
