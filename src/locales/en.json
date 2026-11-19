@@ -409,6 +409,7 @@
     "how": "Every {minutes} minutes we send each source one test query from our server. A day counts as reachable when at least 99% of those queries got an answer. Measured since {since}. On grey days this test environment was asleep and nothing was measured.",
     "feed": "Open the raw observations",
     "failed": "The status data cannot be fetched right now. We will try again shortly.",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "waking": "The test environment was asleep and is starting up. This takes up to half a minute."
   }
 }

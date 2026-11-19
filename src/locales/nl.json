@@ -409,6 +409,7 @@
     "how": "Elke {minutes} minuten stellen we elke bron één testvraag vanaf onze server. Een dag telt als bereikbaar wanneer minstens 99% van die vragen een antwoord kreeg. Gemeten sinds {since}. Op grijze dagen stond deze testomgeving in slaapstand en is er niet gemeten.",
     "feed": "Open de ruwe metingen",
     "failed": "De statusgegevens zijn nu niet op te halen. We proberen het zo opnieuw.",
-    "loading": "Laden…"
+    "loading": "Laden…",
+    "waking": "De testomgeving stond in slaapstand en start op. Dat duurt tot een halve minuut."
   }
 }

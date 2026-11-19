@@ -103,7 +103,7 @@
       v-else-if="!failed"
       class="uptime__loading"
     >
-      {{ t('status.loading') }}
+      {{ slow ? t('status.waking') : t('status.loading') }}
     </p>
   </div>
 </template>
@@ -141,11 +141,19 @@ const feedUrl = `${apiBase}/status/observations/latest`;
 
 const summary = ref<UptimeSummary | null>(null);
 const failed = ref(false);
+// The test environment sleeps when nobody uses it; its first answer can then take half a minute.
+const slow = ref(false);
 let timer: number | undefined;
+let stopped = false;
 
 async function load() {
+  const patience = window.setTimeout(() => {
+    slow.value = true;
+  }, 4_000);
+  const abort = new AbortController();
+  const giveUp = window.setTimeout(() => abort.abort(), 45_000);
   try {
-    const response = await fetch(`${apiBase}/status/uptime?days=90`, {headers: {Accept: 'application/json'}});
+    const response = await fetch(`${apiBase}/status/uptime?days=90`, {headers: {Accept: 'application/json'}, signal: abort.signal});
     if (!response.ok) {
       throw new Error(String(response.status));
     }
@@ -153,14 +161,22 @@ async function load() {
     failed.value = false;
   } catch {
     failed.value = true;
+  } finally {
+    window.clearTimeout(patience);
+    window.clearTimeout(giveUp);
+    slow.value = false;
+  }
+  // Every minute once it works; every few seconds while it does not answer yet.
+  if (!stopped) {
+    timer = window.setTimeout(load, failed.value ? 5_000 : 60_000);
   }
 }
 
-onMounted(() => {
-  load();
-  timer = window.setInterval(load, 60_000);
+onMounted(load);
+onBeforeUnmount(() => {
+  stopped = true;
+  window.clearTimeout(timer);
 });
-onBeforeUnmount(() => window.clearInterval(timer));
 
 const downCount = computed(() => summary.value?.sources.filter(source => source.latest && !source.latest.success).length ?? 0);
 
