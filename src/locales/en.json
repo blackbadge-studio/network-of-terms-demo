@@ -219,8 +219,8 @@
     }
   },
   "simulator": {
-    "title": "Simulator",
-    "navLabel": "Simulator",
+    "title": "Test page",
+    "navLabel": "Test page",
     "lead": "Run simulated search sessions against the GraphQL API and collect test data on response times and source status.",
     "leadTests": "Test scenarios that check whether the Termennetwerk does what the tender asks. Click a test to read what it checks and why.",
     "mode": {
@@ -232,7 +232,7 @@
       "load": "How does it hold up under load?"
     },
     "gateTitle": "Developer tool",
-    "gateText": "Enter the access key to open the simulator.",
+    "gateText": "Enter the access key to open the test page.",
     "gateLabel": "Access key",
     "gateButton": "Open",
     "gateError": "Wrong key.",

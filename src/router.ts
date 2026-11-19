@@ -79,8 +79,10 @@ export const router = createRouter({
           redirect: to => ({name: 'widget', params: to.params, query: to.query}),
         },
         {
-          path: 'simulator',
+          path: 'testpagina',
           name: 'simulator',
+          // The page was called Simulator before; links to its old address keep working.
+          alias: 'simulator',
           component: TheSimulator,
         },
         {

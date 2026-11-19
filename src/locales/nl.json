@@ -219,8 +219,8 @@
     }
   },
   "simulator": {
-    "title": "Simulator",
-    "navLabel": "Simulator",
+    "title": "Testpagina",
+    "navLabel": "Testpagina",
     "lead": "Voer gesimuleerde zoeksessies uit tegen de GraphQL API en verzamel testdata over reactietijden en bronstatus.",
     "leadTests": "Testscenario's die nagaan of het Termennetwerk doet wat het bestek vraagt. Klik op een test om te lezen wat hij controleert en waarom.",
     "mode": {
@@ -232,7 +232,7 @@
       "load": "Hoe houdt het stand onder druk?"
     },
     "gateTitle": "Ontwikkelaarstool",
-    "gateText": "Voer de toegangssleutel in om de simulator te openen.",
+    "gateText": "Voer de toegangssleutel in om de testpagina te openen.",
     "gateLabel": "Toegangssleutel",
     "gateButton": "Openen",
     "gateError": "Onjuiste sleutel.",
