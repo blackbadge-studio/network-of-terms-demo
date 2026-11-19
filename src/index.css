@@ -418,9 +418,12 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .term__uri code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; font-size: inherit; }
 .term__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
 .term__relations { display: grid; gap: var(--s-3); padding-top: var(--s-3); border-top: 1px dashed var(--vtn-border); }
-.relation { display: grid; gap: var(--s-2); }
+.relation { display: grid; gap: var(--s-2); min-width: 0; }
 .relation__caption { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--vtn-muted); }
 .relation__list { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+/* A related term without a label shows its URI: let it break instead of sticking out of the card. */
+.relation__list li { min-width: 0; max-width: 100%; }
+.relation__list .chip { max-width: 100%; overflow-wrap: anywhere; }
 @media (min-width: 48em) {
   .term { padding: var(--s-5); }
   .term__relations { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--s-4); }
