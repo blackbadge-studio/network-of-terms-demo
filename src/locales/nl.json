@@ -32,7 +32,30 @@
     "title_b": "Veelgestelde vragen over het Termennetwerk voor beheerders van terminologiebronnen",
     "title_c": "Veelgestelde vragen over het Termennetwerk voor collectiebeheerders bij erfgoedinstellingen",
     "title_o": "Veelgestelde vragen over het Termennetwerk voor ontwikkelaars van erfgoedsoftware",
-    "title_r": "Handleiding terminologiebron aansluiten op het Termennetwerk"
+    "title_r": "Handleiding terminologiebron aansluiten op het Termennetwerk",
+    "lead": "De vragen zijn gegroepeerd per doelgroep. Kies wat bij je past.",
+    "back": "Alle veelgestelde vragen",
+    "onThisPage": "Op deze pagina",
+    "others": "Vragen voor andere doelgroepen",
+    "questions": "{n} vragen",
+    "audience": {
+      "c": {
+        "title": "Beheerders van erfgoedcollecties",
+        "text": "Wat termen zijn, waarom ze je collectie beter vindbaar maken en hoe je ze gebruikt bij het registreren."
+      },
+      "b": {
+        "title": "Beheerders van terminologiebronnen",
+        "text": "Wat het Termennetwerk met je thesaurus of namenlijst doet, en wat het van je bron verwacht."
+      },
+      "r": {
+        "title": "Aanbieders van terminologiebronnen",
+        "text": "Handleiding: een terminologiebron aansluiten op het Termennetwerk."
+      },
+      "o": {
+        "title": "Ontwikkelaars van erfgoedsoftware",
+        "text": "De API in je eigen applicatie: zoeken, een term opvragen via zijn URI en de resultaten verwerken."
+      }
+    }
   },
   "search": {
     "title": "Vlaams Termennetwerk",

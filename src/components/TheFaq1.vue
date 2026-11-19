@@ -1,27 +1,15 @@
 <template>
-  <div class="container page">
-    <h1 class="page__title">
-      {{ t('faq.title_c') }}
-    </h1>
+  <FaqLayout :title="t('faq.title_c')">
     <FaqEn1 v-if="locale === 'en'" />
     <FaqNl1 v-else />
-  </div>
+  </FaqLayout>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script lang="ts" setup>
 import {useI18n} from 'vue-i18n';
+import FaqLayout from './FaqLayout.vue';
 import FaqEn1 from './FaqEn1.vue';
 import FaqNl1 from './FaqNl1.vue';
 
-export default defineComponent({
-  name: 'TheFaq1',
-  components: {FaqEn1, FaqNl1},
-  setup () {
-    const {t, locale} = useI18n();
-
-    return {t, locale};
-  },
-});
+const {t, locale} = useI18n();
 </script>
-

@@ -62,6 +62,7 @@
           <router-link
             :to="{name: 'faq'}"
             class="nav__link"
+            :class="{'router-link-active': String($route.name ?? '').startsWith('faq')}"
             @click="menuOpen = false"
           >
             {{ t('faq.title') }}

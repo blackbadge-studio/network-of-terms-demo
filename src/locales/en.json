@@ -32,7 +32,30 @@
     "title_b": "Frequently Asked Questions about the Network of Terms for managers of heritage collections",
     "title_c": "Frequently asked questions about the Network of Terms for collection administrators at heritage institutions",
     "title_o": "Frequently Asked Questions about the Network of Terms for heritage software developers",
-    "title_r": "Manual for connecting a terminology source to the the Network of Terms"
+    "title_r": "Manual for connecting a terminology source to the the Network of Terms",
+    "lead": "The questions are grouped by audience. Pick the one that fits you.",
+    "back": "All frequently asked questions",
+    "onThisPage": "On this page",
+    "others": "Questions for other audiences",
+    "questions": "{n} questions",
+    "audience": {
+      "c": {
+        "title": "Managers of heritage collections",
+        "text": "What terms are, why they make your collection easier to find and how to use them when cataloguing."
+      },
+      "b": {
+        "title": "Administrators of terminology sources",
+        "text": "What the Network of Terms does with your thesaurus or name list, and what it expects of your source."
+      },
+      "r": {
+        "title": "Providers of terminology sources",
+        "text": "Manual: connecting a terminology source to the Network of Terms."
+      },
+      "o": {
+        "title": "Heritage software developers",
+        "text": "The API in your own application: searching, fetching a term by its URI and handling the results."
+      }
+    }
   },
   "search": {
     "title": "Vlaams Termennetwerk",
