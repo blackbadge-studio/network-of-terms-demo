@@ -10,7 +10,6 @@ import LookupForm from './components/LookupForm.vue';
 import TerminologySources from './components/TerminologySources.vue';
 import {i18n} from './main';
 import TheMain from './components/TheMain.vue';
-import TheWidget from './components/TheWidget.vue';
 import TheSimulator from './components/TheSimulator.vue';
 import TheWidgetV2 from './components/TheWidgetV2.vue';
 import SearchForm from './components/SearchForm.vue';
@@ -72,12 +71,12 @@ export const router = createRouter({
         {
           path: 'widget',
           name: 'widget',
-          component: TheWidget,
+          component: TheWidgetV2,
         },
         {
+          // The configurator lived here while an older page had /widget; links to it keep working.
           path: 'widget-v2',
-          name: 'widget-v2',
-          component: TheWidgetV2,
+          redirect: to => ({name: 'widget', params: to.params, query: to.query}),
         },
         {
           path: 'simulator',

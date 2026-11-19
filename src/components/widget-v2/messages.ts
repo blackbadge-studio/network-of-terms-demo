@@ -1,12 +1,11 @@
 /**
- * Texts of the Zoekwidget v2 configurator, local to that page (vue-i18n local scope), so the site's
+ * Texts of the Zoekwidget configurator, local to that page (vue-i18n local scope), so the site's
  * locale files stay as they are. The generated code uses `fieldPrefix` for the example field ids.
  */
 export const messages = {
   nl: {
     beta: 'Bèta',
-    docsLink: 'Documentatie en API van de widget',
-    title: 'Zoekwidget v2: configurator',
+    title: 'Zoekwidget: configurator',
     lead: 'Stel de zoekwidget van het Vlaams Termennetwerk samen in de stijl van je eigen website: kies kleuren, lettertype, taal en bronnen, zie meteen hoe hij op een pagina staat en kopieer de code.',
     style: 'Stijl',
     resetStyle: 'meemoo',
@@ -92,14 +91,11 @@ export const messages = {
     framer2Title: 'Een Embed-element op de pagina',
     framer2Body: 'Insert › Embed (type HTML), plak dit en zet de breedte op Fill. De hoogte volgt de inhoud als je “Fit content” kiest.',
     framerNote: 'Framer herlaadt de pagina niet bij navigatie; het script registreert het element één keer en vindt elke nieuwe <vtn-search> zelf.',
-    installNote: 'Alle attributen, events en custom properties staan op de',
-    installNoteLink: 'documentatiepagina van de widget',
     fieldPrefix: 'vervaardiger',
   },
   en: {
     beta: 'Beta',
-    docsLink: 'Widget documentation and API',
-    title: 'Search widget v2: configurator',
+    title: 'Search widget: configurator',
     lead: 'Compose the search widget of the Flemish Network of Terms in the style of your own website: pick colours, font, language and sources, see it on a page right away and copy the code.',
     style: 'Style',
     resetStyle: 'meemoo',
@@ -185,8 +181,6 @@ export const messages = {
     framer2Title: 'An Embed element on the page',
     framer2Body: 'Insert › Embed (type HTML), paste this and set the width to Fill. The height follows the content with “Fit content”.',
     framerNote: 'Framer does not reload the page on navigation; the script registers the element once and picks up every new <vtn-search> by itself.',
-    installNote: 'Every attribute, event and custom property is on the',
-    installNoteLink: 'widget documentation page',
     fieldPrefix: 'creator',
   },
 };

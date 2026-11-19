@@ -4,9 +4,6 @@
       <div>
         <p class="cfg-head__eyebrow">
           <span class="status status--ok">{{ t('beta') }}</span>
-          <router-link :to="{name: 'widget'}">
-            {{ t('docsLink') }}
-          </router-link>
         </p>
         <h1 class="page__title">
           {{ t('title') }}
@@ -406,13 +403,6 @@
               {{ t('framerNote') }}
             </p>
           </template>
-
-          <p class="cfg__note">
-            {{ t('installNote') }}
-            <router-link :to="{name: 'widget', hash: '#configuratie'}">
-              {{ t('installNoteLink') }}
-            </router-link>
-          </p>
         </section>
       </main>
     </div>

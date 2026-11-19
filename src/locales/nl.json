@@ -169,10 +169,6 @@
     "EVENT_pl": "Gebeurtenissen"
   },
   "widget": {
-    "title": "Zoekwidget",
-    "lead": "Bed de federatieve zoekfunctie van het Vlaams Termennetwerk in op je eigen website of in je collectiebeheersysteem.",
-    "statusBadge": "In voorbereiding",
-    "statusText": "De widget bestaat nog niet. Deze pagina beschrijft de geplande integratie; de snippet en attributen zijn de geplande API.",
     "navLabel": "Zoekwidget"
   },
   "theme": {
