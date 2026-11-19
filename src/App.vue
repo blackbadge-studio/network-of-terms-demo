@@ -83,7 +83,7 @@
           <a
             class="nav__link"
             :href="apiUrl"
-          >API <ArrowTopRightOnSquareIcon
+          >GraphQL Playground <ArrowTopRightOnSquareIcon
             class="icon"
             style="width: .8em; height: .8em; margin-left: .2em;"
           /></a>
@@ -161,7 +161,7 @@
             <h2>{{ t('general.footerDevelopers') }}</h2>
             <ul>
               <li>
-                <a :href="apiUrl">GraphQL API <ArrowTopRightOnSquareIcon class="icon" /></a>
+                <a :href="apiUrl">GraphQL Playground <ArrowTopRightOnSquareIcon class="icon" /></a>
               </li>
               <li>
                 <router-link :to="{name: 'simulator'}">
