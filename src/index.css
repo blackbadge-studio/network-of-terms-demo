@@ -272,9 +272,10 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .lang__btn:hover:not([aria-pressed="true"]) { color: var(--vtn-text); }
 /* The full nav needs about 1060px next to the wordmark; below that it collapses into the menu button. */
 @media (min-width: 70em) {
-  .nav { display: flex; }
+  /* Room above and below: when the links wrap under the logo they must not touch the header's line. */
+  .nav { display: flex; padding-block: var(--s-2); }
   .nav__toggle { display: none; }
-  .nav--open { flex-direction: row; flex-basis: auto; padding: 0; border: 0; }
+  .nav--open { flex-direction: row; flex-basis: auto; padding: var(--s-2) 0; border: 0; }
 }
 
 /* ---------- hero + search panel ---------- */
