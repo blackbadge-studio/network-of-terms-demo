@@ -25,6 +25,8 @@
           >
             <a
               :href="`#${question.id}`"
+              :class="{'is-active': question.id === activeId}"
+              :aria-current="question.id === activeId ? 'location' : undefined"
               @click.prevent="jump(question.id)"
             >{{ question.text }}</a>
           </li>
@@ -57,20 +59,22 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
+import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRoute} from 'vue-router';
 import {ArrowLeftIcon, ArrowRightIcon} from '@heroicons/vue/16/solid';
 import {FAQ_AUDIENCES} from '../faq';
 
-// One audience's questions: a way back to the overview, the questions listed beside the text, and the other
-// audiences at the end. The questions are read from the headings of the text itself.
+// One audience's questions: a way back to the overview, the questions listed beside the text (the one being
+// read is marked while scrolling), and the other audiences at the end. The questions are read from the headings
+// of the text itself.
 defineProps({title: {type: String, required: true}});
 
 const {t, locale} = useI18n();
 const route = useRoute();
 const body = ref<HTMLElement | null>(null);
 const questions = ref<Array<{id: string; text: string}>>([]);
+const activeId = ref('');
 const others = computed(() => FAQ_AUDIENCES.filter(audience => audience.route !== route.name));
 
 function readQuestions() {
@@ -79,12 +83,38 @@ function readQuestions() {
     heading.id = `vraag-${index + 1}`;
     return {id: heading.id, text: heading.textContent?.trim() ?? ''};
   });
+  markActive();
+}
+
+// The question being read: the last heading that has passed the top of the window.
+let frame = 0;
+function markActive() {
+  let current = questions.value[0]?.id ?? '';
+  for (const question of questions.value) {
+    const top = document.getElementById(question.id)?.getBoundingClientRect().top ?? Infinity;
+    if (top > 140) {
+      break;
+    }
+    current = question.id;
+  }
+  activeId.value = current;
+}
+function onScroll() {
+  cancelAnimationFrame(frame);
+  frame = requestAnimationFrame(markActive);
 }
 
 function jump(id: string) {
   document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
-onMounted(readQuestions);
+onMounted(() => {
+  readQuestions();
+  window.addEventListener('scroll', onScroll, {passive: true});
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll);
+  cancelAnimationFrame(frame);
+});
 watch(locale, () => nextTick(readQuestions));
 </script>
