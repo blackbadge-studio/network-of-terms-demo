@@ -1,5 +1,5 @@
 <template>
-  <div class="container page">
+  <div class="container container--wide page">
     <h1 class="page__title">
       {{ t('simulator.title') }}
     </h1>

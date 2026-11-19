@@ -4,8 +4,29 @@
     @submit.prevent
   >
     <fieldset :disabled="disabled">
-      <div class="field">
-        <span class="field__label">{{ t('simulator.workload') }}</span>
+      <div class="sim-settings__actions">
+        <button
+          type="button"
+          class="btn btn--secondary btn--sm"
+          @click="surprise"
+        >
+          <SparklesIcon class="icon" />
+          {{ t('simulator.surprise') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm"
+          @click="$emit('update:modelValue', {...DEFAULT_SETTINGS, sources: allSourceUris, tempo: {...DEFAULT_SETTINGS.tempo}})"
+        >
+          <ArrowUturnLeftIcon class="icon" />
+          {{ t('simulator.reset') }}
+        </button>
+      </div>
+
+      <SimFold
+        :label="t('simulator.workload')"
+        :value="t(`simulator.workloads.${model.workload}`)"
+      >
         <div
           class="chip-row"
           role="radiogroup"
@@ -40,11 +61,15 @@
             @input="update('mixRatio', Number(($event.target as HTMLInputElement).value))"
           >
         </label>
-      </div>
+      </SimFold>
 
-      <template v-if="model.workload !== 'lookup'">
+      <SimFold
+        v-if="model.workload !== 'lookup'"
+        :label="t('simulator.terms')"
+        :value="String(model.terms.length)"
+      >
         <div class="field">
-          <span class="field__label">{{ t('simulator.presets') }}</span>
+          <span class="field__hint">{{ t('simulator.presets') }}</span>
           <div class="chip-row">
             <button
               v-for="preset in presetIds"
@@ -57,12 +82,11 @@
             </button>
           </div>
         </div>
-
         <div class="field">
           <label
             for="sim-terms"
-            class="field__label"
-          >{{ t('simulator.terms') }} <small class="field__count">({{ model.terms.length }})</small></label>
+            class="sr-only"
+          >{{ t('simulator.terms') }}</label>
           <textarea
             id="sim-terms"
             class="input sim-settings__terms"
@@ -75,11 +99,15 @@
             {{ t('simulator.termsHint') }}
           </p>
         </div>
-      </template>
+      </SimFold>
 
-      <template v-if="model.workload !== 'search'">
+      <SimFold
+        v-if="model.workload !== 'search'"
+        :label="t('simulator.uris')"
+        :value="String(model.uris.length)"
+      >
         <div class="field">
-          <span class="field__label">{{ t('simulator.uriPresets') }}</span>
+          <span class="field__hint">{{ t('simulator.uriPresets') }}</span>
           <div class="chip-row">
             <button
               v-for="preset in uriPresetIds"
@@ -95,8 +123,8 @@
         <div class="field">
           <label
             for="sim-uris"
-            class="field__label"
-          >{{ t('simulator.uris') }} <small class="field__count">({{ model.uris.length }})</small></label>
+            class="sr-only"
+          >{{ t('simulator.uris') }}</label>
           <textarea
             id="sim-uris"
             class="input sim-settings__terms"
@@ -109,27 +137,28 @@
             {{ t('simulator.urisHint') }}
           </p>
         </div>
-      </template>
+      </SimFold>
 
-      <div
+      <SimFold
         v-if="model.workload !== 'lookup'"
-        class="field"
+        :label="t('simulator.sources')"
+        :value="String(model.sources.length)"
       >
         <label
           for="datasets"
-          class="field__label"
+          class="sr-only"
         >{{ t('simulator.sources') }}</label>
         <SourcePicker
           :model-value="model.sources"
           @update:model-value="update('sources', $event)"
         />
-      </div>
+      </SimFold>
 
-      <div
+      <SimFold
         v-if="model.workload !== 'lookup'"
-        class="field"
+        :label="t('simulator.types')"
+        :value="model.types.map(type => t(`types.${type}_pl`)).join(', ')"
       >
-        <span class="field__label">{{ t('simulator.types') }}</span>
         <div
           class="chip-row"
           role="group"
@@ -151,10 +180,12 @@
         <p class="field__hint">
           {{ t('simulator.typesHint') }}
         </p>
-      </div>
+      </SimFold>
 
-      <div class="field">
-        <span class="field__label">{{ t('simulator.lang') }}</span>
+      <SimFold
+        :label="t('simulator.lang')"
+        :value="model.lang.toUpperCase()"
+      >
         <div
           class="chip-row"
           role="radiogroup"
@@ -175,10 +206,12 @@
             {{ lang.toUpperCase() }}
           </label>
         </div>
-      </div>
+      </SimFold>
 
-      <div class="field">
-        <span class="field__label">{{ t('simulator.tempo') }}</span>
+      <SimFold
+        :label="t('simulator.tempo')"
+        :value="t(`simulator.tempoPreset.${model.tempoId}`)"
+      >
         <div
           class="sim-settings__tempo"
           role="radiogroup"
@@ -241,10 +274,12 @@
             >
           </label>
         </div>
-      </div>
+      </SimFold>
 
-      <div class="field">
-        <span class="field__label">{{ t('simulator.size') }}</span>
+      <SimFold
+        :label="t('simulator.size')"
+        :value="model.sizeMode === 'count' ? String(model.count) : `${model.minutes} min`"
+      >
         <div
           class="chip-row"
           role="radiogroup"
@@ -333,26 +368,7 @@
           >
           {{ t('simulator.stopOnError') }}
         </label>
-      </div>
-
-      <div class="sim-settings__actions">
-        <button
-          type="button"
-          class="btn btn--secondary btn--sm"
-          @click="surprise"
-        >
-          <SparklesIcon class="icon" />
-          {{ t('simulator.surprise') }}
-        </button>
-        <button
-          type="button"
-          class="btn btn--ghost btn--sm"
-          @click="$emit('update:modelValue', {...DEFAULT_SETTINGS, sources: allSourceUris, tempo: {...DEFAULT_SETTINGS.tempo}})"
-        >
-          <ArrowUturnLeftIcon class="icon" />
-          {{ t('simulator.reset') }}
-        </button>
-      </div>
+      </SimFold>
     </fieldset>
   </form>
 </template>
@@ -362,6 +378,7 @@ import {computed, PropType} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {ArrowUturnLeftIcon, SparklesIcon} from '@heroicons/vue/16/solid';
 import SourcePicker from '../SourcePicker.vue';
+import SimFold from './SimFold.vue';
 import state from '../../store';
 import {DEFAULT_SETTINGS, RESULT_TYPES, SimSettings, TEMPO_PRESETS, TERM_PRESETS, Tempo, TempoId, TermPresetId, URI_PRESETS, UriPresetId, Workload} from '../../simulator/types';
 

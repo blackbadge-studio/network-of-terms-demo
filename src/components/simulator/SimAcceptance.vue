@@ -1,17 +1,5 @@
 <template>
   <div class="sim-acc">
-    <p class="notice">
-      <DocumentTextIcon class="icon" />
-      <span>
-        {{ t('simulator.acceptance.testplanNote') }}
-        <a
-          href="https://github.com/blackbadge-studio/network-of-terms/blob/poc/laravel-cloud/docs/vlaams-termennetwerk/testplan.md"
-          target="_blank"
-          rel="noopener"
-        >{{ t('simulator.acceptance.testplanLink') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
-      </span>
-    </p>
-
     <p
       v-if="loading"
       class="empty"
@@ -56,11 +44,6 @@
           <StopIcon class="icon" />
           {{ t('simulator.stop') }}
         </button>
-        <span class="field__hint">
-          {{ t('simulator.acceptance.scenarios', {n: manifest.scenarios.length}) }}
-          <template v-if="manifest.generated">· {{ t('simulator.acceptance.generated') }} {{ new Date(manifest.generated).toLocaleString(locale) }}</template>
-          <template v-if="apiVersion">· {{ t('simulator.acceptance.apiVersion') }} {{ apiVersion }}</template>
-        </span>
       </div>
 
       <div
@@ -350,7 +333,7 @@
 <script lang="ts" setup>
 import {computed, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {ArrowDownTrayIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, DocumentTextIcon, ExclamationTriangleIcon, PlayIcon, StopIcon, TrashIcon} from '@heroicons/vue/16/solid';
+import {ArrowDownTrayIcon, ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon, PlayIcon, StopIcon, TrashIcon} from '@heroicons/vue/16/solid';
 import {
   AcceptanceRun, MAX_ACCEPTANCE_RUNS, Manifest, Result, Scenario,
   apiBaseUrl, fetchApiVersion, loadAcceptanceRuns, loadManifest, loadRunner, saveAcceptanceRuns, summarizeResults, testsBaseUrl, toMarkdownReport,

@@ -725,7 +725,16 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .sim__tabs .panel__tab { background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
 .sim__tab-count { font-weight: 600; color: var(--vtn-muted); font-variant-numeric: tabular-nums; }
 @media (min-width: 64em) { .sim { grid-template-columns: 22rem minmax(0, 1fr); } .sim__side { position: sticky; top: var(--s-4); max-height: calc(100vh - 2rem); overflow: auto; } }
-.sim-settings fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--s-5); }
+.container--wide { max-width: none; }
+.sim-settings fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; }
+.sim-fold { border-top: 1px solid var(--vtn-border); }
+.sim-fold__head { display: flex; align-items: center; gap: var(--s-2); padding: var(--s-3) 0; cursor: pointer; list-style: none; border-radius: var(--r-sm); }
+.sim-fold__head::-webkit-details-marker { display: none; }
+.sim-fold__head:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.sim-fold[open] > .sim-fold__head .picker__chev { transform: rotate(180deg); }
+.sim-fold__label { font-weight: 600; font-size: var(--fs-md); }
+.sim-fold__value { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sm); color: var(--vtn-muted); }
+.sim-fold__body { display: grid; gap: var(--s-4); padding-bottom: var(--s-4); }
 .sim-settings fieldset:disabled { opacity: 0.6; }
 .sim-settings__terms { font-family: var(--vtn-mono); font-size: var(--fs-sm); line-height: 1.5; min-height: 8rem; resize: vertical; border-radius: var(--r-md); }
 .field__count { font-weight: 500; color: var(--vtn-muted); }
@@ -739,7 +748,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .sim-settings__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: var(--s-3); }
 .sim-settings__switch { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); cursor: pointer; }
 .sim-settings__switch input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--vtn-primary-strong); }
-.sim-settings__actions { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.sim-settings__actions { display: flex; flex-wrap: wrap; gap: var(--s-2); padding-bottom: var(--s-4); }
 .progress { display: grid; gap: var(--s-2); }
 .progress__track { height: 0.5rem; border-radius: var(--r-pill); background: var(--vtn-surface-3); overflow: hidden; }
 .progress__bar { height: 100%; background: var(--vtn-primary); border-radius: var(--r-pill); transition: width 200ms ease; }
