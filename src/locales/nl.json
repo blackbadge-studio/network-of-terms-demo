@@ -409,13 +409,13 @@
     "cacheOff": "Cache: uit (elke vraag gaat live naar de bron)"
   },
   "browse": {
-    "navLabel": "Bladeren",
-    "title": "Bladeren in een thesaurus",
+    "navLabel": "Hiërarchie",
+    "title": "Hiërarchisch zoeken en navigeren",
     "lead": "Verken de structuur van een terminologiebron: begin bij de topbegrippen en klap niveau per niveau open. Zo vind je een term ook als je de juiste benaming nog niet kent.",
     "source": "Terminologiebron",
     "choose": "Kies een bron met een hiërarchie",
     "noSources": "Er zijn nog geen bronnen met een hiërarchie beschikbaar.",
-    "notAvailable": "Bladeren is nog niet beschikbaar in deze versie van de API.",
+    "notAvailable": "Hiërarchisch navigeren is nog niet beschikbaar in deze versie van de API.",
     "pathNote": "Dit begrip staat op meer dan één plaats in de hiërarchie; we tonen het eerste pad.",
     "tree": "Hiërarchie van {source}",
     "top": "Topbegrippen",

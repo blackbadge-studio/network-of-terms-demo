@@ -64,8 +64,10 @@ export const router = createRouter({
           component: TerminologySources,
         },
         {
-          path: 'bladeren',
+          path: 'hierarchie',
           name: 'browse',
+          // The page was called Bladeren before; links to its old address keep working.
+          alias: 'bladeren',
           component: TheBrowse,
         },
         {
