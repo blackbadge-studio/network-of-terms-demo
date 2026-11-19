@@ -173,9 +173,6 @@
                   {{ t('status.navLabel') }}
                 </router-link>
               </li>
-              <li>
-                <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
-              </li>
             </ul>
           </div>
           <div>
