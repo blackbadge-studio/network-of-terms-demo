@@ -31,8 +31,10 @@ export interface LanguageString {
 export interface Term {
   __typename: string;
   uri: string;
-  /** Not yet exposed by the API (CONCEPT | PERSON | ORGANIZATION | PLACE | EVENT); rendered only when present. */
+  /** CONCEPT | PERSON | ORGANIZATION | PLACE | EVENT. */
   resultType?: string;
+  /** What the source states about the person this term denotes; null for other terms and for sources that give no details. */
+  person?: Person | null;
   prefLabel: LanguageString[];
   altLabel: LanguageString[];
   hiddenLabel: LanguageString[];
@@ -42,6 +44,20 @@ export interface Term {
   narrower: RelatedTerm[];
   related: RelatedTerm[];
   exactMatch: RelatedTerm[];
+}
+
+export interface Entity {
+  uri: string | null;
+  name: LanguageString[];
+}
+
+export interface Person {
+  birthDate: string | null;
+  deathDate: string | null;
+  birthPlace: Entity[];
+  deathPlace: Entity[];
+  hasOccupation: Array<{roleName: LanguageString[]; occupation: Entity | null}>;
+  nationality: Entity[];
 }
 
 export interface RelatedTerm {
@@ -99,6 +115,7 @@ export const holderName = (source: Source): string | undefined => {
 
 export const TERM_FIELDS = `
   uri
+  resultType
   prefLabel { language value }
   altLabel { language value }
   hiddenLabel { language value }
@@ -108,10 +125,18 @@ export const TERM_FIELDS = `
   narrower { uri prefLabel { language value } }
   related { uri prefLabel { language value } }
   exactMatch { uri prefLabel { language value } }
+  person {
+    birthDate
+    deathDate
+    birthPlace { uri name { language value } }
+    deathPlace { uri name { language value } }
+    hasOccupation { roleName { language value } occupation { uri name { language value } } }
+    nationality { uri name { language value } }
+  }
 `;
 
-export const TERMS_QUERY = `query Terms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID]) {
-  terms (sources: $sources query: $query languages: $languages genres: $genres) {
+export const TERMS_QUERY = `query Terms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID], $types: [ResultType!]) {
+  terms (sources: $sources query: $query languages: $languages genres: $genres types: $types) {
     source {
       name
       uri

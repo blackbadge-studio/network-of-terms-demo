@@ -128,7 +128,11 @@
     "jumpToSource": "Go to source",
     "inSource": "in {source}",
     "heroTitle": "Search terms, people and places",
-    "heroLead": "One search across Flemish and international terminology sources, straight from the source holder."
+    "heroLead": "One search across Flemish and international terminology sources, straight from the source holder.",
+    "born": "Born",
+    "died": "Died",
+    "occupation": "Occupation",
+    "nationality": "Nationality"
   },
   "language": {
     "label": "Taal"

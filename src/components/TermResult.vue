@@ -9,7 +9,6 @@
           {{ prefLabel }}
         </router-link>
       </h3>
-      <!-- Result-type badge: the API field is not live yet, so this renders nothing until it is. -->
       <span
         v-if="term.resultType"
         class="chip chip--tag term__type"
@@ -36,6 +35,19 @@
         {{ noteExpanded ? t('search.showLess') : t('search.showMore') }}
       </button>
     </div>
+
+    <dl
+      v-if="personFacts.length > 0"
+      class="term__facts"
+    >
+      <div
+        v-for="fact in personFacts"
+        :key="fact.label"
+      >
+        <dt>{{ fact.label }}</dt>
+        <dd>{{ fact.value }}</dd>
+      </div>
+    </dl>
 
     <dl
       v-if="altLabels.length > 0"
@@ -117,7 +129,7 @@ import {useQuery} from 'villus';
 import {ArrowTopRightOnSquareIcon, RectangleGroupIcon} from '@heroicons/vue/16/solid';
 import RelatedTerms from './RelatedTerms.vue';
 import CopyButton from './CopyButton.vue';
-import {SOURCES_QUERY, Source, Term, filterLanguageStrings} from '../query';
+import {Entity, LanguageString, SOURCES_QUERY, Source, Term, filterLanguageStrings} from '../query';
 import {supportsHierarchy} from '../browse';
 import state from '../store';
 
@@ -149,6 +161,34 @@ const noteExpanded = ref(false);
 const prefLabel = computed(() => filterLanguageStrings(props.term.prefLabel).join(' · ') || props.term.uri);
 const scopeNote = computed(() => filterLanguageStrings(props.term.scopeNote).join(' · '));
 const altLabels = computed(() => [...new Set(filterLanguageStrings(props.term.altLabel))]);
+
+/**
+ * What the source states about a person as data (birth, death, occupation, nationality), where it does.
+ * Dates are shown as the source gives them. A death year still to come is an estimate some sources carry for
+ * the living (Getty ULAN) and is left out.
+ */
+const personFacts = computed(() => {
+  const person = props.term.person;
+  if (!person) {
+    return [];
+  }
+  const names = (entities: Array<{name: LanguageString[]} | null>) =>
+    [...new Set(entities.flatMap(entity => entity ? filterLanguageStrings(entity.name) : []))];
+  const when = (date: string | null, places: Entity[]) => [date, names(places).join(' / ')].filter(Boolean).join(', ');
+  const deathYear = Number.parseInt(person.deathDate ?? '', 10);
+  const deathDate = deathYear > new Date().getFullYear() ? null : person.deathDate;
+  // A source that only names an occupation gives one role per language: pick the language over all of them.
+  const occupations = [...new Set([
+    ...filterLanguageStrings(person.hasOccupation.flatMap(role => role.roleName)),
+    ...names(person.hasOccupation.filter(role => role.roleName.length === 0).map(role => role.occupation)),
+  ])];
+  return [
+    {label: t('search.born'), value: when(person.birthDate, person.birthPlace)},
+    {label: t('search.died'), value: when(deathDate, person.deathPlace)},
+    {label: t('search.occupation'), value: occupations.join(', ')},
+    {label: t('search.nationality'), value: names(person.nationality).join(', ')},
+  ].filter(fact => fact.value);
+});
 const hasRelations = computed(() =>
   props.term.broader.length + props.term.narrower.length + props.term.related.length + props.term.exactMatch.length > 0,
 );

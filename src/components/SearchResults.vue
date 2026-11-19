@@ -49,6 +49,7 @@
         :q="q"
         :languages="languages"
         :genres="genres"
+        :types="types"
         :compact="compact"
         :selected-uri="selected?.term.uri"
         @select="onSelect"
@@ -126,6 +127,8 @@ const props = defineProps({
   q: {type: String, default: ''},
   datasets: {type: Array as PropType<string[]>, default: () => []},
   genres: {type: Array as PropType<string[]>, default: () => []},
+  /** Result types to keep (PERSON, PLACE, ...); the API leaves out sources that offer none of them. */
+  types: {type: Array as PropType<string[]>, default: () => []},
   compact: {type: Boolean, default: false},
 });
 
@@ -139,6 +142,7 @@ const {data, isFetching, error} = useQuery<TermsQueryResult>({
     query: props.q,
     languages,
     ...(props.genres.length > 0 ? {genres: props.genres} : {}),
+    ...(props.types.length > 0 ? {types: props.types} : {}),
   },
   context: {
     headers: reactive({'Accept-Language': locale}),

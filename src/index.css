@@ -409,6 +409,9 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .term__note--clamped { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .term__alt { font-size: var(--fs-sm); color: var(--vtn-text-2); display: flex; flex-wrap: wrap; gap: 0.3em var(--s-2); }
 .term__alt dt { font-weight: 600; color: var(--vtn-muted); }
+.term__facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--s-2) var(--s-4); font-size: var(--fs-sm); padding: var(--s-3); border-radius: var(--r-sm); background: var(--vtn-surface-2); }
+.term__facts dt { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--vtn-muted); }
+.term__facts dd { margin: 0; color: var(--vtn-text); }
 .term__alt dd::after { content: "·"; margin-left: var(--s-2); color: var(--vtn-border-strong); }
 .term__alt dd:last-child::after { content: none; }
 .term__uri {

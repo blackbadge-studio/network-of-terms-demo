@@ -33,8 +33,7 @@
 import {useI18n} from 'vue-i18n';
 import state from '../store';
 
-// Mirrors the API's upcoming Term.resultType values; the filter is kept in the
-// store so it can be sent as `terms(types:)` once that argument is live.
+// The API's result types; the choice is kept in the store and sent as `terms(types:)`.
 const TYPES = ['CONCEPT', 'PERSON', 'ORGANIZATION', 'PLACE', 'EVENT'];
 const {t} = useI18n();
 </script>

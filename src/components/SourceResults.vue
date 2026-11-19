@@ -80,6 +80,7 @@ const props = defineProps({
   q: {type: String, required: true},
   languages: {type: Array as PropType<string[]>, required: true},
   genres: {type: Array as PropType<string[]>, default: () => []},
+  types: {type: Array as PropType<string[]>, default: () => []},
   compact: {type: Boolean, default: false},
   selectedUri: {type: String, default: undefined},
 });
@@ -96,6 +97,7 @@ const {execute, isFetching} = useQuery<TermsQueryResult>({
     query: props.q,
     languages: props.languages,
     ...(props.genres.length > 0 ? {genres: props.genres} : {}),
+    ...(props.types.length > 0 ? {types: props.types} : {}),
   },
   context: {headers: reactive({'Accept-Language': locale})},
   cachePolicy: 'network-only',

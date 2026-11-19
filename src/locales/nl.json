@@ -128,7 +128,11 @@
     "jumpToSource": "Ga naar bron",
     "inSource": "in {source}",
     "heroTitle": "Zoek termen, personen en plaatsen",
-    "heroLead": "Eén zoekopdracht over Vlaamse en internationale terminologiebronnen, rechtstreeks bij de bronhouder."
+    "heroLead": "Eén zoekopdracht over Vlaamse en internationale terminologiebronnen, rechtstreeks bij de bronhouder.",
+    "born": "Geboren",
+    "died": "Overleden",
+    "occupation": "Beroep",
+    "nationality": "Nationaliteit"
   },
   "language": {
     "label": "Language"

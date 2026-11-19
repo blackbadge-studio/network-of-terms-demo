@@ -175,6 +175,7 @@
       :q="submitted.q"
       :datasets="submitted.datasets"
       :genres="submitted.genres"
+      :types="submitted.types"
       :compact="isMinimal"
     />
   </div>
@@ -216,6 +217,7 @@ const submitted = {
   q: (route.query.q as string) ?? '',
   datasets: [...state.selectedDatasets],
   genres: [...state.selectedGenres],
+  types: [...state.selectedTypes],
 };
 
 const showGenresFilter = computed(() =>
@@ -258,7 +260,6 @@ function onSubmit() {
     query.genres = state.selectedGenres.join(',');
   }
   if (state.selectedTypes.length > 0) {
-    // Kept in the URL so the choice survives; not sent to the API until `types` is live.
     query.types = state.selectedTypes.join(',');
   }
   router.replace({name: 'home', query});
