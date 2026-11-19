@@ -388,5 +388,27 @@
     "loading": "Laden…",
     "retry": "Opnieuw proberen",
     "showInTree": "Toon in boom"
+  },
+  "status": {
+    "navLabel": "Status",
+    "title": "Status van de bronnen",
+    "lead": "Het Termennetwerk bevraagt elke bron rechtstreeks bij de bronhouder. Hier zie je per bron of ze bereikbaar is en hoe dat de voorbije weken verliep.",
+    "allUp": "Alle bronnen bereikbaar",
+    "someDown": "{n} van {total} bronnen niet bereikbaar | {n} van {total} bronnen niet bereikbaar",
+    "updated": "Bijgewerkt om {time}, ververst elke minuut",
+    "last24h": "Laatste 24 uur",
+    "last7d": "Laatste 7 dagen",
+    "period": "Laatste {n} dagen",
+    "perSource": "Bereikbaarheid per bron, laatste {n} dagen",
+    "barLabel": "Bereikbaarheid van {source} per dag, laatste {n} dagen",
+    "lastCheck": "Laatste controle om {time}",
+    "legendUp": "Bereikbaar",
+    "legendDegraded": "Deels bereikbaar",
+    "legendDown": "Niet bereikbaar",
+    "legendNone": "Niet gemeten",
+    "how": "Elke {minutes} minuten stellen we elke bron één testvraag vanaf onze server. Een dag telt als bereikbaar wanneer minstens 99% van die vragen een antwoord kreeg. Gemeten sinds {since}. Op grijze dagen stond deze testomgeving in slaapstand en is er niet gemeten.",
+    "feed": "Open de ruwe metingen",
+    "failed": "De statusgegevens zijn nu niet op te halen. We proberen het zo opnieuw.",
+    "loading": "Laden…"
   }
 }

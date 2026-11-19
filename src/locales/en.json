@@ -388,5 +388,27 @@
     "loading": "Loading…",
     "retry": "Try again",
     "showInTree": "Show in tree"
+  },
+  "status": {
+    "navLabel": "Status",
+    "title": "Source status",
+    "lead": "The Network of Terms queries every source directly at its publisher. This page shows per source whether it can be reached and how that went over the past weeks.",
+    "allUp": "All sources reachable",
+    "someDown": "{n} of {total} sources unreachable | {n} of {total} sources unreachable",
+    "updated": "Updated at {time}, refreshes every minute",
+    "last24h": "Last 24 hours",
+    "last7d": "Last 7 days",
+    "period": "Last {n} days",
+    "perSource": "Availability per source, last {n} days",
+    "barLabel": "Availability of {source} per day, last {n} days",
+    "lastCheck": "Last check at {time}",
+    "legendUp": "Reachable",
+    "legendDegraded": "Partly reachable",
+    "legendDown": "Unreachable",
+    "legendNone": "Not measured",
+    "how": "Every {minutes} minutes we send each source one test query from our server. A day counts as reachable when at least 99% of those queries got an answer. Measured since {since}. On grey days this test environment was asleep and nothing was measured.",
+    "feed": "Open the raw observations",
+    "failed": "The status data cannot be fetched right now. We will try again shortly.",
+    "loading": "Loading…"
   }
 }

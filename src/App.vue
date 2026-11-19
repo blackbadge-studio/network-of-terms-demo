@@ -169,6 +169,11 @@
                 </router-link>
               </li>
               <li>
+                <router-link :to="{name: 'status'}">
+                  {{ t('status.navLabel') }}
+                </router-link>
+              </li>
+              <li>
                 <a href="https://github.com/blackbadge-studio/network-of-terms">{{ t('general.sourceCode') }} <ArrowTopRightOnSquareIcon class="icon" /></a>
               </li>
             </ul>

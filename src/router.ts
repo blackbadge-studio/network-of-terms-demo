@@ -15,6 +15,7 @@ import TheSimulator from './components/TheSimulator.vue';
 import TheWidgetV2 from './components/TheWidgetV2.vue';
 import SearchForm from './components/SearchForm.vue';
 import TheBrowse from './components/TheBrowse.vue';
+import TheStatus from './components/TheStatus.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -82,6 +83,11 @@ export const router = createRouter({
           path: 'simulator',
           name: 'simulator',
           component: TheSimulator,
+        },
+        {
+          path: 'status',
+          name: 'status',
+          component: TheStatus,
         },
         {
           path: 'contact',
