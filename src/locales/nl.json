@@ -195,7 +195,15 @@
     "title": "Simulator",
     "navLabel": "Simulator",
     "lead": "Voer gesimuleerde zoeksessies uit tegen de GraphQL API en verzamel testdata over reactietijden en bronstatus.",
-    "banner": "Alleen voor test- en demodoeleinden. Elk verzoek draagt de header X-Simulation: 1; er worden geen persoonsgegevens gelogd.",
+    "leadTests": "Testscenario's die nagaan of het Termennetwerk doet wat het bestek vraagt. Klik op een test om te lezen wat hij controleert en waarom.",
+    "mode": {
+      "tests": "Acceptatietests",
+      "load": "Belastingsimulatie"
+    },
+    "modeHint": {
+      "tests": "Doet het wat gevraagd is?",
+      "load": "Hoe houdt het stand onder druk?"
+    },
     "gateTitle": "Ontwikkelaarstool",
     "gateText": "Voer de toegangssleutel in om de simulator te openen.",
     "gateLabel": "Toegangssleutel",
@@ -327,7 +335,6 @@
     "date": "Datum",
     "retry": "Opnieuw proberen",
     "acceptance": {
-      "tab": "Acceptatietests",
       "loading": "Scenario's laden…",
       "loadError": "Scenario's konden niet geladen worden van {url}",
       "runAll": "Alles uitvoeren",
@@ -358,7 +365,19 @@
       "scope": "Bereik",
       "area": "Gebied",
       "failures": "Gefaalde en foutieve scenario's",
-      "none": "geen"
+      "none": "geen",
+      "legend": "API-01, UI-01: ons testscenario. F2.1: de vereiste uit de lijst van meemoo. §3.7: de paragraaf in het bestek.",
+      "why": "Waarom deze test?",
+      "requirement": "Vereiste",
+      "bestek": "Bestek",
+      "page": "p.",
+      "openBestek": "Open het bestek op deze pagina",
+      "checksTitle": "Wat we controleren",
+      "expectedGot": "verwacht: {expected} · gekregen: {actual}",
+      "tech": "Technische details",
+      "request": "Het verzoek",
+      "expression": "Controle",
+      "notRun": "Nog niet uitgevoerd."
     },
     "cacheOff": "Cache: uit (elke vraag gaat live naar de bron)"
   },

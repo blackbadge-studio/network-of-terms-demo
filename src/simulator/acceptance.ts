@@ -13,8 +13,16 @@ export interface Scenario {
   id: string;
   area: string;
   title: string;
+  /** In plain language, what the scenario tests. */
+  what?: string;
   requirement: string[];
   kind: 'graphql' | 'http';
+  query?: string;
+  path?: string;
+  method?: string;
+  base?: 'api' | 'ui';
+  expectError?: boolean;
+  checks?: Array<{label?: string} & Record<string, unknown>>;
   [key: string]: unknown;
 }
 
@@ -23,10 +31,49 @@ export interface Manifest {
   generated: string;
   areas: Area[];
   scenarios: Scenario[];
+  /** The requirements of meemoo's list the scenarios refer to, by number (F2.1). */
+  requirements?: Record<string, {title: string; text: string; story?: string}>;
+  /** The tender and the sections the scenarios refer to (§3.7): the printed page and the page of the PDF. */
+  bestek?: {url: string; sections: Record<string, {title: string; page: number; pdfPage: number}>};
+}
+
+/** A GraphQL query on one line, laid out over lines by its braces, for reading. */
+export function formatQuery(query: string): string {
+  let out = '';
+  let depth = 0;
+  let parens = 0;
+  let inString = false;
+  const pad = () => '  '.repeat(depth);
+  for (let i = 0; i < query.length; i++) {
+    const char = query[i];
+    if (char === '"' && query[i - 1] !== '\\') {
+      inString = !inString;
+    }
+    if (inString || (char !== '{' && char !== '}') || parens > 0) {
+      if (!inString && char === '(') parens++;
+      if (!inString && char === ')') parens--;
+      out += char;
+      continue;
+    }
+    if (char === '{') {
+      depth++;
+      out = out.replace(/ +$/, '') + (out.trim() ? ' ' : '') + '{\n' + pad();
+    } else {
+      depth = Math.max(0, depth - 1);
+      out = out.replace(/\s+$/, '') + '\n' + pad() + '}';
+      if (/[^\s}]/.test(query.slice(i + 1, i + 3))) {
+        out += '\n' + pad();
+      }
+    }
+    while (query[i + 1] === ' ') i++;
+  }
+  return out.trim();
 }
 
 export interface Check {
   label: string;
+  /** The exact expression behind the label. */
+  detail?: string;
   ok: boolean;
   actual?: unknown;
   expected?: unknown;

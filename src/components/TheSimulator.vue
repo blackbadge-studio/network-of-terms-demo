@@ -4,7 +4,7 @@
       {{ t('simulator.title') }}
     </h1>
     <p class="page__lead">
-      {{ t('simulator.lead') }}
+      {{ t(mode === 'tests' ? 'simulator.leadTests' : 'simulator.lead') }}
     </p>
 
     <!-- gate: only when a key is configured at build time -->
@@ -45,15 +45,50 @@
     </form>
 
     <template v-else>
-      <p
-        class="notice notice--warn"
-        role="note"
+      <div
+        class="sim__modes"
+        role="tablist"
+        :aria-label="t('simulator.title')"
       >
-        <span class="status status--timeout">{{ t('general.poc') }}</span>
-        <span>{{ t('simulator.banner') }}</span>
-      </p>
+        <button
+          v-for="item in modes"
+          :id="`sim-mode-${item}`"
+          :key="item"
+          type="button"
+          role="tab"
+          class="sim__mode"
+          :class="{'is-active': mode === item}"
+          :aria-selected="mode === item"
+          :aria-controls="`sim-view-${item}`"
+          @click="mode = item"
+        >
+          <component
+            :is="item === 'tests' ? ClipboardDocumentCheckIcon : BoltIcon"
+            class="icon"
+          />
+          <span>
+            <b>{{ t(`simulator.mode.${item}`) }}</b>
+            <small>{{ t(`simulator.modeHint.${item}`) }}</small>
+          </span>
+        </button>
+      </div>
 
-      <div class="sim">
+      <div
+        v-show="mode === 'tests'"
+        id="sim-view-tests"
+        role="tabpanel"
+        aria-labelledby="sim-mode-tests"
+      >
+        <SimAcceptance v-if="testsOpened" />
+      </div>
+
+      <div
+        v-show="mode === 'load'"
+        id="sim-view-load"
+        role="tabpanel"
+        aria-labelledby="sim-mode-load"
+        class="sim"
+      >
         <aside class="sim__side">
           <div class="sim__side-head">
             <h2>{{ t('simulator.settings') }}</h2>
@@ -142,14 +177,6 @@
             <SimResults :run="viewRun" />
           </div>
           <div
-            v-show="tab === 'acceptance'"
-            id="sim-panel-acceptance"
-            role="tabpanel"
-            aria-labelledby="sim-tab-acceptance"
-          >
-            <SimAcceptance v-if="acceptanceOpened" />
-          </div>
-          <div
             v-show="tab === 'history'"
             id="sim-panel-history"
             role="tabpanel"
@@ -172,7 +199,7 @@
 <script lang="ts" setup>
 import {computed, onBeforeUnmount, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {PlayIcon, StopIcon} from '@heroicons/vue/16/solid';
+import {BoltIcon, ClipboardDocumentCheckIcon, PlayIcon, StopIcon} from '@heroicons/vue/16/solid';
 import state from '../store';
 import SimSettings from './simulator/SimSettings.vue';
 import SimLog from './simulator/SimLog.vue';
@@ -217,10 +244,14 @@ const currentRun = ref<SimRun | null>(null);
 const running = ref(false);
 const progress = ref({done: 0, total: null as number | null, elapsedMs: 0});
 const validationError = ref('');
-const tab = ref<'log' | 'results' | 'history' | 'acceptance'>('log');
-// The acceptance tab fetches scenarios from the API; mount it on first open only.
-const acceptanceOpened = ref(false);
-watch(tab, (value) => { if (value === 'acceptance') acceptanceOpened.value = true; });
+const tab = ref<'log' | 'results' | 'history'>('log');
+// Two things live on this page and they share nothing: the acceptance tests (does it do what was asked) and
+// the load simulation (how does it hold up). Each has its own view, so its buttons never sit beside the other's.
+const modes = ['tests', 'load'] as const;
+const mode = ref<typeof modes[number]>('tests');
+// The acceptance tests fetch their scenarios from the API; mount them on first open only.
+const testsOpened = ref(true);
+watch(mode, (value) => { if (value === 'tests') testsOpened.value = true; });
 const viewRunId = ref<string | null>(null);
 const viewRun = computed(() => runs.value.find(run => run.id === viewRunId.value) ?? currentRun.value);
 let runner: Runner | null = null;
@@ -230,7 +261,6 @@ const tabs = computed(() => [
   {id: 'log' as const, label: 'simulator.tabLog', count: currentRun.value?.records.length},
   {id: 'results' as const, label: 'simulator.tabResults', count: undefined},
   {id: 'history' as const, label: 'simulator.tabHistory', count: runs.value.length},
-  {id: 'acceptance' as const, label: 'simulator.acceptance.tab', count: undefined},
 ]);
 
 function start() {

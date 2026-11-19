@@ -821,7 +821,39 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .sim-acc__reqs { display: inline-flex; flex-wrap: wrap; gap: var(--s-1); }
 .sim-acc__run-one { margin-top: 0.2rem; }
 .sim-acc__details { grid-column: 1 / -1; padding: var(--s-2) var(--s-3) var(--s-3) 2.5rem; display: grid; gap: var(--s-2); }
+.sim-acc__details { gap: var(--s-4); }
 .sim-acc__details code { font-size: var(--fs-xs); white-space: pre-wrap; word-break: break-word; }
+.sim-acc__legend { margin: 0; }
+.sim-acc__what { font-size: var(--fs-md); color: var(--vtn-text); max-width: var(--prose); }
+.sim-acc__block { display: grid; gap: var(--s-2); }
+.sim-acc__block h4 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--vtn-muted); }
+.sim-acc__checks, .sim-acc__refs { list-style: none; display: grid; gap: var(--s-2); max-width: var(--prose); }
+.sim-acc__checks li { display: grid; grid-template-columns: 1.4rem minmax(0, 1fr); gap: var(--s-2); align-items: baseline; font-size: var(--fs-sm); }
+.sim-acc__mark { font-weight: 700; text-align: center; }
+.sim-acc__mark.is-ok { color: var(--vtn-ok); }
+.sim-acc__mark.is-fail { color: var(--vtn-danger); }
+.sim-acc__mark.is-pending { color: var(--vtn-muted); }
+.sim-acc__got { display: block; font-family: var(--vtn-mono); font-size: var(--fs-xs); color: var(--vtn-danger); word-break: break-word; }
+.sim-acc__refs li { display: grid; gap: 0.15rem; padding-left: var(--s-3); border-left: 3px solid var(--vtn-border); font-size: var(--fs-sm); }
+.sim-acc__refs small { color: var(--vtn-muted); }
+.sim-acc__refs a { display: inline-flex; align-items: center; gap: var(--s-1); justify-self: start; }
+.sim-acc__tech { display: grid; gap: var(--s-3); }
+.sim-acc__tech > summary { display: inline-flex; align-items: center; gap: var(--s-2); cursor: pointer; list-style: none; font-size: var(--fs-sm); font-weight: 600; color: var(--vtn-text-2); }
+.sim-acc__tech > summary::-webkit-details-marker { display: none; }
+.sim-acc__tech[open] > summary { margin-bottom: var(--s-3); }
+.sim-acc__tech[open] > summary .picker__chev { transform: rotate(180deg); }
+.sim-acc__tech .data-table { margin-top: var(--s-3); }
+.sim-acc__request { margin: 0; padding: var(--s-3); border: 1px solid var(--vtn-border); border-radius: var(--r-sm); background: var(--vtn-surface-2); overflow-x: auto; }
+.sim-acc__request code { white-space: pre; word-break: normal; }
+.sim__modes { display: grid; gap: var(--s-3); margin-bottom: var(--s-6); }
+.sim__mode { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-3) var(--s-4); border: 1.5px solid var(--vtn-border); border-radius: var(--r-md); background: var(--vtn-surface); color: var(--vtn-text); text-align: left; cursor: pointer; }
+.sim__mode span { display: grid; }
+.sim__mode b { font-size: var(--fs-md); }
+.sim__mode small { font-size: var(--fs-sm); color: var(--vtn-muted); }
+.sim__mode:hover { background: var(--vtn-surface-2); }
+.sim__mode.is-active { border-color: var(--vtn-primary); background: var(--vtn-mint-light); }
+.sim__mode:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+@media (min-width: 40em) { .sim__modes { grid-template-columns: repeat(2, minmax(0, 22rem)); } }
 .sim-acc__history { display: grid; gap: var(--s-3); padding-top: var(--s-4); border-top: 1px solid var(--vtn-border); }
 .sim-acc__history h3 { font-size: var(--fs-md); }
 @media (max-width: 47.99em) {

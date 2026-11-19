@@ -46,6 +46,10 @@
         </button>
       </div>
 
+      <p class="field__hint sim-acc__legend">
+        {{ t('simulator.acceptance.legend') }}
+      </p>
+
       <div
         v-if="currentRun"
         class="sim-acc__summary"
@@ -143,6 +147,7 @@
                   v-for="req in scenario.requirement"
                   :key="req"
                   class="chip chip--tag"
+                  :title="refTitle(req)"
                 >{{ req }}</span>
               </span>
               <span
@@ -166,51 +171,120 @@
               class="sim-acc__details"
             >
               <p
+                v-if="scenario.what"
+                class="sim-acc__what"
+              >
+                {{ scenario.what }}
+              </p>
+              <p
                 v-if="resultOf(scenario.id)?.error"
                 class="sim-log__message"
               >
                 {{ resultOf(scenario.id)!.error }}
               </p>
-              <table
-                v-if="resultOf(scenario.id)?.checks.length"
-                class="data-table"
+
+              <div
+                v-if="checksOf(scenario).length"
+                class="sim-acc__block"
               >
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      {{ t('simulator.acceptance.checks') }}
-                    </th>
-                    <th scope="col">
-                      {{ t('simulator.acceptance.expected') }}
-                    </th>
-                    <th scope="col">
-                      {{ t('simulator.acceptance.actual') }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(check, index) in resultOf(scenario.id)!.checks"
+                <h4>{{ t('simulator.acceptance.checksTitle') }}</h4>
+                <ul class="sim-acc__checks">
+                  <li
+                    v-for="(check, index) in checksOf(scenario)"
                     :key="index"
                   >
-                    <th scope="row">
-                      <span
-                        class="status"
-                        :class="check.ok ? 'status--ok' : 'status--error'"
-                      >{{ check.ok ? '✓' : '✗' }}</span>
+                    <span
+                      class="sim-acc__mark"
+                      :class="check.ok === undefined ? 'is-pending' : check.ok ? 'is-ok' : 'is-fail'"
+                      aria-hidden="true"
+                    >{{ check.ok === undefined ? '○' : check.ok ? '✓' : '✗' }}</span>
+                    <span>
                       {{ check.label }}
-                    </th>
-                    <td><code>{{ fmt(check.expected) }}</code></td>
-                    <td><code>{{ fmt(check.actual) }}</code></td>
-                  </tr>
-                </tbody>
-              </table>
-              <p
-                v-else-if="!resultOf(scenario.id)"
-                class="field__hint"
+                      <small
+                        v-if="check.ok === false"
+                        class="sim-acc__got"
+                      >{{ t('simulator.acceptance.expectedGot', {expected: fmt(check.expected), actual: fmt(check.actual)}) }}</small>
+                    </span>
+                  </li>
+                </ul>
+                <p
+                  v-if="!resultOf(scenario.id)"
+                  class="field__hint"
+                >
+                  {{ t('simulator.acceptance.notRun') }}
+                </p>
+              </div>
+
+              <div
+                v-if="refsOf(scenario).length"
+                class="sim-acc__block"
               >
-                {{ t('simulator.acceptance.noResults') }}
-              </p>
+                <h4>{{ t('simulator.acceptance.why') }}</h4>
+                <ul class="sim-acc__refs">
+                  <li
+                    v-for="item in refsOf(scenario)"
+                    :key="item.id"
+                  >
+                    <template v-if="item.kind === 'requirement'">
+                      <b>{{ t('simulator.acceptance.requirement') }} {{ item.id }} · {{ item.title }}</b>
+                      <span>
+                        {{ item.text }}
+                        <small v-if="item.story">({{ item.story }})</small>
+                      </span>
+                    </template>
+                    <template v-else-if="item.kind === 'bestek'">
+                      <b>{{ t('simulator.acceptance.bestek') }} {{ item.number }} · {{ item.title }}</b>
+                      <a
+                        :href="item.href"
+                        target="_blank"
+                        rel="noopener"
+                      >{{ t('simulator.acceptance.openBestek') }} ({{ t('simulator.acceptance.page') }} {{ item.page }}) <ArrowTopRightOnSquareIcon class="icon" /></a>
+                    </template>
+                    <b v-else>{{ item.id }}</b>
+                  </li>
+                </ul>
+              </div>
+
+              <details class="sim-acc__tech">
+                <summary>
+                  <ChevronDownIcon class="icon picker__chev" />
+                  {{ t('simulator.acceptance.tech') }}
+                </summary>
+                <div class="sim-acc__block">
+                  <h4>{{ t('simulator.acceptance.request') }}</h4>
+                  <pre class="sim-acc__request"><code>{{ requestOf(scenario) }}</code></pre>
+                </div>
+                <table
+                  v-if="checksOf(scenario).length"
+                  class="data-table"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        {{ t('simulator.acceptance.expression') }}
+                      </th>
+                      <th scope="col">
+                        {{ t('simulator.acceptance.expected') }}
+                      </th>
+                      <th scope="col">
+                        {{ t('simulator.acceptance.actual') }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(check, index) in checksOf(scenario)"
+                      :key="index"
+                    >
+                      <th scope="row">
+                        <code>{{ check.detail }}</code>
+                      </th>
+                      <td><code>{{ fmt(check.expected) }}</code></td>
+                      <td><code>{{ fmt(check.actual) }}</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
             </div>
           </li>
         </ul>
@@ -333,9 +407,9 @@
 <script lang="ts" setup>
 import {computed, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {ArrowDownTrayIcon, ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon, PlayIcon, StopIcon, TrashIcon} from '@heroicons/vue/16/solid';
+import {ArrowDownTrayIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, ExclamationTriangleIcon, PlayIcon, StopIcon, TrashIcon} from '@heroicons/vue/16/solid';
 import {
-  AcceptanceRun, MAX_ACCEPTANCE_RUNS, Manifest, Result, Scenario,
+  AcceptanceRun, MAX_ACCEPTANCE_RUNS, Manifest, Result, Scenario, formatQuery,
   apiBaseUrl, fetchApiVersion, loadAcceptanceRuns, loadManifest, loadRunner, saveAcceptanceRuns, summarizeResults, testsBaseUrl, toMarkdownReport,
 } from '../../simulator/acceptance';
 import {downloadText} from '../../simulator/stats';
@@ -408,6 +482,46 @@ const progressPercent = computed(() => {
   return Math.min(100, Math.round((run.results.length / planned) * 100));
 });
 const fmt = (value: unknown) => value === undefined ? '' : typeof value === 'string' ? value : JSON.stringify(value);
+
+/**
+ * The checks of a scenario for display: judged ones once it ran, otherwise what it is going to check.
+ * `label` is plain language, `detail` the exact expression (older stored runs only have the latter).
+ */
+function checksOf(scenario: Scenario) {
+  const judged = resultOf(scenario.id)?.checks ?? [];
+  if (judged.length > 0) {
+    return judged.map(check => ({...check, detail: check.detail ?? check.label, ok: check.ok as boolean | undefined}));
+  }
+  const planned = scenario.checks?.length ? scenario.checks : scenario.expectError ? [{label: 'De API antwoordt met een duidelijke foutmelding'}] : [];
+  return planned.map(check => ({label: check.label ?? '', detail: detailOf(check), ok: undefined as boolean | undefined, expected: undefined as unknown, actual: undefined as unknown}));
+}
+const detailOf = (check: Record<string, unknown>) => Object.entries(check)
+  .filter(([key]) => key !== 'label')
+  .map(([key, value]) => `${key} ${typeof value === 'string' ? value : JSON.stringify(value)}`)
+  .join(', ');
+
+/** What a scenario answers to: the requirement in meemoo's list, or the section of the tender. */
+function refsOf(scenario: Scenario) {
+  return scenario.requirement.map(id => {
+    const requirement = manifest.value?.requirements?.[id];
+    if (requirement) {
+      return {kind: 'requirement' as const, id, ...requirement};
+    }
+    const section = manifest.value?.bestek?.sections[id];
+    if (section) {
+      return {kind: 'bestek' as const, id, number: id.split(' ')[0], title: section.title, page: section.page, href: `${manifest.value!.bestek!.url}#page=${section.pdfPage}`};
+    }
+    return {kind: 'other' as const, id};
+  });
+}
+const refTitle = (id: string) => manifest.value?.requirements?.[id]?.title ?? manifest.value?.bestek?.sections[id]?.title;
+
+function requestOf(scenario: Scenario): string {
+  if (scenario.kind === 'graphql') {
+    return `POST ${apiBaseUrl()}${scenario.path ?? '/graphql'}\n\n${formatQuery(scenario.query ?? '')}`;
+  }
+  return `${scenario.method ?? 'GET'} ${scenario.base === 'ui' ? window.location.origin : apiBaseUrl()}${scenario.path ?? ''}`;
+}
 
 function toggle(id: string) {
   if (expanded.has(id)) {

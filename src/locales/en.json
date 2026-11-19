@@ -195,7 +195,15 @@
     "title": "Simulator",
     "navLabel": "Simulator",
     "lead": "Run simulated search sessions against the GraphQL API and collect test data on response times and source status.",
-    "banner": "For test and demo purposes only. Every request carries the header X-Simulation: 1; no personal data is logged.",
+    "leadTests": "Test scenarios that check whether the Termennetwerk does what the tender asks. Click a test to read what it checks and why.",
+    "mode": {
+      "tests": "Acceptance tests",
+      "load": "Load simulation"
+    },
+    "modeHint": {
+      "tests": "Does it do what was asked?",
+      "load": "How does it hold up under load?"
+    },
     "gateTitle": "Developer tool",
     "gateText": "Enter the access key to open the simulator.",
     "gateLabel": "Access key",
@@ -327,7 +335,6 @@
     "date": "Date",
     "retry": "Retry",
     "acceptance": {
-      "tab": "Acceptance tests",
       "loading": "Loading scenarios…",
       "loadError": "Scenarios could not be loaded from {url}",
       "runAll": "Run all",
@@ -358,7 +365,19 @@
       "scope": "Scope",
       "area": "Area",
       "failures": "Failed and errored scenarios",
-      "none": "none"
+      "none": "none",
+      "legend": "API-01, UI-01: our test scenario. F2.1: the requirement from meemoo's list. §3.7: the section of the tender.",
+      "why": "Why this test?",
+      "requirement": "Requirement",
+      "bestek": "Tender",
+      "page": "p.",
+      "openBestek": "Open the tender at this page",
+      "checksTitle": "What we check",
+      "expectedGot": "expected: {expected} · got: {actual}",
+      "tech": "Technical details",
+      "request": "The request",
+      "expression": "Check",
+      "notRun": "Not run yet."
     },
     "cacheOff": "Cache: off (every query goes live to the source)"
   },
