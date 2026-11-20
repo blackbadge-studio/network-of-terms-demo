@@ -32,3 +32,28 @@ export function holdAtTop(find: () => Element | null | undefined, options: {forM
   };
   tick();
 }
+
+/**
+ * For a scroll the visitor caused (pressing search): returns a function that glides the element to the top of
+ * the window, and says whether the page was long enough to get it there. Call it when the element appears, and
+ * again once its content has arrived if it could not get there. It does nothing once the visitor has moved the
+ * page themself. The glide is the page's own scroll behaviour (smooth, or a jump for who asked for less motion).
+ */
+export function glideToTop(find: () => Element | null | undefined): () => boolean {
+  let released = false;
+  const release = () => { released = true; };
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(type => window.addEventListener(type, release, {once: true, passive: true}));
+
+  return () => {
+    const top = find()?.getBoundingClientRect().top;
+    if (released || top === undefined) {
+      return true;
+    }
+    const distance = top - TOP_GAP;
+    if (Math.abs(distance) > 2) {
+      window.scrollBy({top: distance});
+    }
+    const room = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+    return distance <= room;
+  };
+}

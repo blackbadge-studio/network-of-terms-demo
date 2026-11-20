@@ -114,7 +114,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, PropType, reactive, ref, watch} from 'vue';
+import {computed, nextTick, onMounted, PropType, reactive, ref, watch} from 'vue';
 import {useQuery} from 'villus';
 import {useI18n} from 'vue-i18n';
 import {ExclamationCircleIcon, XMarkIcon} from '@heroicons/vue/16/solid';
@@ -123,7 +123,7 @@ import SourceResults from './SourceResults.vue';
 import SourceHeader from './SourceHeader.vue';
 import TermResult from './TermResult.vue';
 import state from '../store';
-import {holdAtTop} from '../scroll';
+import {glideToTop} from '../scroll';
 
 const props = defineProps({
   q: {type: String, default: ''},
@@ -156,12 +156,20 @@ watch(isFetching, (fetching) => {
   state.loading = fetching;
 }, {immediate: true});
 
-// After the visitor pressed search, the results come into view and stay there while they arrive. A search that
-// was opened from a link stays at the top of the page: nobody asked to be moved.
+// After the visitor pressed search, the page glides to the results as soon as the section appears, and once more
+// when the answer is in if the page was too short to get there. A search that was opened from a link stays at
+// the top of the page: nobody asked to be moved.
 const sectionEl = ref<HTMLElement | null>(null);
 if (Date.now() - state.searchedAt < 3000) {
   state.searchedAt = 0;
-  holdAtTop(() => sectionEl.value, {forMs: 12000, until: () => !isFetching.value});
+  const glide = glideToTop(() => sectionEl.value);
+  let arrived = false;
+  onMounted(() => { arrived = glide(); });
+  watch(isFetching, (fetching) => {
+    if (!fetching && !arrived) {
+      nextTick(glide);
+    }
+  });
 }
 
 // Response times feed the netwerk theme's source-status panel.
