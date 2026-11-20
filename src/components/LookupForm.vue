@@ -155,6 +155,7 @@ function onSubmit() {
     return;
   }
   state.loading = true;
+  state.searchedAt = Date.now();
   router.replace({name: 'lookup', query: {uri: uri.value.trim()}});
 }
 </script>

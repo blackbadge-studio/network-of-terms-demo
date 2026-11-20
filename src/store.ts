@@ -10,4 +10,6 @@ export default reactive({
   selectedTypes: [] as string[],
   /** Response time per source URI from the last search, for the netwerk source-status panel. */
   responseTimes: {} as Record<string, number>,
+  /** When the visitor last pressed search (ms); the results that then appear scroll into view. */
+  searchedAt: 0,
 });

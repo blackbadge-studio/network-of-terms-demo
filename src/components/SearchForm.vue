@@ -252,6 +252,7 @@ function onSubmit() {
     return;
   }
   state.loading = true;
+  state.searchedAt = Date.now();
   const query: Record<string, string> = {
     q: q.value.trim(),
     datasets: state.selectedDatasets.join(','),

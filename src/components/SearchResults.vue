@@ -1,6 +1,7 @@
 <template>
   <section
     v-if="q && datasets.length > 0"
+    ref="sectionEl"
     class="results"
     :class="{'results--compact': compact, 'has-detail': compact && selected}"
     aria-live="polite"
@@ -122,6 +123,7 @@ import SourceResults from './SourceResults.vue';
 import SourceHeader from './SourceHeader.vue';
 import TermResult from './TermResult.vue';
 import state from '../store';
+import {holdAtTop} from '../scroll';
 
 const props = defineProps({
   q: {type: String, default: ''},
@@ -153,6 +155,14 @@ const {data, isFetching, error} = useQuery<TermsQueryResult>({
 watch(isFetching, (fetching) => {
   state.loading = fetching;
 }, {immediate: true});
+
+// After the visitor pressed search, the results come into view and stay there while they arrive. A search that
+// was opened from a link stays at the top of the page: nobody asked to be moved.
+const sectionEl = ref<HTMLElement | null>(null);
+if (Date.now() - state.searchedAt < 3000) {
+  state.searchedAt = 0;
+  holdAtTop(() => sectionEl.value, {forMs: 12000, until: () => !isFetching.value});
+}
 
 // Response times feed the netwerk theme's source-status panel.
 state.responseTimes = {};

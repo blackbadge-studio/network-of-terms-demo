@@ -16,6 +16,7 @@ import SearchForm from './components/SearchForm.vue';
 import TheBrowse from './components/TheBrowse.vue';
 import TheStatus from './components/TheStatus.vue';
 import TheIntegration from './components/TheIntegration.vue';
+import {holdAtTop} from './scroll';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -113,42 +114,16 @@ export const router = createRouter({
   ],
   scrollBehavior (to, from) {
     if (to.hash) {
-      // A link from elsewhere straight to a heading (/integratie#opzoeken) is handled apart, see holdAt.
+      // A link from elsewhere straight to a heading (/integratie#opzoeken): on that first load the page keeps
+      // growing for a moment, so a single scroll lands short or not at all. Hold the heading at the top instead.
       if (from.matched.length === 0) {
-        holdAt(to.hash.slice(1));
+        holdAtTop(() => document.getElementById(to.hash.slice(1)));
         return;
       }
-      return {el: to.hash, top: HEADING_GAP, behavior: 'smooth'};
+      return {el: to.hash, top: 16, behavior: 'smooth'};
     }
   },
 });
-
-const HEADING_GAP = 16;
-
-/**
- * On a first load the page keeps growing for a moment (lists and examples fill in), so a single scroll to a
- * heading lands short or not at all. Keep the heading at the top until the page is still, or the reader moves.
- */
-function holdAt(id: string) {
-  const until = Date.now() + 2500;
-  let released = false;
-  const release = () => { released = true; };
-  for (const type of ['wheel', 'touchstart', 'keydown', 'mousedown']) {
-    window.addEventListener(type, release, {once: true, passive: true});
-  }
-  const tick = () => {
-    if (released || Date.now() > until) {
-      return;
-    }
-    const top = document.getElementById(id)?.getBoundingClientRect().top;
-    if (top !== undefined && Math.abs(top - HEADING_GAP) > 2) {
-      window.scrollBy({top: top - HEADING_GAP, behavior: 'instant'});
-    }
-    // A timer, not an animation frame: a tab opened in the background draws no frames, and would stay at the top.
-    setTimeout(tick, 50);
-  };
-  tick();
-}
 
 router.beforeEach((to, from, next) => {
   const locale: string = to.params.locale as  string;
