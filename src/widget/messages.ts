@@ -42,6 +42,7 @@ const nl = {
   retry: 'Opnieuw proberen',
   poweredBy: 'Zoeken via het Vlaams Termennetwerk',
   externalLink: 'opent in een nieuw venster',
+  labelLanguage: 'Taal van deze naam: {language}',
   types: {
     CONCEPT: 'Concept',
     PERSON: 'Persoon',
@@ -86,6 +87,7 @@ const en: WidgetMessages = {
   retry: 'Try again',
   poweredBy: 'Search powered by the Flemish Network of Terms',
   externalLink: 'opens in a new window',
+  labelLanguage: 'Language of this name: {language}',
   types: {
     CONCEPT: 'Concept',
     PERSON: 'Person',

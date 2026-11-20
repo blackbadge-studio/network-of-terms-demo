@@ -1,6 +1,6 @@
 import {
   SourceState, TermsEntry, WidgetSource, WidgetTerm,
-  fetchSources, fetchTerms, pickLabels, sourceState,
+  fetchSources, fetchTerms, pickLabels, pickLanguage, sourceState,
 } from './api';
 import {MESSAGES, WidgetLang, WidgetMessages, format, isWidgetLang} from './messages';
 import {WIDGET_STYLES} from './styles';
@@ -22,6 +22,8 @@ import {WIDGET_STYLES} from './styles';
  * Events (CustomEvent, bubbling and composed, so a listener on the element or the document hears them):
  *   vtn:search  {query, sources, genres}
  *   vtn:select  {uri, prefLabel, source: {uri, name}, resultType, language}
+ *               language is the language of the chosen label: the widget's own, or the language the
+ *               source has the name in when it has none in the widget's
  *   vtn:error   {source, type, message}  per unreachable source, or source null for the API itself
  */
 
@@ -31,6 +33,7 @@ export interface VtnSelectDetail {
   prefLabel: string;
   source: {uri: string; name: string};
   resultType: string;
+  /** The language of `prefLabel`, which is another one than the widget's when the source has no name in that. */
   language: string;
 }
 
@@ -236,6 +239,9 @@ export class VtnSearchElement extends HTMLElement {
     }
     const sources = this.sourceUris;
     const genres = this.genreUris;
+    // Labels are asked in the widget's language and, to fall back on, in the languages the searched sources offer.
+    const offered = (this.allSources ?? []).filter(source => sources.includes(source.uri)).flatMap(source => source.inLanguage ?? []);
+    const languages = [...new Set([this.widgetLang, 'nl', 'en', ...offered])];
 
     this.controller?.abort();
     const controller = new AbortController();
@@ -246,7 +252,7 @@ export class VtnSearchElement extends HTMLElement {
     this.emit<VtnSearchDetail>('vtn:search', {query, sources, genres});
 
     try {
-      const entries = await fetchTerms({api: this.api, sources, query, lang: this.widgetLang, genres, limit: this.limit, signal: controller.signal});
+      const entries = await fetchTerms({api: this.api, sources, query, lang: this.widgetLang, languages, genres, limit: this.limit, signal: controller.signal});
       if (controller.signal.aborted) {
         return;
       }
@@ -330,7 +336,7 @@ export class VtnSearchElement extends HTMLElement {
           prefLabel: this.label(term),
           source: {uri: entry.source.uri, name: entry.source.name},
           resultType: term.resultType,
-          language: this.widgetLang,
+          language: pickLanguage(term.prefLabel, this.widgetLang).language ?? this.widgetLang,
         });
 
         return;
@@ -368,7 +374,7 @@ export class VtnSearchElement extends HTMLElement {
   }
 
   private label(term: WidgetTerm): string {
-    return pickLabels(term.prefLabel, this.widgetLang).join(' · ') || term.uri;
+    return pickLanguage(term.prefLabel, this.widgetLang).values.join(' · ') || term.uri;
   }
 
   /** Batches renders within a frame and keeps the search field's focus and caret. */
@@ -496,7 +502,9 @@ export class VtnSearchElement extends HTMLElement {
     const m = this.messages;
     const lang = this.widgetLang;
     const label = this.label(term);
-    const note = pickLabels(term.scopeNote, lang).join(' · ');
+    const note = pickLanguage(term.scopeNote, lang).values.join(' · ');
+    // Named beside the label when the source has it in another language than the widget's.
+    const labelLanguage = pickLanguage(term.prefLabel, lang).language;
     const alt = [...new Set(pickLabels(term.altLabel, lang))];
     const open = this.openUris.has(term.uri);
     const selected = this.selectedUri === term.uri;
@@ -517,7 +525,7 @@ export class VtnSearchElement extends HTMLElement {
     return `
       <li class="term${open ? ' term--open' : ''}${selected ? ' term--selected' : ''}" part="term" data-uri="${escape(term.uri)}">
         <div class="term__head">
-          <h4 class="term__title">${escape(label)}</h4>
+          <h4 class="term__title">${escape(label)}${labelLanguage && labelLanguage !== lang ? ` <span class="term__lang" title="${escape(format(m.labelLanguage, {language: labelLanguage}))}">${escape(labelLanguage)}</span>` : ''}</h4>
           <span class="term__type">${escape(m.types[term.resultType] ?? term.resultType)}</span>
         </div>
         ${note ? `<p class="term__note">${escape(note)}</p>` : ''}

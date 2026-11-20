@@ -245,6 +245,25 @@
     </p>
 
     <h3>
+      In welke talen krijg ik termen terug?
+    </h3>
+    <p>
+      In de talen die de bron zelf aanlevert: het Termennetwerk vertaalt niets. Welke talen een bron heeft, staat in de
+      <router-link :to="{name: 'sources'}">
+        lijst van terminologiebronnen
+      </router-link>. Met het argument
+      <code>languages</code> vraag je de namen in de talen die je wilt tonen; elk label komt dan terug met zijn taal.
+    </p>
+    <p>
+      Een term valt niet weg omdat een taal ontbreekt. Vraag daarom een terugvaltaal mee, zoals Nederlands of Engels,
+      en toon de taal bij een naam in een andere taal dan die van je scherm. De zoekinterface doet dat ook: boven de
+      resultaten kies je de taal, en bij een naam in een andere taal staat welke taal het is. De
+      <router-link :to="{name: 'integration'}">
+        integratiegids
+      </router-link> heeft een voorbeeld dat je kunt uitvoeren.
+    </p>
+
+    <h3>
       Welke terminologiebronnen moet ik doorzoeken?
     </h3>
     <p>

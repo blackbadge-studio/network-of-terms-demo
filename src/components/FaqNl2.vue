@@ -107,6 +107,20 @@
     </p>
 
     <h3>
+      Hoe gaat het Termennetwerk om met de talen van mijn bron?
+    </h3>
+    <p>
+      Het Termennetwerk toont de talen die je bron aanlevert en vertaalt niets. In de catalogus staat per bron in welke
+      talen ze namen en beschrijvingen heeft, en een zoekvraag doorzoekt de namen in al die talen. Geef daarom bij elke
+      naam en beschrijving de taal mee, met een taalcode zoals <code>nl</code> of <code>fr</code>. Een naam zonder
+      taal behandelt het Termennetwerk als Nederlands.
+    </p>
+    <p>
+      Heeft een term geen naam in de taal die een gebruiker kiest, dan ziet die de naam in een andere taal, met de taal
+      erbij.
+    </p>
+
+    <h3>
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>

@@ -39,6 +39,8 @@ export interface WidgetSource {
   mainEntityOfPage?: string | null;
   /** Only on the sources list, where the widget reads the names of the genres it was given. */
   genres?: WidgetGenre[];
+  /** Only on the sources list: the languages the source offers labels in. */
+  inLanguage?: string[];
 }
 
 export interface TermsError {
@@ -63,7 +65,7 @@ export const sourceState = (result: TermsEntry['result']): SourceState => {
 };
 
 const SOURCES_QUERY = `query WidgetSources ($genres: [ID]) {
-  sources (genres: $genres) { uri name alternateName mainEntityOfPage genres { uri name } }
+  sources (genres: $genres) { uri name alternateName mainEntityOfPage inLanguage genres { uri name } }
 }`;
 
 const TERMS_QUERY = `query WidgetTerms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID], $limit: Int) {
@@ -133,6 +135,8 @@ export interface TermsRequest {
   sources: string[];
   query: string;
   lang: string;
+  /** The languages to ask labels in: the widget's own first, then the ones to fall back on. */
+  languages: string[];
   /** Genre URIs; a result type is a genre too. */
   genres: string[];
   limit: number;
@@ -143,13 +147,34 @@ export async function fetchTerms(request: TermsRequest): Promise<TermsEntry[]> {
   const data = await graphql<{terms: TermsEntry[]}>(request.api, TERMS_QUERY, {
     sources: request.sources,
     query: request.query,
-    languages: [request.lang],
+    languages: request.languages,
     ...(request.genres.length > 0 ? {genres: request.genres} : {}),
     limit: request.limit,
   }, request.lang, request.signal);
 
   return data.terms;
 }
+
+/** The strings of one language, and which language that is. */
+export interface Picked {
+  values: string[];
+  language: string | null;
+}
+
+/**
+ * What to show in the widget's language: the strings in that language and, where the source has none,
+ * those in Dutch, then English, then the first other language it has. Nothing is translated.
+ */
+export const pickLanguage = (strings: LanguageString[], lang: string): Picked => {
+  for (const language of [lang, 'nl', 'en', ...strings.map(item => item.language)]) {
+    const values = strings.filter(item => item.language === language).map(item => item.value);
+    if (values.length > 0) {
+      return {values, language};
+    }
+  }
+
+  return {values: [], language: null};
+};
 
 /** Labels in the widget's language first; every label when the source has none in it. */
 export const pickLabels = (strings: LanguageString[], lang: string): string[] => {

@@ -107,6 +107,20 @@
     </p>
 
     <h3>
+      How does the Network of Terms handle the languages of my source?
+    </h3>
+    <p>
+      The Network of Terms shows the languages your source provides and translates nothing. The catalog records per
+      source in which languages it has names and descriptions, and a search goes through the names in all of them.
+      So give every name and description its language, with a language code such as <code>nl</code> or
+      <code>fr</code>. The Network of Terms treats a name without a language as Dutch.
+    </p>
+    <p>
+      When a term has no name in the language a user chooses, they see the name in another language, with the
+      language beside it.
+    </p>
+
+    <h3>
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>

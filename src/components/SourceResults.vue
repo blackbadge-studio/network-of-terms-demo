@@ -91,12 +91,12 @@ const {t, locale} = useI18n();
 const override = ref<TermsEntry | null>(null);
 const {execute, isFetching} = useQuery<TermsQueryResult>({
   query: TERMS_QUERY,
-  variables: {
+  variables: computed(() => ({
     sources: [props.entry.source.uri],
     query: props.q,
     languages: props.languages,
     ...(props.genres.length > 0 ? {genres: props.genres} : {}),
-  },
+  })),
   context: {headers: reactive({'Accept-Language': locale})},
   cachePolicy: 'network-only',
   fetchOnMount: false,

@@ -245,6 +245,27 @@
     </p>
 
     <h3>
+      In which languages do I get terms back?
+    </h3>
+    <p>
+      In the languages the source itself provides: the Network of Terms translates nothing. Which languages a source
+      has is in the <router-link :to="{name: 'sources'}">
+        list of terminology sources
+      </router-link>. With the argument
+      <code>languages</code> you ask for the names in the languages you want to show; each label then comes back with
+      its language.
+    </p>
+    <p>
+      A term is never left out because a language is missing. So also ask for a language to fall back on, such as
+      Dutch or English, and show the language beside a name that is in another language than your screen. The search
+      interface does the same: above the results you choose the language, and a name in another language says which
+      language it is in. The <router-link :to="{name: 'integration'}">
+        integration guide
+      </router-link> has an example
+      you can run.
+    </p>
+
+    <h3>
       Who creates and manages the Network of Terms?
     </h3>
     <p>

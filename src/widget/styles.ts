@@ -136,6 +136,7 @@ a { color: var(--_primary); }
 .term--selected { border-color: var(--_ok); box-shadow: inset 3px 0 0 var(--_ok); }
 .term__head { display: flex; flex-wrap: wrap; align-items: center; gap: .3em .6em; }
 .term__title { margin: 0; font-size: 1.0625em; font-weight: 700; }
+.term__lang { display: inline-block; padding: 0 .4em; border-radius: 999px; background: var(--_surface-2); color: var(--_muted); font-size: .6875em; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }
 .term__type { display: inline-flex; align-items: center; min-height: 1.5em; padding: .05em .6em; border-radius: 999px; background: var(--_surface-2); color: var(--_muted); font-size: .75em; font-weight: 600; letter-spacing: .01em; margin-left: auto; }
 .term__note { margin: 0; font-size: .9em; color: var(--_muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .term--open .term__note { display: block; }

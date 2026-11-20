@@ -11,7 +11,7 @@
           class="chip"
           :to="{name: 'lookup', query: {uri: term.uri}}"
         >
-          {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
+          {{ filterLanguageStrings(term.prefLabel, language)[0] ?? term.uri }}
         </router-link>
         <a
           v-else
@@ -20,7 +20,7 @@
           target="_blank"
           rel="noopener"
         >
-          {{ filterLanguageStrings(term.prefLabel)[0] ?? term.uri }}
+          {{ filterLanguageStrings(term.prefLabel, language)[0] ?? term.uri }}
           <ArrowTopRightOnSquareIcon class="icon" />
         </a>
       </li>
@@ -31,6 +31,7 @@
 <script lang="ts" setup>
 import {PropType} from 'vue';
 import {RelatedTerm, filterLanguageStrings} from '../query';
+import {useResultLanguage} from '../languages';
 import {ArrowTopRightOnSquareIcon} from '@heroicons/vue/16/solid';
 
 defineProps({
@@ -38,6 +39,8 @@ defineProps({
   terms: {type: Array as PropType<RelatedTerm[]>, required: true},
   lookupLink: {type: Boolean, default: true},
 });
+
+const language = useResultLanguage();
 </script>
 
 <style scoped>

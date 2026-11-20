@@ -115,6 +115,8 @@
     "available": "Beschikbaar",
     "unavailable": "Momenteel niet beschikbaar",
     "resultsFor": "Resultaten voor “{q}”",
+    "resultLanguage": "Taal van de resultaten",
+    "labelLanguage": "Dit staat in het {language}",
     "resultsSummary": "geen termen | {n} term | {n} termen",
     "inSources": "in {n} bron | in {n} bron | in {n} bronnen",
     "stateResults": "geen resultaten | {n} resultaat | {n} resultaten",

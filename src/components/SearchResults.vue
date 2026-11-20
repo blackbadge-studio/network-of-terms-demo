@@ -17,6 +17,25 @@
         </template>
       </h2>
       <span class="results__meta">{{ t('search.resultsFor', {q}) }}</span>
+      <!-- The language the results are shown in, apart from the language of the interface. -->
+      <label
+        v-if="entries && languageOptions.length > 1"
+        class="results__lang"
+      >
+        <span>{{ t('search.resultLanguage') }}</span>
+        <select
+          v-model="resultLanguage"
+          class="results__lang-select"
+        >
+          <option
+            v-for="code in languageOptions"
+            :key="code"
+            :value="code"
+          >
+            {{ languageName(code, locale) }}
+          </option>
+        </select>
+      </label>
     </div>
 
     <!-- minimaal: sticky per-source strip -->
@@ -120,11 +139,12 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, PropType, reactive, ref, watch} from 'vue';
+import {computed, nextTick, onMounted, PropType, provide, reactive, ref, watch} from 'vue';
 import {useQuery} from 'villus';
 import {useI18n} from 'vue-i18n';
 import {ExclamationCircleIcon, XMarkIcon} from '@heroicons/vue/16/solid';
-import {Source, TERMS_QUERY, Term, TermsQueryResult, sourceState} from '../query';
+import {SOURCES_QUERY, Source, TERMS_QUERY, Term, TermsQueryResult, sourceState} from '../query';
+import {RESULT_LANGUAGE, languageName} from '../languages';
 import {SOURCES_BY_GENRE_QUERY, isTypeGenre} from '../genres';
 import SourceResults from './SourceResults.vue';
 import SourceHeader from './SourceHeader.vue';
@@ -141,7 +161,6 @@ const props = defineProps({
 });
 
 const {t, locale} = useI18n();
-const languages = [...new Set([locale.value, 'nl', 'en'])];
 
 // A type is asked for as a genre, in the two steps the API offers: `sources(genres:)` says which
 // sources carry the chosen types, and only those of the chosen sources are searched; `terms(genres:)`
@@ -161,20 +180,51 @@ const searched = computed<string[] | null>(() => {
   return carrying ? props.datasets.filter(uri => carrying.some(source => source.uri === uri)) : null;
 });
 
+// The catalog says which languages each source offers; the picker has usually loaded it already.
+const {data: catalog, isFetching: isReadingCatalog, error: catalogError} = useQuery<{sources: Source[]}>({
+  query: SOURCES_QUERY,
+  variables: reactive({locale}),
+  context: {headers: reactive({'Accept-Language': locale})},
+  skip: () => !props.q || props.datasets.length === 0 || state.sources.length > 0,
+});
+/** The languages the searched sources offer; null while the catalog still has to say, empty if it cannot. */
+const sourceLanguages = computed<string[] | null>(() => {
+  const sources = state.sources.length > 0 ? state.sources : catalog.value?.sources;
+  if (!searched.value || (!sources && !catalogError.value)) {
+    return null;
+  }
+  return [...new Set((sources ?? [])
+    .filter(source => searched.value!.includes(source.uri))
+    .flatMap(source => source.inLanguage ?? []))];
+});
+
+// The labels are asked in every language the searched sources offer. So the language of the results
+// is a choice the visitor makes above them, apart from the language of the interface, and a term
+// that has no name in the chosen language still shows one, with its language beside it.
+const languages = computed(() => [...new Set([locale.value, 'nl', 'en', ...(sourceLanguages.value ?? [])])]);
+const resultLanguage = ref<string>(locale.value);
+provide(RESULT_LANGUAGE, resultLanguage);
+const languageOptions = computed(() => {
+  const name = (code: string) => languageName(code, locale.value);
+  const offered = [...new Set([locale.value, ...(sourceLanguages.value ?? [])])];
+  // The language of the interface first, the others by name.
+  return [locale.value, ...offered.filter(code => code !== locale.value).sort((a, b) => name(a).localeCompare(name(b), locale.value))];
+});
+
 const {data, isFetching: isSearching, error: searchError} = useQuery<TermsQueryResult>({
   query: TERMS_QUERY,
   variables: computed(() => ({
     sources: searched.value ?? [],
     query: props.q,
-    languages,
+    languages: languages.value,
     ...(props.genres.length > 0 ? {genres: props.genres} : {}),
   })),
   context: {
     headers: reactive({'Accept-Language': locale}),
   },
-  skip: () => !props.q || !searched.value || searched.value.length === 0,
+  skip: () => !props.q || !searched.value || searched.value.length === 0 || sourceLanguages.value === null,
 });
-const isFetching = computed(() => isChoosing.value || isSearching.value);
+const isFetching = computed(() => isChoosing.value || isReadingCatalog.value || isSearching.value);
 const error = computed(() => choosingError.value ?? searchError.value);
 /** None of the chosen sources carries a chosen type, so there is nothing to search. */
 const noSourceOfType = computed(() => searched.value?.length === 0);

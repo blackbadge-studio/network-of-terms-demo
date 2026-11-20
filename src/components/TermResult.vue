@@ -8,6 +8,7 @@
         >
           {{ prefLabel }}
         </router-link>
+        <LanguageTag :language="label.language" />
       </h3>
       <span
         v-if="term.resultType"
@@ -21,7 +22,7 @@
         class="term__note"
         :class="{'term__note--clamped': !noteExpanded}"
       >
-        {{ scopeNote }}
+        {{ scopeNote }}<LanguageTag :language="note.language" />
       </p>
       <button
         v-if="scopeNote.length > 220"
@@ -131,6 +132,8 @@ import RelatedTerms from './RelatedTerms.vue';
 import CopyButton from './CopyButton.vue';
 import {Entity, LanguageString, SOURCES_QUERY, Source, Term, filterLanguageStrings} from '../query';
 import {supportsHierarchy} from '../browse';
+import {pickLanguage, useResultLanguage} from '../languages';
+import LanguageTag from './LanguageTag.vue';
 import state from '../store';
 
 const props = defineProps({
@@ -158,9 +161,14 @@ const showTreeLink = computed(() =>
 const noteId = useId();
 const noteExpanded = ref(false);
 
-const prefLabel = computed(() => filterLanguageStrings(props.term.prefLabel).join(' · ') || props.term.uri);
-const scopeNote = computed(() => filterLanguageStrings(props.term.scopeNote).join(' · '));
-const altLabels = computed(() => [...new Set(filterLanguageStrings(props.term.altLabel))]);
+// In the language the results are shown in (on a page without that choice: the language of the interface);
+// where the source has no name or description in it, in another one, which is named.
+const language = useResultLanguage();
+const label = computed(() => pickLanguage(props.term.prefLabel, language.value));
+const note = computed(() => pickLanguage(props.term.scopeNote, language.value));
+const prefLabel = computed(() => label.value.values.join(' · ') || props.term.uri);
+const scopeNote = computed(() => note.value.values.join(' · '));
+const altLabels = computed(() => [...new Set(filterLanguageStrings(props.term.altLabel, language.value))]);
 
 /**
  * What the source states about a person as data (birth, death, occupation, nationality), where it does.
@@ -173,13 +181,13 @@ const personFacts = computed(() => {
     return [];
   }
   const names = (entities: Array<{name: LanguageString[]} | null>) =>
-    [...new Set(entities.flatMap(entity => entity ? filterLanguageStrings(entity.name) : []))];
+    [...new Set(entities.flatMap(entity => entity ? filterLanguageStrings(entity.name, language.value) : []))];
   const when = (date: string | null, places: Entity[]) => [date, names(places).join(' / ')].filter(Boolean).join(', ');
   const deathYear = Number.parseInt(person.deathDate ?? '', 10);
   const deathDate = deathYear > new Date().getFullYear() ? null : person.deathDate;
   // A source that only names an occupation gives one role per language: pick the language over all of them.
   const occupations = [...new Set([
-    ...filterLanguageStrings(person.hasOccupation.flatMap(role => role.roleName)),
+    ...filterLanguageStrings(person.hasOccupation.flatMap(role => role.roleName), language.value),
     ...names(person.hasOccupation.filter(role => role.roleName.length === 0).map(role => role.occupation)),
   ])];
   return [

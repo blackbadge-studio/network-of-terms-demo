@@ -115,6 +115,8 @@
     "available": "Available",
     "unavailable": "Currently unavailable",
     "resultsFor": "Results for “{q}”",
+    "resultLanguage": "Language of the results",
+    "labelLanguage": "This is in {language}",
     "resultsSummary": "no terms | {n} term | {n} terms",
     "inSources": "in {n} source | in {n} source | in {n} sources",
     "stateResults": "no results | {n} result | {n} results",

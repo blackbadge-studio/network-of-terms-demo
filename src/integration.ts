@@ -36,6 +36,23 @@ export const QUERIES = {
     }
   }
 }`,
+  languages: `{
+  terms(
+    sources: ["http://vocab.getty.edu/tgn"]
+    query: "Ypres"
+    languages: [nl, fr]
+    limit: 2
+  ) {
+    source { name inLanguage }
+    result {
+      __typename
+      ... on TranslatedTerms {
+        terms { uri prefLabel { language value } altLabel { language value } }
+      }
+      ... on Error { message }
+    }
+  }
+}`,
   lookup: `{
   lookup(
     uris: [
@@ -77,6 +94,7 @@ export const QUERIES = {
 export const STORED_TERM = `{
   "uri": "https://data.rkd.nl/artists/89578",
   "label": "Permeke, Henri Louis",
+  "language": "nl",
   "source": "https://data.rkd.nl/rkdartists",
   "type": "PERSON"
 }`;
@@ -108,7 +126,7 @@ export interface Guide {
 export const GUIDE: Record<'nl' | 'en', Guide> = {
   nl: {
     title: 'Integratiegids',
-    lead: 'Zo koppel je een collectiebeheersysteem of website aan het Vlaams Termennetwerk. Zes stappen, elk met een voorbeeld dat je hier meteen kunt uitvoeren.',
+    lead: 'Zo koppel je een collectiebeheersysteem of website aan het Vlaams Termennetwerk. Zeven stappen, elk met een voorbeeld dat je hier meteen kunt uitvoeren.',
     address: 'Alle vragen gaan als GraphQL naar één adres. Je stuurt een POST met JSON; op deze testomgeving heb je geen sleutel nodig, en elke website mag de API aanroepen.',
     steps: [
       {
@@ -129,6 +147,15 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         query: 'terms',
       },
       {
+        id: 'talen',
+        title: 'Talen',
+        text: [
+          'Met `languages` vraag je de namen in de talen die je wilt tonen. Elk label komt dan terug met zijn taal (`language`) en zijn tekst (`value`); welke talen een bron levert, staat in `inLanguage`. Zonder `languages` krijg je gewone tekst, in het Nederlands en anders in het Engels.',
+          'Het Termennetwerk vertaalt niets. Heeft een term geen naam in een van de gevraagde talen, dan krijg je de naam die bij de bron zonder taal staat, gemarkeerd als Nederlands, en anders een lege `prefLabel`. Vraag daarom een terugvaltaal mee, zoals Nederlands of Engels, en toon de taal bij een naam in een andere taal dan die van je scherm.',
+        ],
+        query: 'languages',
+      },
+      {
         id: 'kiezen',
         title: 'Laten kiezen',
         text: [
@@ -146,7 +173,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'bewaren',
         title: 'Bewaren',
         text: [
-          'Bewaar van de gekozen term minstens de URI: dat is de duurzame identifier. Bewaar daarnaast het label, de bron en het type, zodat je ze kunt tonen zonder opnieuw te vragen.',
+          'Bewaar van de gekozen term minstens de URI: dat is de duurzame identifier. Bewaar daarnaast het label met zijn taal, de bron en het type, zodat je ze kunt tonen zonder opnieuw te vragen.',
         ],
         sample: STORED_TERM,
       },
@@ -177,7 +204,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
       },
     ],
     widgetTitle: 'Liever geen eigen scherm bouwen?',
-    widgetText: 'De zoekwidget doet deze zes stappen in één HTML-tag en geeft de gekozen term terug als gebeurtenis.',
+    widgetText: 'De zoekwidget doet deze stappen in één HTML-tag en geeft de gekozen term terug als gebeurtenis.',
     widgetLink: 'Naar de zoekwidget',
     stableTitle: 'Stabiele API',
     stableLead: 'Een koppeling die vandaag werkt, moet blijven werken. Daar houden we de API aan:',
@@ -190,7 +217,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
   },
   en: {
     title: 'Integration guide',
-    lead: 'How to connect a collection management system or website to the Vlaams Termennetwerk. Six steps, each with an example you can run right here.',
+    lead: 'How to connect a collection management system or website to the Vlaams Termennetwerk. Seven steps, each with an example you can run right here.',
     address: 'Every question goes as GraphQL to one address. You send a POST with JSON; this test environment needs no key, and any website may call the API.',
     steps: [
       {
@@ -211,6 +238,15 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         query: 'terms',
       },
       {
+        id: 'talen',
+        title: 'Languages',
+        text: [
+          '`languages` asks for the names in the languages you want to show. Each label then comes back with its language (`language`) and its text (`value`); `inLanguage` says which languages a source offers. Without `languages` you get plain text, in Dutch and otherwise in English.',
+          'The Termennetwerk translates nothing. When a term has no name in any of the requested languages, you get the name the source holds without a language, marked as Dutch, and otherwise an empty `prefLabel`. So also ask for a language to fall back on, such as Dutch or English, and show the language beside a name that is in another language than your screen.',
+        ],
+        query: 'languages',
+      },
+      {
         id: 'kiezen',
         title: 'Let the user choose',
         text: [
@@ -228,7 +264,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'bewaren',
         title: 'Store',
         text: [
-          'Of the chosen term, store at least the URI: that is the durable identifier. Also store the label, the source and the type, so you can show them without asking again.',
+          'Of the chosen term, store at least the URI: that is the durable identifier. Also store the label with its language, the source and the type, so you can show them without asking again.',
         ],
         sample: STORED_TERM,
       },
@@ -259,7 +295,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
       },
     ],
     widgetTitle: 'Rather not build your own screen?',
-    widgetText: 'The search widget does these six steps in one HTML tag and returns the chosen term as an event.',
+    widgetText: 'The search widget does these steps in one HTML tag and returns the chosen term as an event.',
     widgetLink: 'To the search widget',
     stableTitle: 'Stable API',
     stableLead: 'An integration that works today has to keep working. This is what we hold the API to:',

@@ -187,8 +187,9 @@ export interface SourceStatus {
   lastChecked: string;
 }
 
-export const filterLanguageStrings = (languageStrings: LanguageString[]) => {
-  const preferredValues = languageStrings.filter(languageString => languageString.language === i18n.global.locale);
+/** The values in the given language (default: the language of the interface); every value when there is none in it. */
+export const filterLanguageStrings = (languageStrings: LanguageString[], language?: string) => {
+  const preferredValues = languageStrings.filter(languageString => languageString.language === (language ?? i18n.global.locale));
   if (preferredValues.length > 0) {
     return preferredValues.map(languageString => languageString.value);
   }
