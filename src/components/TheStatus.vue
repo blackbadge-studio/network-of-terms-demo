@@ -75,10 +75,130 @@
             <li
               v-for="slot in slots"
               :key="slot"
-              :class="slotClass(source, slot)"
-              :title="slotTitle(source, slot)"
-            />
+            >
+              <button
+                type="button"
+                class="uptime__slot"
+                :class="[slotClass(source, slot), {'is-selected': isSelected(source, slot)}]"
+                :title="slotTitle(source, slot)"
+                :aria-label="slotTitle(source, slot)"
+                :aria-expanded="dayOf(source, slot) ? isSelected(source, slot) : undefined"
+                :disabled="!dayOf(source, slot)"
+                @click="toggleDay(source, slot)"
+              />
+            </li>
           </ol>
+          <section
+            v-if="selected && selected.uri === source.uri && selectedDay"
+            class="uptime__day"
+            :aria-label="t('status.dayTitle', {date: day(selected.date)})"
+          >
+            <header class="uptime__day-head">
+              <h3>{{ day(selected.date) }}</h3>
+              <span
+                class="uptime__badge"
+                :class="slotClass(source, selected.date)"
+              >{{ t(`status.dayState.${slotClass(source, selected.date)}`) }}</span>
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm uptime__day-close"
+                :aria-label="t('general.close')"
+                @click="selected = null"
+              >
+                <XMarkIcon class="icon" />
+              </button>
+            </header>
+            <p class="uptime__day-text">
+              {{ t('status.daySummary', {ok: selectedDay.ok, checks: selectedDay.checks, percent: percent(selectedDay.uptime)}) }}
+              {{ t(`status.dayWhy.${slotClass(source, selected.date)}`) }}
+            </p>
+            <dl class="uptime__day-stats">
+              <div>
+                <dt>{{ t('status.statChecks') }}</dt>
+                <dd>{{ selectedDay.checks }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('status.statFailed') }}</dt>
+                <dd>{{ selectedDay.checks - selectedDay.ok }}</dd>
+              </div>
+              <div>
+                <dt>{{ t('status.statAvg') }}</dt>
+                <dd>{{ selectedDay.avgResponseTimeMs === null ? '–' : `${selectedDay.avgResponseTimeMs} ms` }}</dd>
+              </div>
+              <div v-if="slowest">
+                <dt>{{ t('status.statSlowest') }}</dt>
+                <dd>{{ slowest.responseTimeMs }} ms <small>{{ clock(slowest.observedAt) }}</small></dd>
+              </div>
+            </dl>
+
+            <template v-if="checks">
+              <h4>{{ t('status.allChecks') }}</h4>
+              <ol class="uptime__ticks">
+                <li
+                  v-for="check in checks"
+                  :key="check.observedAt"
+                  :class="check.success ? 'is-up' : 'is-down'"
+                  :title="`${clock(check.observedAt)} · ${check.success ? `${check.responseTimeMs} ms` : t('status.checkFailed')}`"
+                />
+              </ol>
+              <p
+                v-if="checks.length > 0"
+                class="uptime__ticks-axis"
+              >
+                <span>{{ clock(checks[0].observedAt) }}</span>
+                <span>{{ clock(checks[checks.length - 1].observedAt) }}</span>
+              </p>
+
+              <template v-if="failedChecks.length > 0">
+                <h4>{{ t('status.failedChecks') }}</h4>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          {{ t('status.colTime') }}
+                        </th>
+                        <th
+                          scope="col"
+                          class="num"
+                        >
+                          {{ t('status.colDuration') }}
+                        </th>
+                        <th scope="col">
+                          {{ t('status.colReason') }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="check in failedChecks"
+                        :key="check.observedAt"
+                      >
+                        <th scope="row">
+                          {{ clock(check.observedAt) }}
+                        </th>
+                        <td class="num">
+                          {{ check.responseTimeMs }} ms
+                        </td>
+                        <td>
+                          <code v-if="check.errorMessage">{{ check.errorMessage }}</code>
+                          <template v-else>
+                            {{ t('status.noReason') }}
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </template>
+            </template>
+            <p
+              v-else
+              class="uptime__day-note"
+            >
+              {{ checksFailed ? t('status.checksUnavailable') : t('status.checksLoading') }}
+            </p>
+          </section>
           <p class="uptime__meta">
             <span v-if="source.latest">{{ t('status.lastCheck', {time: clock(source.latest.observedAt)}) }}<template v-if="source.latest.success"> · {{ source.latest.responseTimeMs }} ms</template></span>
             <span>{{ source.endpoint }}</span>
@@ -92,6 +212,10 @@
         <span><i class="uptime__swatch is-down" /> {{ t('status.legendDown') }}</span>
         <span><i class="uptime__swatch is-none" /> {{ t('status.legendNone') }}</span>
       </div>
+
+      <p class="uptime__hint">
+        {{ t('status.clickHint') }}
+      </p>
 
       <p class="uptime__how">
         {{ t('status.how', {minutes: Math.round(summary.pollingIntervalSeconds / 60), since: summary.measuredSince ? day(summary.measuredSince) : '–'}) }}
@@ -111,6 +235,7 @@
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
+import {XMarkIcon} from '@heroicons/vue/16/solid';
 
 interface UptimeDay {
   date: string;
@@ -126,6 +251,13 @@ interface SourceUptime {
   latest: {observedAt: string; success: boolean; responseTimeMs: number} | null;
   uptime: {last24h: number | null; last7d: number | null; period: number | null};
   days: UptimeDay[];
+}
+/** One check of one source: what a day of the bar is made of. */
+interface DayCheck {
+  observedAt: string;
+  success: boolean;
+  responseTimeMs: number;
+  errorMessage: string | null;
 }
 interface UptimeSummary {
   generatedAt: string;
@@ -176,6 +308,7 @@ onMounted(load);
 onBeforeUnmount(() => {
   stopped = true;
   window.clearTimeout(timer);
+  checksAbort?.abort();
 });
 
 const downCount = computed(() => summary.value?.sources.filter(source => source.latest && !source.latest.success).length ?? 0);
@@ -205,6 +338,47 @@ function slotClass(source: SourceUptime, date: string): string {
     return 'is-up';
   }
   return entry.uptime >= 0.5 ? 'is-degraded' : 'is-down';
+}
+
+// A click on a day opens what is behind it: the day's counts (already here) and every check of that day,
+// fetched when asked. If the checks cannot be fetched the counts are still shown.
+const selected = ref<{uri: string; date: string} | null>(null);
+const checks = ref<DayCheck[] | null>(null);
+const checksFailed = ref(false);
+let checksAbort: AbortController | null = null;
+
+const isSelected = (source: SourceUptime, date: string) => selected.value?.uri === source.uri && selected.value.date === date;
+const selectedDay = computed(() => {
+  const source = summary.value?.sources.find(item => item.uri === selected.value?.uri);
+  return source && selected.value ? dayOf(source, selected.value.date) : undefined;
+});
+const failedChecks = computed(() => checks.value?.filter(check => !check.success) ?? []);
+const slowest = computed(() => {
+  const answered = checks.value?.filter(check => check.success) ?? [];
+  return answered.length > 0 ? answered.reduce((worst, check) => check.responseTimeMs > worst.responseTimeMs ? check : worst) : null;
+});
+
+async function toggleDay(source: SourceUptime, date: string) {
+  checksAbort?.abort();
+  if (isSelected(source, date)) {
+    selected.value = null;
+    return;
+  }
+  selected.value = {uri: source.uri, date};
+  checks.value = null;
+  checksFailed.value = false;
+  const abort = checksAbort = new AbortController();
+  try {
+    const response = await fetch(`${apiBase}/status/uptime/checks?source=${encodeURIComponent(source.uri)}&date=${date}`, {headers: {Accept: 'application/json'}, signal: abort.signal});
+    if (!response.ok) {
+      throw new Error(String(response.status));
+    }
+    checks.value = (await response.json() as {checks: DayCheck[]}).checks;
+  } catch {
+    if (!abort.signal.aborted) {
+      checksFailed.value = true;
+    }
+  }
 }
 
 function slotTitle(source: SourceUptime, date: string): string {
@@ -264,12 +438,37 @@ const day = (date: string) => new Intl.DateTimeFormat(locale.value, {day: 'numer
 .uptime__state.is-unknown { color: var(--vtn-muted); }
 
 .uptime__bar { list-style: none; display: flex; gap: 2px; height: 1.75rem; margin: var(--s-3) 0 0; padding: 0; }
-.uptime__bar li { flex: 1 1 0; min-width: 0; border-radius: 2px; }
-.uptime__bar li.is-up, .uptime__swatch.is-up { background: var(--vtn-ok); }
-.uptime__bar li.is-degraded, .uptime__swatch.is-degraded { background: #e0a100; }
-.uptime__bar li.is-down, .uptime__swatch.is-down { background: var(--vtn-danger); }
-.uptime__bar li.is-none, .uptime__swatch.is-none { background: var(--vtn-neutral-bg); }
-.uptime__bar li:hover { opacity: 0.7; }
+.uptime__bar li { flex: 1 1 0; min-width: 0; display: flex; }
+.uptime__slot { flex: 1 1 auto; min-width: 0; padding: 0; border: 0; border-radius: 2px; cursor: pointer; }
+.uptime__slot:disabled { cursor: default; }
+.uptime__slot.is-up, .uptime__swatch.is-up, .uptime__ticks .is-up { background: var(--vtn-ok); }
+.uptime__slot.is-degraded, .uptime__swatch.is-degraded { background: #e0a100; }
+.uptime__slot.is-down, .uptime__swatch.is-down, .uptime__ticks .is-down { background: var(--vtn-danger); }
+.uptime__slot.is-none, .uptime__swatch.is-none { background: var(--vtn-neutral-bg); }
+.uptime__slot:not(:disabled):hover { opacity: 0.7; }
+.uptime__slot.is-selected { outline: 2px solid var(--vtn-text); outline-offset: 2px; }
+
+/* What is behind one day, opened under the bar. */
+.uptime__day { margin-top: var(--s-4); padding: var(--s-4); border: 1px solid var(--vtn-border); border-radius: 0.5rem; background: var(--vtn-surface-2); display: grid; gap: var(--s-3); }
+.uptime__day-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
+.uptime__day-head h3 { font-size: var(--fs-lg); }
+.uptime__day-close { margin-left: auto; }
+.uptime__badge { padding: 0.1rem 0.6rem; border-radius: 999px; font-size: var(--fs-xs); font-weight: 600; }
+.uptime__badge.is-up { background: var(--vtn-ok-bg); color: var(--vtn-ok); }
+.uptime__badge.is-degraded { background: var(--vtn-warn-bg); color: var(--vtn-warn); }
+.uptime__badge.is-down { background: var(--vtn-danger-bg); color: var(--vtn-danger); }
+.uptime__day-text { max-width: 46rem; font-size: var(--fs-sm); color: var(--vtn-text-2); }
+.uptime__day-stats { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0; }
+.uptime__day-stats dt { font-size: var(--fs-xs); color: var(--vtn-muted); }
+.uptime__day-stats dd { margin: 0; font-size: var(--fs-lg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.uptime__day-stats small { font-size: var(--fs-xs); font-weight: 400; color: var(--vtn-muted); }
+.uptime__day h4 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--vtn-muted); }
+.uptime__ticks { list-style: none; display: flex; gap: 1px; height: 1.25rem; margin: 0; padding: 0; }
+.uptime__ticks li { flex: 1 1 0; min-width: 0; border-radius: 1px; }
+.uptime__ticks-axis { display: flex; justify-content: space-between; margin-top: calc(var(--s-2) * -1); font-size: var(--fs-xs); color: var(--vtn-muted); font-variant-numeric: tabular-nums; }
+.uptime__day-note { font-size: var(--fs-sm); color: var(--vtn-muted); }
+.uptime__day code { font-size: var(--fs-xs); overflow-wrap: anywhere; }
+.uptime__hint { margin-top: var(--s-3); font-size: var(--fs-sm); color: var(--vtn-muted); }
 
 .uptime__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-1) var(--s-4); margin: var(--s-2) 0 0; font-size: var(--fs-xs); color: var(--vtn-muted); }
 .uptime__meta span:last-child { font-family: var(--vtn-mono); overflow-wrap: anywhere; }

@@ -448,7 +448,33 @@
     "feed": "Open de ruwe metingen",
     "failed": "De statusgegevens zijn nu niet op te halen. We proberen het zo opnieuw.",
     "loading": "Laden…",
-    "waking": "De testomgeving stond in slaapstand en start op. Dat duurt tot een halve minuut."
+    "waking": "De testomgeving stond in slaapstand en start op. Dat duurt tot een halve minuut.",
+    "clickHint": "Klik op een dag om te zien welke controles toen mislukten.",
+    "dayTitle": "Detail van {date}",
+    "dayState": {
+      "is-up": "Bereikbaar",
+      "is-degraded": "Deels bereikbaar",
+      "is-down": "Niet bereikbaar"
+    },
+    "daySummary": "{ok} van de {checks} controles kregen die dag een antwoord ({percent}).",
+    "dayWhy": {
+      "is-up": "Dat is minstens 99%, dus de dag telt als bereikbaar.",
+      "is-degraded": "Dat is minder dan 99% maar minstens de helft, dus de dag telt als deels bereikbaar.",
+      "is-down": "Dat is minder dan de helft, dus de dag telt als niet bereikbaar."
+    },
+    "statChecks": "Controles",
+    "statFailed": "Mislukt",
+    "statAvg": "Gemiddelde antwoordtijd",
+    "statSlowest": "Traagste antwoord",
+    "allChecks": "Elke controle van die dag, in volgorde",
+    "failedChecks": "Mislukte controles",
+    "colTime": "Tijdstip",
+    "colDuration": "Duur",
+    "colReason": "Wat ging er mis",
+    "noReason": "Geen reden genoteerd",
+    "checkFailed": "mislukt",
+    "checksLoading": "Controles ophalen…",
+    "checksUnavailable": "De afzonderlijke controles van deze dag zijn nu niet op te vragen."
   },
   "integration": {
     "navLabel": "Integratiegids",

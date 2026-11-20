@@ -448,7 +448,33 @@
     "feed": "Open the raw observations",
     "failed": "The status data cannot be fetched right now. We will try again shortly.",
     "loading": "Loading…",
-    "waking": "The test environment was asleep and is starting up. This takes up to half a minute."
+    "waking": "The test environment was asleep and is starting up. This takes up to half a minute.",
+    "clickHint": "Click a day to see which checks failed then.",
+    "dayTitle": "Detail of {date}",
+    "dayState": {
+      "is-up": "Reachable",
+      "is-degraded": "Partly reachable",
+      "is-down": "Unreachable"
+    },
+    "daySummary": "{ok} of the {checks} checks got an answer that day ({percent}).",
+    "dayWhy": {
+      "is-up": "That is at least 99%, so the day counts as reachable.",
+      "is-degraded": "That is less than 99% but at least half, so the day counts as partly reachable.",
+      "is-down": "That is less than half, so the day counts as unreachable."
+    },
+    "statChecks": "Checks",
+    "statFailed": "Failed",
+    "statAvg": "Average response time",
+    "statSlowest": "Slowest answer",
+    "allChecks": "Every check of that day, in order",
+    "failedChecks": "Failed checks",
+    "colTime": "Time",
+    "colDuration": "Duration",
+    "colReason": "What went wrong",
+    "noReason": "No reason recorded",
+    "checkFailed": "failed",
+    "checksLoading": "Fetching checks…",
+    "checksUnavailable": "The individual checks of this day cannot be fetched right now."
   },
   "integration": {
     "navLabel": "Integration guide",
