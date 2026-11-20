@@ -111,12 +111,22 @@ export const router = createRouter({
       ],
     },
   ],
-  scrollBehavior (to) {
+  scrollBehavior (to, from) {
     if (to.hash) {
-      return {
-        el: to.hash,
-        behavior: 'smooth',
-      };
+      // A link from elsewhere straight to a heading (/integratie#opzoeken): on that first load a gliding scroll
+      // is dropped while the page is still being drawn, so wait for the heading and jump to it instead.
+      const firstLoad = from.matched.length === 0;
+      return new Promise((resolve) => {
+        const started = Date.now();
+        const look = () => {
+          if (document.getElementById(to.hash.slice(1)) || Date.now() - started > 3000) {
+            resolve({el: to.hash, top: 16, behavior: firstLoad ? 'instant' : 'smooth'});
+          } else {
+            requestAnimationFrame(look);
+          }
+        };
+        look();
+      });
     }
   },
 });

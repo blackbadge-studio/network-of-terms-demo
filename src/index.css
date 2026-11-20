@@ -855,6 +855,9 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .sim-acc__toggle:hover { background: var(--vtn-surface-2); }
 .sim-acc__toggle .picker__chev { transition: transform 150ms ease; color: var(--vtn-muted); }
 .sim-acc__row.is-open .sim-acc__toggle .picker__chev { transform: rotate(180deg); }
+/* The test a link pointed at (?test=): clear of the top edge once scrolled to, and marked. */
+.sim-acc__row { scroll-margin-top: var(--s-5); }
+.sim-acc__row.is-linked { box-shadow: inset 3px 0 0 var(--vtn-primary); background: var(--vtn-surface-2); }
 .sim-acc__id { font-size: var(--fs-xs); color: var(--vtn-muted); white-space: nowrap; }
 .sim-acc__title { font-weight: 600; min-width: 0; }
 .sim-acc__reqs { display: inline-flex; flex-wrap: wrap; gap: var(--s-1); }

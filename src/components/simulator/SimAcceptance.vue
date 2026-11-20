@@ -130,7 +130,7 @@
             v-for="scenario in area.scenarios"
             :key="scenario.id"
             class="sim-acc__row"
-            :class="{'is-open': expanded.has(scenario.id)}"
+            :class="{'is-open': expanded.has(scenario.id), 'is-linked': linked === scenario.id}"
           >
             <button
               type="button"
@@ -245,7 +245,10 @@
                 </ul>
               </div>
 
-              <details class="sim-acc__tech">
+              <details
+                class="sim-acc__tech"
+                :open="linked === scenario.id"
+              >
                 <summary>
                   <ChevronDownIcon class="icon picker__chev" />
                   {{ t('simulator.acceptance.tech') }}
@@ -405,8 +408,9 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
+import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
+import {useRoute} from 'vue-router';
 import {ArrowDownTrayIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, ExclamationTriangleIcon, PlayIcon, StopIcon, TrashIcon} from '@heroicons/vue/16/solid';
 import {
   AcceptanceRun, MAX_ACCEPTANCE_RUNS, Manifest, Result, Scenario, formatQuery,
@@ -415,6 +419,7 @@ import {
 import {downloadText} from '../../simulator/stats';
 
 const {t, locale} = useI18n();
+const route = useRoute();
 
 const manifest = ref<Manifest | null>(null);
 const loading = ref(false);
@@ -442,7 +447,29 @@ async function load() {
     loading.value = false;
   }
 }
-onMounted(load);
+
+// A link to one test (/testpagina?test=API-15, as our slides use per point of the tender): that test opens
+// with its request, scrolls into view and runs, so the page shows the example and its answer straight away.
+const linked = ref<string | null>(null);
+async function openLinked() {
+  const wanted = String(route.query.test ?? '').toUpperCase();
+  const scenario = wanted ? manifest.value?.scenarios.find(item => item.id.toUpperCase() === wanted) : undefined;
+  if (!scenario) {
+    return;
+  }
+  linked.value = scenario.id;
+  expanded.add(scenario.id);
+  run([scenario], `scenario:${scenario.id}`);
+  // Scroll once the run's summary has taken its place above the list, and in one jump: the page scrolls
+  // smoothly by default, and a smooth scroll is dropped when the list re-renders under it.
+  await nextTick();
+  document.getElementById(`acc-${scenario.id}`)?.parentElement?.scrollIntoView({block: 'start', behavior: 'instant'});
+}
+
+onMounted(async () => {
+  await load();
+  openLinked();
+});
 onBeforeUnmount(() => controller?.abort());
 
 const areas = computed(() => {
