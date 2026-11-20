@@ -518,6 +518,21 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .faq__toc a:hover { color: var(--vtn-primary-strong); text-decoration: underline; }
 .faq__toc a.is-active { border-left-color: var(--vtn-primary); color: var(--vtn-text); font-weight: 600; }
 .faq__body { display: grid; gap: var(--s-7); min-width: 0; }
+.guide { gap: var(--s-6); max-width: 52rem; }
+.guide__address { display: grid; gap: var(--s-2); padding: var(--s-4); border: 1px solid var(--vtn-border); border-radius: var(--r-md); background: var(--vtn-surface); }
+.guide__address code { font-size: var(--fs-sm); word-break: break-all; }
+.guide__address p { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+.guide__step { display: grid; gap: var(--s-3); scroll-margin-top: var(--s-5); }
+.guide__step h2 { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-xl); }
+.guide__step ul { display: grid; gap: var(--s-1); padding-left: 1.2em; }
+.guide__step code { padding: 0.1em 0.35em; border-radius: var(--r-sm); background: var(--vtn-surface-2); }
+.guide__number { display: inline-grid; place-items: center; width: 2rem; height: 2rem; flex: none; border-radius: 50%; background: var(--vtn-primary); color: #fff; font-size: var(--fs-md); font-weight: 700; }
+.guide__links { display: flex; flex-wrap: wrap; gap: var(--s-4); }
+.example { display: grid; gap: var(--s-2); }
+.example__code, .example__response { margin: 0; padding: var(--s-4); overflow: auto; border: 1px solid var(--vtn-border); border-radius: var(--r-md); background: var(--vtn-surface-2); font-size: var(--fs-sm); line-height: 1.5; }
+.example__code code, .example__response code { padding: 0; background: none; }
+.example__response { max-height: 22rem; background: var(--vtn-surface); border-style: dashed; }
+.example__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
 .faq__others { max-width: var(--prose); padding-top: var(--s-5); border-top: 1px solid var(--vtn-border); }
 @media (min-width: 40em) { .faq-cards:not(.faq-cards--compact) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 64em) { .faq { grid-template-columns: minmax(0, 1fr) 18rem; } .faq__toc { order: 2; position: sticky; top: var(--s-4); max-height: calc(100vh - 2rem); overflow: auto; } }

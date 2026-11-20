@@ -15,6 +15,7 @@ import TheWidgetV2 from './components/TheWidgetV2.vue';
 import SearchForm from './components/SearchForm.vue';
 import TheBrowse from './components/TheBrowse.vue';
 import TheStatus from './components/TheStatus.vue';
+import TheIntegration from './components/TheIntegration.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -91,6 +92,11 @@ export const router = createRouter({
           path: 'status',
           name: 'status',
           component: TheStatus,
+        },
+        {
+          path: 'integratie',
+          name: 'integration',
+          component: TheIntegration,
         },
         {
           path: 'contact',

@@ -165,6 +165,11 @@
                 <a :href="apiUrl">GraphQL Playground <ArrowTopRightOnSquareIcon class="icon" /></a>
               </li>
               <li>
+                <router-link :to="{name: 'integration'}">
+                  {{ t('integration.navLabel') }}
+                </router-link>
+              </li>
+              <li>
                 <router-link :to="{name: 'simulator'}">
                   {{ t('simulator.navLabel') }}
                 </router-link>

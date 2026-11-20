@@ -449,5 +449,14 @@
     "failed": "De statusgegevens zijn nu niet op te halen. We proberen het zo opnieuw.",
     "loading": "Laden…",
     "waking": "De testomgeving stond in slaapstand en start op. Dat duurt tot een halve minuut."
+  },
+  "integration": {
+    "navLabel": "Integratiegids",
+    "run": "Uitvoeren",
+    "running": "Bezig…",
+    "copy": "Kopieer",
+    "response": "Antwoord in {ms} ms",
+    "responseLabel": "Het antwoord van de API",
+    "failed": "De vraag kon niet verstuurd worden."
   }
 }

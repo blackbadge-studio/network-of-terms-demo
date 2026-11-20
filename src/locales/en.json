@@ -449,5 +449,14 @@
     "failed": "The status data cannot be fetched right now. We will try again shortly.",
     "loading": "Loading…",
     "waking": "The test environment was asleep and is starting up. This takes up to half a minute."
+  },
+  "integration": {
+    "navLabel": "Integration guide",
+    "run": "Run",
+    "running": "Running…",
+    "copy": "Copy",
+    "response": "Answer in {ms} ms",
+    "responseLabel": "The answer of the API",
+    "failed": "The query could not be sent."
   }
 }
