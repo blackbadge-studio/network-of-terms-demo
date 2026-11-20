@@ -59,10 +59,10 @@
       Wat is het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rembrandt’ – en het
+      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rubens’ – en het
       Termennetwerk zoekt vervolgens rechtstreeks, realtime in terminologiebronnen naar overeenkomende termen. Uit de
-      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Rembrandt’ in RKDartists of ‘Rembrandt Harmensz.
-      van Rijn’ in de Nederlandse Thesaurus van Auteursnamen.
+      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Pieter Paul Rubens’ in Wikidata of ‘Rubens,
+      Arnold Frans’ in RKDartists.
     </p>
 
     <h3>
@@ -97,38 +97,35 @@
       Hoe kan ik het Termennetwerk uitproberen?
     </h3>
     <p>
-      Je kunt gebruikmaken van onze <em>demonstrator</em>, een website waarmee je zoekvragen aan het Termennetwerk
-      kunt stellen. De demonstrator is te bereiken op de volgende locatie:
-    </p>
-    <p><a href="https://termennetwerk.netwerkdigitaalerfgoed.nl/">https://termennetwerk.netwerkdigitaalerfgoed.nl/</a></p>
-    <p>
-      Bovenaan de pagina kun je je zoekvraag invullen en aangeven in welke terminologiebron of -bronnen je wilt
-      zoeken. Als je klikt op de knop <em>Zoeken</em> wordt je zoekvraag verwerkt. Onderaan de pagina verschijnen
-      vervolgens de termen die gevonden zijn in de terminologiebronnen.
+      Op deze website. Op de <router-link :to="{name: 'home'}">
+        zoekpagina
+      </router-link> vul je bovenaan je zoekvraag in en kies je in welke terminologiebron of -bronnen je wilt zoeken.
+      Als je klikt op de knop <em>Zoeken</em> wordt je zoekvraag verwerkt. Onderaan de pagina verschijnen vervolgens
+      de termen die gevonden zijn in de terminologiebronnen.
     </p>
     <p>
-      Let op: de demonstrator en het Termennetwerk zijn verschillende toepassingen. De demonstrator illustreert de
-      werking van het Termennetwerk, maar is geen onderdeel van het Termennetwerk.
+      Deze website laat zien wat het Termennetwerk kan. In de praktijk gebruik je het vanuit je
+      collectiebeheersysteem.
     </p>
 
     <h3>
       Wie maakt en beheert het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk wordt gemaakt en beheerd door de samenwerkende erfgoedinstellingen in het Netwerk Digitaal
-      Erfgoed. De instellingen staan in voor de werking en beschikbaarheid van het Termennetwerk.
+      Het Vlaams Termennetwerk wordt een dienst van meemoo, het Vlaams instituut voor het archief. Het bouwt voort
+      op de open broncode van het Nederlandse Termennetwerk, gemaakt door het Netwerk Digitaal Erfgoed. Deze
+      testomgeving is een proof of concept van Black Badge Studio.
     </p>
 
     <h3>
       Kan ik het Termennetwerk al gebruiken?
     </h3>
     <p>
-      Jazeker! Het Termenetwerk is geschikt voor gebruik.
-      We horen graag wat je ervan vindt. Bijvoorbeeld: zijn de zoekmogelijkheden toereikend? Zijn de zoekresultaten bruikbaar?
+      Uitproberen kan nu al, maar dit is een testomgeving: bronnen en functies kunnen nog veranderen. We horen
+      graag wat je ervan vindt. Bijvoorbeeld: zijn de zoekmogelijkheden toereikend? Zijn de zoekresultaten bruikbaar?
     </p>
     <p>
-      Als je een stap verder wilt gaan, dan kun je het Termennetwerk in je collectiebeheersysteem laten implementeren
-      door je leverancier. Wij ondersteunen je hier graag bij.
+      Zodra het Vlaams Termennetwerk in productie is, kan je leverancier het in je collectiebeheersysteem inbouwen.
     </p>
 
     <h3>
@@ -193,8 +190,8 @@
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>
-      Het Termennetwerk wordt beheerd en onderhouden door de Rijksdienst voor het Cultureel Erfgoed.<br>
-      Wij zijn bereikbaar via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
+      Dit is een testomgeving. Gebruik de feedbackknop rechtsonder op elke pagina: je opmerking komt met de pagina
+      en een schermafbeelding bij de bouwers terecht.
     </p>
   </div>
 </template>

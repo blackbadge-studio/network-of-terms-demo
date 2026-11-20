@@ -57,10 +57,10 @@
       Wat is het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rembrandt’ – en het
+      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rubens’ – en het
       Termennetwerk zoekt vervolgens rechtstreeks, realtime in terminologiebronnen naar overeenkomende termen. Uit de
-      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Rembrandt’ in RKDartists of ‘Rembrandt Harmensz.
-      van Rijn’ in de Nederlandse Thesaurus van Auteursnamen.
+      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Pieter Paul Rubens’ in Wikidata of ‘Rubens,
+      Arnold Frans’ in RKDartists.
     </p>
 
     <h3>
@@ -76,8 +76,9 @@
       Wie maakt en beheert het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk wordt gemaakt en beheerd door de samenwerkende erfgoedinstellingen in het Netwerk Digitaal
-      Erfgoed. De instellingen staan in voor de werking en beschikbaarheid van het Termennetwerk.
+      Het Vlaams Termennetwerk wordt een dienst van meemoo, het Vlaams instituut voor het archief. Het bouwt voort
+      op de open broncode van het Nederlandse Termennetwerk, gemaakt door het Netwerk Digitaal Erfgoed. Deze
+      testomgeving is een proof of concept van Black Badge Studio.
     </p>
 
     <h3>
@@ -85,8 +86,7 @@
       toevoeg?
     </h3>
     <p>
-      Daarmee geef je aan dat je bron van belang is voor de samenwerkende instellingen in het Netwerk Digitaal
-      Erfgoed. Het stelt collectiebeheerders in staat om de termen in je bron eenvoudiger te vinden en te gebruiken
+      Daarmee maak je je bron bruikbaar voor erfgoedorganisaties in Vlaanderen. Het stelt collectiebeheerders in staat om de termen in je bron eenvoudiger te vinden en te gebruiken
       bij het beschrijven van hun collecties. En dat zorgt ervoor dat digitaal erfgoed beter vindbaar wordt voor
       gebruikers.
     </p>
@@ -110,8 +110,8 @@
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>
-      Het Termennetwerk wordt beheerd en onderhouden door de Rijksdienst voor het Cultureel Erfgoed.<br>
-      Wij zijn bereikbaar via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
+      Dit is een testomgeving. Gebruik de feedbackknop rechtsonder op elke pagina: je opmerking komt met de pagina
+      en een schermafbeelding bij de bouwers terecht.
     </p>
   </div>
 </template>

@@ -71,10 +71,10 @@
       Wat is het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rembrandt’ – en het
+      Het Termennetwerk is een zoekmachine voor termen. Je voert er een zoekvraag in – zoals ‘Rubens’ – en het
       Termennetwerk zoekt vervolgens rechtstreeks, realtime in terminologiebronnen naar overeenkomende termen. Uit de
-      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Rembrandt’ in RKDartists of ‘Rembrandt Harmensz.
-      van Rijn’ in de Nederlandse Thesaurus van Auteursnamen.
+      termen die dit oplevert kun je een keuze maken. Bijvoorbeeld ‘Pieter Paul Rubens’ in Wikidata of ‘Rubens,
+      Arnold Frans’ in RKDartists.
     </p>
 
     <h3>
@@ -118,19 +118,19 @@
       Hoe kan ik het Termennetwerk uitproberen?
     </h3>
     <p>
-      Je kunt gebruikmaken van <a href="https://termennetwerk-api.netwerkdigitaalerfgoed.nl">GraphQL Playground</a>,
+      Je kunt gebruikmaken van <a :href="playgroundUrl">GraphQL Playground</a>,
       een interactieve editor waarmee je GraphQL-vragen aan het Termennetwerk kunt stellen via je browser.
     </p>
     <p>
       Aan de linkerkant van de pagina kun je je GraphQL-query opgeven. Bijvoorbeeld: met de volgende query geef je aan
       te willen zoeken naar termen met het woord ‘schilderij’ in de terminologiebronnen Art &amp; Architecture
-      Thesaurus (AAT) en Cultuurhistorische Thesaurus (CHT).
+      Thesaurus (AAT) en de Gentse erfgoedthesaurus.
     </p>
     <pre>query Terms {
   terms(
     sources: [
-      "http://vocab.getty.edu/aat/sparql",
-      "https://data.cultureelerfgoed.nl/PoolParty/sparql/term/id/cht",
+      "http://vocab.getty.edu/aat",
+      "https://stad.gent/id/conceptscheme/concept",
     ]
     query: "schilderij"
   ) {
@@ -160,8 +160,8 @@
     <pre>query Terms {
   terms(
     sources: [
-      "http://vocab.getty.edu/aat/sparql",
-      "https://data.cultureelerfgoed.nl/PoolParty/sparql/term/id/cht",
+      "http://vocab.getty.edu/aat",
+      "https://stad.gent/id/conceptscheme/concept",
     ]
     query: "schilderij"
   ) {
@@ -222,7 +222,7 @@
       library de API van het Termennetwerk aan te spreken met GraphQL-queries. De API is te bereiken op de volgende
       locatie:
     </p>
-    <p>https://termennetwerk-api.netwerkdigitaalerfgoed.nl/graphql</p>
+    <p>{{ graphqlUrl }}</p>
 
     <h3>
       Hoe kan ik vanuit mijn collectiebeheersysteem gebruikmaken van het Termennetwerk?
@@ -261,28 +261,29 @@
       Wie maakt en beheert het Termennetwerk?
     </h3>
     <p>
-      Het Termennetwerk wordt gemaakt en beheerd door de samenwerkende erfgoedinstellingen in het Netwerk Digitaal
-      Erfgoed. De instellingen staan in voor de werking en beschikbaarheid van het Termennetwerk.
+      Het Vlaams Termennetwerk wordt een dienst van meemoo, het Vlaams instituut voor het archief. Het bouwt voort
+      op de open broncode van het Nederlandse Termennetwerk, gemaakt door het Netwerk Digitaal Erfgoed. Deze
+      testomgeving is een proof of concept van Black Badge Studio.
     </p>
 
     <h3>
       Kan ik het Termennetwerk al gebruiken?
     </h3>
     <p>
-      Jazeker! Het Termennetwerk is geschikt voor gebruik.
-      We horen graag wat je ervan vindt. Bijvoorbeeld: zijn de zoekmogelijkheden toereikend? Is de API bruikbaar?
+      Uitproberen kan nu al, maar dit is een testomgeving: bronnen en functies kunnen nog veranderen. We horen
+      graag wat je ervan vindt. Bijvoorbeeld: zijn de zoekmogelijkheden toereikend? Is de API bruikbaar?
     </p>
     <p>
-      Als je een stap verder wilt gaan, dan kun je het Termennetwerk in je collectiebeheersysteem implementeren zodat
-      collectiebeheerders ermee aan de slag kunnen. Wij ondersteunen je hier graag bij.
+      Zodra het Vlaams Termennetwerk in productie is, kun je het in je collectiebeheersysteem inbouwen zodat
+      collectiebeheerders ermee aan de slag kunnen.
     </p>
 
     <h3>
       Ik heb een vraag, probleem of wens. Met wie kan ik contact opnemen?
     </h3>
     <p>
-      Het Termennetwerk wordt beheerd en onderhouden door de Rijksdienst voor het Cultureel Erfgoed.<br>
-      Wij zijn bereikbaar via <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
+      Dit is een testomgeving. Gebruik de feedbackknop rechtsonder op elke pagina: je opmerking komt met de pagina
+      en een schermafbeelding bij de bouwers terecht.
     </p>
     <a id="widget" />
     <h3>
@@ -291,7 +292,7 @@
     <p>
       Ja, dat is de bedoeling van de <router-link :to="{name: 'widget'}">
         zoekwidget
-      </router-link>: één script-tag die de federatieve zoekfunctie op een andere site toont en de gekozen term als gebeurtenis teruggeeft. De widget is in voorbereiding; de pagina beschrijft de geplande integratie.
+      </router-link>: één script-tag die de federatieve zoekfunctie op een andere site toont en de gekozen term als gebeurtenis teruggeeft. Op die pagina stel je de widget samen en kopieer je de code.
     </p>
     <a id="simulator" />
     <h3>
@@ -299,8 +300,8 @@
     </h3>
     <p>
       Met de <router-link :to="{name: 'simulator'}">
-        simulator
-      </router-link>, een ontwikkelaarstool die gesimuleerde zoeksessies tegen de API uitvoert en reactietijden en bronstatus per bron verzamelt. Gesimuleerd verkeer draagt de header <code>X-Simulation: 1</code>.
+        testpagina
+      </router-link>. Daar draai je de acceptatietests en een belastingsimulatie: gesimuleerde zoeksessies tegen de API, met reactietijden en bronstatus per bron. Gesimuleerd verkeer draagt de header <code>X-Simulation: 1</code>.
     </p>
   </div>
 </template>
@@ -310,5 +311,10 @@ import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'FaqNl3',
+  setup() {
+    // The API this site talks to, so the examples point at this Termennetwerk and not at another one.
+    const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL as string;
+    return {graphqlUrl, playgroundUrl: graphqlUrl.replace(/\/graphql$/, '/graphiql')};
+  },
 });
 </script>

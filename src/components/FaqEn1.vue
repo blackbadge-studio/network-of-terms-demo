@@ -58,10 +58,10 @@
       What is the Network of Terms?
     </h3>
     <p>
-      The Network of Terms is a search engine for terms. You enter a query - such as 'Rembrandt' - and the
+      The Network of Terms is a search engine for terms. You enter a query - such as 'Rubens' - and the
       Network of Terms then searches terminology sources directly, in real time, for matching terms. From the
-      terms that this produces you can make a choice. For example 'Rembrandt' in RKDartists or 'Rembrandt Harmensz.
-      van Rijn' in the Dutch Thesaurus of Authors' Names.
+      terms that this produces you can make a choice. For example 'Pieter Paul Rubens' in Wikidata or 'Rubens,
+      Arnold Frans' in RKDartists.
     </p>
 
     <h3>
@@ -96,38 +96,35 @@
       How can I try out the Network of Terms?
     </h3>
     <p>
-      You can use our <em>demonstrator</em>, a website that allows you to submit queries to the Network of Terms.
-      The demonstrator can be reached at the following location:
-    </p>
-    <p><a href="https://termennetwerk.netwerkdigitaalerfgoed.nl/">https://termennetwerk.netwerkdigitaalerfgoed.nl/</a></p>
-    <p>
-      At the top of the page you can enter your search query and indicate which terminology source or sources you want
-      to search. If you click on the <em>Search</em> button, your query will be processed. Appear at the bottom of the page
-      then the terms found in the terminology sources.
+      On this website. On the <router-link :to="{name: 'home'}">
+        search page
+      </router-link> you enter your query at the top and choose which terminology source or sources to search. Click
+      the <em>Search</em> button and your query is processed. The terms found in the terminology sources then appear
+      at the bottom of the page.
     </p>
     <p>
-      Please note that the demonstrator and the Network of Terms are different applications. The demonstrator illustrates the
-      operation of the Network of Terms, but is not part of the Network of Terms.
+      This website shows what the Network of Terms can do. In practice you use it from within your collection
+      management system.
     </p>
 
     <h3>
       Who creates and manages the Network of Terms?
     </h3>
     <p>
-      The Network of Terms is created and managed by the collaborating heritage institutions in the Network Digital
-      Heritage. Theses organisations are responsible for the operation and availability of the Network of Terms.
+      The Vlaams Termennetwerk (Flemish Network of Terms) is to become a service of meemoo, the Flemish institute
+      for archives. It builds on the open source code of the Dutch Network of Terms, made by the Dutch Digital
+      Heritage Network. This test environment is a proof of concept by Black Badge Studio.
     </p>
 
     <h3>
       Can I already use the Network of Terms?
     </h3>
     <p>
-      Of course! The Terme network is ready for use.
-      We'd love to hear what you think. For example: are the search options sufficient? Are the search results useful?
+      You can try it out now, but this is a test environment: sources and features may still change. We'd love
+      to hear what you think. For example: are the search options sufficient? Are the search results useful?
     </p>
     <p>
-      If you want to go a step further, you can have the Network of Terms implemented in your collection management system
-      by your supplier. We are happy to support you in this.
+      Once the Vlaams Termennetwerk is in production, your supplier can build it into your collection management system.
     </p>
 
     <h3>
@@ -180,8 +177,8 @@
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>
-      The Network of Terms is managed and maintained by the Cultural Heritage Agency of the Netherlands.<br>
-      We can be reached at <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
+      This is a test environment. Use the feedback button at the bottom right of every page: your remark reaches
+      the builders together with the page and a screenshot.
     </p>
   </div>
 </template>

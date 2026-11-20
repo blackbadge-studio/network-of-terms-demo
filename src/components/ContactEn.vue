@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <p>Do you have questions about the Network of Terms, problems or wishes?</p>
-    <p>Please contact <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>. Our aim is to response within one working day.</p>
+    <p>This is a test environment. Use the feedback button at the bottom right of every page: your remark reaches the builders together with the page and a screenshot.</p>
   </div>
 </template>
 

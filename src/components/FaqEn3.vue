@@ -71,10 +71,10 @@
       What is the Network of Terms?
     </h3>
     <p>
-      The Network of Terms is a search engine for terms. You enter a query - such as 'Rembrandt' - and the
+      The Network of Terms is a search engine for terms. You enter a query - such as 'Rubens' - and the
       Network of Terms then searches terminology sources directly, in real time, for matching terms. From the
-      terms that this produces you can make a choice. For example 'Rembrandt' in RKDartists or 'Rembrandt Harmensz.
-      van Rijn' in the Dutch Thesaurus of Authors' Names.
+      terms that this produces you can make a choice. For example 'Pieter Paul Rubens' in Wikidata or 'Rubens,
+      Arnold Frans' in RKDartists.
     </p>
 
     <h3>
@@ -118,19 +118,19 @@
       How can I try out the Network of Terms?
     </h3>
     <p>
-      You can use <a href="https://termennetwerk-api.netwerkdigitaalerfgoed.nl">GraphQL Playground</a>,
+      You can use <a :href="playgroundUrl">GraphQL Playground</a>,
       an interactive editor that allows you to submit GraphQL questions to the Network of Terms through your browser.
     </p>
     <p>
       On the left side of the page you can specify your GraphQL query. For example: with the following query you specify
       you want to search for terms containing the word 'painting' in the terminology sources Art &amp; Architecture
-      Thesaurus (AAT) and Cultural History Thesaurus (CHT).
+      Thesaurus (AAT) and the Ghent heritage thesaurus.
     </p>
     <pre>query Terms {
   terms(
     sources: [
-      "http://vocab.getty.edu/aat/sparql",
-      "https://data.cultureelerfgoed.nl/PoolParty/sparql/term/id/cht",
+      "http://vocab.getty.edu/aat",
+      "https://stad.gent/id/conceptscheme/concept",
     ]
     query: "schilderij"
   ) {
@@ -160,8 +160,8 @@
     <pre>query Terms {
   terms(
     sources: [
-      "http://vocab.getty.edu/aat/sparql",
-      "https://data.cultureelerfgoed.nl/PoolParty/sparql/term/id/cht",
+      "http://vocab.getty.edu/aat",
+      "https://stad.gent/id/conceptscheme/concept",
     ]
     query: "schilderij"
   ) {
@@ -222,7 +222,7 @@
       library to access the API of the Network of Terms with GraphQL queries. The API can be reached at the following
       location:
     </p>
-    <p>https://termennetwerk-api.netwerkdigitaalerfgoed.nl/graphql</p>
+    <p>{{ graphqlUrl }}</p>
 
     <h3>
       How can I use the Network of Terms from my collection management system?
@@ -248,28 +248,29 @@
       Who creates and manages the Network of Terms?
     </h3>
     <p>
-      The Network of Terms is created and managed by the collaborating heritage institutions in the Network Digital
-      Heritage. The settings are responsible for the operation and availability of the Network of Terms.
+      The Vlaams Termennetwerk (Flemish Network of Terms) is to become a service of meemoo, the Flemish institute
+      for archives. It builds on the open source code of the Dutch Network of Terms, made by the Dutch Digital
+      Heritage Network. This test environment is a proof of concept by Black Badge Studio.
     </p>
 
     <h3>
       Can I already use the Network of Terms?
     </h3>
     <p>
-      Of course! The Terme network is ready for use.
-      We'd love to hear what you think. For example: are the search options sufficient? Are the search results useful?
+      You can try it out now, but this is a test environment: sources and features may still change. We'd love
+      to hear what you think. For example: are the search options sufficient? Is the API usable?
     </p>
     <p>
-      If you want to go a step further, you can implement the Network of Terms in your collection management system so that
-      collection managers can work with it. We are happy to support you in this.
+      Once the Vlaams Termennetwerk is in production, you can build it into your collection management system so that
+      collection managers can work with it.
     </p>
 
     <h3>
       I have a question, problem or wish. Who can I contact?
     </h3>
     <p>
-      The Network of Terms is managed and maintained by the Cultural Heritage Agency of the Netherlands.<br>
-      We can be reached at <a href="mailto:thesauri@cultureelerfgoed.nl">thesauri@cultureelerfgoed.nl</a>.
+      This is a test environment. Use the feedback button at the bottom right of every page: your remark reaches
+      the builders together with the page and a screenshot.
     </p>
     <a id="widget" />
     <h3>
@@ -278,7 +279,7 @@
     <p>
       Yes, that is what the <router-link :to="{name: 'widget'}">
         search widget
-      </router-link> is for: one script tag that renders the federated search on another site and returns the chosen term as an event. The widget is in preparation; the page describes the planned integration.
+      </router-link> is for: one script tag that renders the federated search on another site and returns the chosen term as an event. On that page you put the widget together and copy the code.
     </p>
     <a id="simulator" />
     <h3>
@@ -286,8 +287,8 @@
     </h3>
     <p>
       With the <router-link :to="{name: 'simulator'}">
-        simulator
-      </router-link>, a developer tool that runs simulated search sessions against the API and collects response times and status per source. Simulated traffic carries the header <code>X-Simulation: 1</code>.
+        test page
+      </router-link>. There you run the acceptance tests and a load simulation: simulated search sessions against the API, with response times and status per source. Simulated traffic carries the header <code>X-Simulation: 1</code>.
     </p>
   </div>
 </template>
@@ -297,5 +298,10 @@ import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'FaqEn3',
+  setup() {
+    // The API this site talks to, so the examples point at this Termennetwerk and not at another one.
+    const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL as string;
+    return {graphqlUrl, playgroundUrl: graphqlUrl.replace(/\/graphql$/, '/graphiql')};
+  },
 });
 </script>
