@@ -113,23 +113,42 @@ export const router = createRouter({
   ],
   scrollBehavior (to, from) {
     if (to.hash) {
-      // A link from elsewhere straight to a heading (/integratie#opzoeken): on that first load a gliding scroll
-      // is dropped while the page is still being drawn, so wait for the heading and jump to it instead.
-      const firstLoad = from.matched.length === 0;
-      return new Promise((resolve) => {
-        const started = Date.now();
-        const look = () => {
-          if (document.getElementById(to.hash.slice(1)) || Date.now() - started > 3000) {
-            resolve({el: to.hash, top: 16, behavior: firstLoad ? 'instant' : 'smooth'});
-          } else {
-            requestAnimationFrame(look);
-          }
-        };
-        look();
-      });
+      // A link from elsewhere straight to a heading (/integratie#opzoeken) is handled apart, see holdAt.
+      if (from.matched.length === 0) {
+        holdAt(to.hash.slice(1));
+        return;
+      }
+      return {el: to.hash, top: HEADING_GAP, behavior: 'smooth'};
     }
   },
 });
+
+const HEADING_GAP = 16;
+
+/**
+ * On a first load the page keeps growing for a moment (lists and examples fill in), so a single scroll to a
+ * heading lands short or not at all. Keep the heading at the top until the page is still, or the reader moves.
+ */
+function holdAt(id: string) {
+  const until = Date.now() + 2500;
+  let released = false;
+  const release = () => { released = true; };
+  for (const type of ['wheel', 'touchstart', 'keydown', 'mousedown']) {
+    window.addEventListener(type, release, {once: true, passive: true});
+  }
+  const tick = () => {
+    if (released || Date.now() > until) {
+      return;
+    }
+    const top = document.getElementById(id)?.getBoundingClientRect().top;
+    if (top !== undefined && Math.abs(top - HEADING_GAP) > 2) {
+      window.scrollBy({top: top - HEADING_GAP, behavior: 'instant'});
+    }
+    // A timer, not an animation frame: a tab opened in the background draws no frames, and would stay at the top.
+    setTimeout(tick, 50);
+  };
+  tick();
+}
 
 router.beforeEach((to, from, next) => {
   const locale: string = to.params.locale as  string;
