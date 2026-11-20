@@ -922,6 +922,15 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 }
 .browse__heading { font-size: 1.05rem; margin: 0 0 .25rem .25rem; }
 .browse__detail { position: sticky; top: 1rem; }
+/* Every path to the selected concept, as breadcrumbs (bestek 3.4.9: a concept may have more than one). */
+.browse__paths { margin: 0 0 1.25rem; padding: .9rem 1rem; border: 1px solid var(--vtn-border); border-radius: 12px; background: var(--vtn-surface-2); }
+.browse__paths-title { margin: 0 0 .35rem; font-size: var(--fs-sm); font-weight: 600; color: var(--vtn-text-2); }
+.browse__path { list-style: none; margin: 0; padding: .15rem 0; display: flex; flex-wrap: wrap; align-items: center; gap: .15rem .4rem; font-size: var(--fs-sm); }
+.browse__path li { display: inline-flex; align-items: center; gap: .4rem; }
+.browse__path li + li::before { content: '›'; color: var(--vtn-muted); }
+.browse__crumb { border: 0; background: none; padding: 0; font: inherit; color: var(--vtn-primary); cursor: pointer; text-decoration: underline; text-underline-offset: .15em; }
+.browse__crumb:hover { text-decoration-thickness: 2px; }
+.browse__paths-more { margin: .4rem 0 0; font-size: .8rem; color: var(--vtn-muted); }
 .tree__hint { margin: 0 0 .75rem .25rem; font-size: .8rem; color: var(--vtn-muted); }
 .tree, .tree__group { list-style: none; margin: 0; padding: 0; }
 .tree__group:not(.tree__group--root) {

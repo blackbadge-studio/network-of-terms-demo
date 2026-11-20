@@ -1,4 +1,4 @@
-import {RelatedTerm, Source} from './query';
+import {LanguageString, RelatedTerm, Source} from './query';
 
 /**
  * Hierarchical browsing (bestek F5.1, F2.23, F4.16) on top of the API's
@@ -42,7 +42,7 @@ const LOOKUP_BROADER_QUERY = `query BrowseLookup ($uris: [ID]!, $languages: [Lan
   lookup (uris: $uris, languages: $languages) {
     result {
       __typename
-      ... on TranslatedTerm { uri broader { uri prefLabel { language value } } }
+      ... on TranslatedTerm { uri prefLabel { language value } broader { uri prefLabel { language value } } }
     }
   }
 }`;
@@ -105,44 +105,80 @@ export async function browseNodes(source: string, uri: string | null, locale: st
   }
 }
 
-export interface ResolvedPath {
-  /** Ancestor URIs from the top concept down to the direct parent (empty for a top concept). */
-  ancestors: string[];
-  /** True when some level had more than one broader concept (the first was taken). */
-  polyhierarchy: boolean;
+export interface PathStep {
+  uri: string;
+  label: string;
+}
+
+export interface ResolvedPaths {
+  /** The concept's own label, when the lookup gave one. */
+  label: string | null;
+  /**
+   * Every path to the concept: its broader concepts from a top concept down to a direct parent.
+   * A concept with several broader concepts has several paths (bestek 3.4.9: never reduce them to one);
+   * a top concept has one, empty, path.
+   */
+  paths: PathStep[][];
+  /** True when the source has more paths or levels than we follow. */
+  truncated: boolean;
   found: boolean;
 }
 
-/** Walks up via `lookup` broader (first broader when there are several), at most 10 levels. */
-export async function resolvePath(source: string, uri: string, locale: string, signal?: AbortSignal): Promise<ResolvedPath> {
+const MAX_PATHS = 8;
+const MAX_DEPTH = 12;
+
+/** Walks up via `lookup` broader along every broader concept, so all paths to the concept are kept. */
+export async function resolvePaths(source: string, uri: string, locale: string, signal?: AbortSignal): Promise<ResolvedPaths> {
   if (STUB) {
-    return stubResolvePath(uri);
+    return stubResolvePaths(uri);
   }
-  const ancestors: string[] = [];
-  let polyhierarchy = false;
-  let current = uri;
-  for (let level = 0; level < 10; level++) {
-    const json = await graphql<{lookup: {result: {__typename: string, broader?: RelatedTerm[]}}[]}>(
-      LOOKUP_BROADER_QUERY, {uris: [current], languages: [...new Set([locale, 'nl', 'en'])]}, locale, signal,
-    );
-    const result = json.data?.lookup?.[0]?.result;
-    if (!result || result.__typename !== 'TranslatedTerm') {
-      return {ancestors, polyhierarchy, found: level > 0};
+  const languages = [...new Set([locale, 'nl', 'en'])];
+  const pick = (labels: LanguageString[] = []) => (labels.find(label => label.language === locale) ?? labels[0])?.value ?? null;
+  // One lookup per concept, however many paths pass through it.
+  const lookups = new Map<string, Promise<{label: string | null, broader: PathStep[]} | null>>();
+  const lookup = (current: string) => {
+    if (!lookups.has(current)) {
+      lookups.set(current, graphql<{lookup: {result: {__typename: string, prefLabel?: LanguageString[], broader?: RelatedTerm[]}}[]}>(
+        LOOKUP_BROADER_QUERY, {uris: [current], languages}, locale, signal,
+      ).then((json) => {
+        const result = json.data?.lookup?.[0]?.result;
+        if (!result || result.__typename !== 'TranslatedTerm') {
+          return null;
+        }
+        return {
+          label: pick(result.prefLabel),
+          broader: (result.broader ?? []).map(parent => ({uri: parent.uri, label: pick(parent.prefLabel) ?? parent.uri})),
+        };
+      }));
     }
-    const broader = result.broader ?? [];
-    if (broader.length === 0) {
-      break;
-    }
-    if (broader.length > 1) {
-      polyhierarchy = true;
-    }
-    current = broader[0].uri;
-    if (ancestors.includes(current) || current === uri) {
-      break;
-    }
-    ancestors.unshift(current);
+    return lookups.get(current)!;
+  };
+
+  const own = await lookup(uri);
+  if (!own) {
+    return {label: null, paths: [], truncated: false, found: false};
   }
-  return {ancestors, polyhierarchy, found: true};
+  const paths: PathStep[][] = [];
+  let truncated = false;
+  // `trail` runs from the concept's direct parent upwards; a finished trail is turned around.
+  const walk = async (current: string, trail: PathStep[]): Promise<void> => {
+    if (paths.length >= MAX_PATHS) {
+      truncated = true;
+      return;
+    }
+    const entry = await lookup(current);
+    const parents = (entry?.broader ?? []).filter(parent => parent.uri !== uri && !trail.some(step => step.uri === parent.uri));
+    if (parents.length === 0 || trail.length >= MAX_DEPTH) {
+      truncated = truncated || parents.length > 0;
+      paths.push([...trail].reverse());
+      return;
+    }
+    for (const parent of parents) {
+      await walk(parent.uri, [...trail, parent]);
+    }
+  };
+  await walk(uri, []);
+  return {label: own.label, paths, truncated, found: true};
 }
 
 /* ---------- dev stub (VITE_BROWSE_STUB=1): a deterministic fake tree ---------- */
@@ -173,9 +209,19 @@ function stubBrowse(source: string, uri: string | null): Promise<BrowseOutcome> 
   return new Promise(resolve => setTimeout(() => resolve({status: 'ok', nodes, responseTimeMs: 120, cached: false}), 300));
 }
 
-function stubResolvePath(uri: string): Promise<ResolvedPath> {
+function stubResolvePaths(uri: string): Promise<ResolvedPaths> {
   const path = stubPath(uri);
   const source = uri.split('#stub-')[0];
-  const ancestors = path.slice(0, -1).map((_, index) => stubUri(source, path.slice(0, index + 1)));
-  return Promise.resolve({ancestors, polyhierarchy: path[path.length - 1] === 2, found: path.length > 0});
+  const steps = (numbers: number[]): PathStep[] => numbers.slice(0, -1).map((_, index) => {
+    const prefix = numbers.slice(0, index + 1);
+    return {uri: stubUri(source, prefix), label: stubLabel(prefix)};
+  });
+  const paths = [steps(path)];
+  // The stub tree puts every second child under a neighbouring parent too: that concept has two paths.
+  if (path.length > 1 && path[path.length - 1] === 2) {
+    const parent = path.slice(0, -1);
+    const other = [...parent.slice(0, -1), (parent[parent.length - 1] % 8) + 1];
+    paths.push(steps([...other, 2]));
+  }
+  return Promise.resolve({label: stubLabel(path), paths, truncated: false, found: path.length > 0});
 }
