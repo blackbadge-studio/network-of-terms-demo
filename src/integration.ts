@@ -6,10 +6,10 @@
 
 export const QUERIES = {
   sources: `{
-  sources {
+  sources(genres: ["https://termennetwerk.meemoo.be/genres/persoon"]) {
     uri
     name
-    resultTypes
+    genres { uri name }
     inLanguage
     features { type }
     status { isAvailable }
@@ -22,7 +22,7 @@ export const QUERIES = {
       "https://www.wikidata.org#vlaanderen-personen"
     ]
     query: "Permeke"
-    types: [PERSON]
+    genres: ["https://termennetwerk.meemoo.be/genres/persoon"]
     limit: 3
   ) {
     source { uri name }
@@ -115,8 +115,8 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'bronnen',
         title: 'Per veld de bronnen kiezen',
         text: [
-          'Vraag de lijst van bronnen op en bepaal per registratieveld waarin gezocht wordt: ‘vervaardiger’ in bronnen met personen, ‘plaats’ in bronnen met plaatsen.',
-          'Elke bron zegt zelf welke types (`resultTypes`) en talen (`inLanguage`) ze levert en of ze bereikbaar is. Bewaar per veld de URI’s van de gekozen bronnen.',
+          'Vraag de lijst van bronnen op en bepaal per registratieveld waarin gezocht wordt: ‘vervaardiger’ in bronnen met personen, ‘plaats’ in bronnen met plaatsen. Een type is een genre: met `genres` krijg je alleen de bronnen van dat type, hier personen.',
+          'Elke bron zegt zelf welke genres (`genres`) en talen (`inLanguage`) ze levert, wat ze kan (`features`) en of ze bereikbaar is. Bewaar per veld de URI’s van de gekozen bronnen.',
         ],
         query: 'sources',
       },
@@ -124,7 +124,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'zoeken',
         title: 'Zoeken',
         text: [
-          'Stuur de zoekterm samen met de bronnen van dat veld. Met `types` beperk je het antwoord, hier tot personen; met `limit` het aantal resultaten per bron.',
+          'Stuur de zoekterm samen met de bronnen van dat veld. Met `genres` geef je ook hier het type mee: een bron die types mengt, zoals RKDartists, geeft dan alleen haar personen terug. Zo’n bron herken je aan `GENRE_FILTER` in `features`. Met `limit` beperk je het aantal resultaten per bron.',
         ],
         query: 'terms',
       },
@@ -197,8 +197,8 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'bronnen',
         title: 'Choose the sources per field',
         text: [
-          'Fetch the list of sources and decide per cataloguing field where to search: ‘maker’ in sources with persons, ‘place’ in sources with places.',
-          'Each source states which types (`resultTypes`) and languages (`inLanguage`) it offers and whether it is reachable. Keep the URIs of the chosen sources per field.',
+          'Fetch the list of sources and decide per cataloguing field where to search: ‘maker’ in sources with persons, ‘place’ in sources with places. A type is a genre: `genres` returns only the sources of that type, here persons.',
+          'Each source states which genres (`genres`) and languages (`inLanguage`) it offers, what it can do (`features`) and whether it is reachable. Keep the URIs of the chosen sources per field.',
         ],
         query: 'sources',
       },
@@ -206,7 +206,7 @@ export const GUIDE: Record<'nl' | 'en', Guide> = {
         id: 'zoeken',
         title: 'Search',
         text: [
-          'Send the search term together with the sources of that field. `types` narrows the answer, here to persons; `limit` caps the results per source.',
+          'Send the search term together with the sources of that field. `genres` passes the type here too: a source that mixes types, such as RKDartists, then returns only its persons. Such a source has `GENRE_FILTER` among its `features`. `limit` caps the results per source.',
         ],
         query: 'terms',
       },

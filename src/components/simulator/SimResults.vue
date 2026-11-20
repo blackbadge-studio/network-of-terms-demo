@@ -225,7 +225,7 @@ const acceptedArguments = computed(() => {
   if (!caps) {
     return [];
   }
-  return [caps.types ? 'types' : null, caps.limit ? 'limit' : null, caps.timeoutMs ? 'timeoutMs' : null, caps.resultType ? 'resultType' : null, caps.cached ? 'cached' : null].filter(Boolean) as string[];
+  return [caps.genres ? 'genres' : null, caps.limit ? 'limit' : null, caps.timeoutMs ? 'timeoutMs' : null, caps.resultType ? 'resultType' : null, caps.cached ? 'cached' : null].filter(Boolean) as string[];
 });
 const kpis = computed(() => {
   const summary = props.run?.summary;

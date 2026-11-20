@@ -135,8 +135,8 @@ export const TERM_FIELDS = `
   }
 `;
 
-export const TERMS_QUERY = `query Terms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID], $types: [ResultType!]) {
-  terms (sources: $sources query: $query languages: $languages genres: $genres types: $types) {
+export const TERMS_QUERY = `query Terms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID]) {
+  terms (sources: $sources query: $query languages: $languages genres: $genres) {
     source {
       name
       uri

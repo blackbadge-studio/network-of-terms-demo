@@ -60,7 +60,7 @@ export const URI_PRESETS: Record<UriPresetId, string[]> = {
   ],
 };
 
-export const RESULT_TYPES = ['CONCEPT', 'PERSON', 'ORGANIZATION', 'PLACE', 'EVENT'] as const;
+export {RESULT_TYPES} from '../genres';
 
 export interface SimSettings {
   workload: Workload;
@@ -146,7 +146,8 @@ export interface RunSummary {
 }
 
 export interface ApiCapabilities {
-  types: boolean;
+  /** `genres` on `terms`: how a result type is asked for. */
+  genres: boolean;
   limit: boolean;
   timeoutMs: boolean;
   resultType: boolean;

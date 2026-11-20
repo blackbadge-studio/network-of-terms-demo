@@ -9,7 +9,7 @@
   >
     <div class="results__bar">
       <h2 class="results__summary">
-        <template v-if="entries">
+        <template v-if="entries || noSourceOfType">
           {{ t('search.resultsSummary', totalTerms) }} {{ t('search.inSources', sourcesWithTerms) }}
         </template>
         <template v-else>
@@ -50,16 +50,22 @@
         :q="q"
         :languages="languages"
         :genres="genres"
-        :types="types"
         :compact="compact"
         :selected-uri="selected?.term.uri"
         @select="onSelect"
       />
     </template>
 
+    <p
+      v-else-if="noSourceOfType"
+      class="source__notice"
+      role="status"
+    >
+      {{ t('search.noSourceOfType') }}
+    </p>
     <template v-else-if="isFetching">
       <article
-        v-for="uri in datasets"
+        v-for="uri in searched ?? datasets"
         :key="uri"
         class="source"
       >
@@ -119,6 +125,7 @@ import {useQuery} from 'villus';
 import {useI18n} from 'vue-i18n';
 import {ExclamationCircleIcon, XMarkIcon} from '@heroicons/vue/16/solid';
 import {Source, TERMS_QUERY, Term, TermsQueryResult, sourceState} from '../query';
+import {SOURCES_BY_GENRE_QUERY, isTypeGenre} from '../genres';
 import SourceResults from './SourceResults.vue';
 import SourceHeader from './SourceHeader.vue';
 import TermResult from './TermResult.vue';
@@ -128,29 +135,49 @@ import {glideToTop} from '../scroll';
 const props = defineProps({
   q: {type: String, default: ''},
   datasets: {type: Array as PropType<string[]>, default: () => []},
+  /** Genre URIs: the chosen result types (a type is a genre) and subjects. */
   genres: {type: Array as PropType<string[]>, default: () => []},
-  /** Result types to keep (PERSON, PLACE, ...); the API leaves out sources that offer none of them. */
-  types: {type: Array as PropType<string[]>, default: () => []},
   compact: {type: Boolean, default: false},
 });
 
 const {t, locale} = useI18n();
 const languages = [...new Set([locale.value, 'nl', 'en'])];
 
-const {data, isFetching, error} = useQuery<TermsQueryResult>({
+// A type is asked for as a genre, in the two steps the API offers: `sources(genres:)` says which
+// sources carry the chosen types, and only those of the chosen sources are searched; `terms(genres:)`
+// then filters inside the sources that mix types.
+const typeGenres = props.genres.filter(isTypeGenre);
+const {data: typed, isFetching: isChoosing, error: choosingError} = useQuery<{sources: {uri: string}[]}>({
+  query: SOURCES_BY_GENRE_QUERY,
+  variables: {genres: typeGenres},
+  skip: () => !props.q || props.datasets.length === 0 || typeGenres.length === 0,
+});
+/** The sources that are searched; null while the API still has to say which carry the chosen types. */
+const searched = computed<string[] | null>(() => {
+  if (typeGenres.length === 0) {
+    return props.datasets;
+  }
+  const carrying = typed.value?.sources;
+  return carrying ? props.datasets.filter(uri => carrying.some(source => source.uri === uri)) : null;
+});
+
+const {data, isFetching: isSearching, error: searchError} = useQuery<TermsQueryResult>({
   query: TERMS_QUERY,
-  variables: {
-    sources: props.datasets,
+  variables: computed(() => ({
+    sources: searched.value ?? [],
     query: props.q,
     languages,
     ...(props.genres.length > 0 ? {genres: props.genres} : {}),
-    ...(props.types.length > 0 ? {types: props.types} : {}),
-  },
+  })),
   context: {
     headers: reactive({'Accept-Language': locale}),
   },
-  skip: () => !props.q || props.datasets.length === 0,
+  skip: () => !props.q || !searched.value || searched.value.length === 0,
 });
+const isFetching = computed(() => isChoosing.value || isSearching.value);
+const error = computed(() => choosingError.value ?? searchError.value);
+/** None of the chosen sources carries a chosen type, so there is nothing to search. */
+const noSourceOfType = computed(() => searched.value?.length === 0);
 
 watch(isFetching, (fetching) => {
   state.loading = fetching;

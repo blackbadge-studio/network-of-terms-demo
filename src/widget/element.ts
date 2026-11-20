@@ -1,5 +1,5 @@
 import {
-  RESULT_TYPES, SourceState, TermsEntry, WidgetSource, WidgetTerm,
+  SourceState, TermsEntry, WidgetSource, WidgetTerm,
   fetchSources, fetchTerms, pickLabels, sourceState,
 } from './api';
 import {MESSAGES, WidgetLang, WidgetMessages, format, isWidgetLang} from './messages';
@@ -9,16 +9,18 @@ import {WIDGET_STYLES} from './styles';
  * <vtn-search>: the embeddable federated search of the Vlaams Termennetwerk. One script tag
  * registers it; attributes configure it (see the Zoekwidget page):
  *
- *   sources      comma-separated source URIs            default: every source of the API
+ *   sources      comma-separated source URIs            default: every source of the API, or with
+ *                                                       `genres` every source that has one of them
  *   lang         nl | en                                default: the page's language
- *   types        concept,person,organization,place,event  default: every type
+ *   genres       comma-separated genre URIs             default: no filter. A result type is a
+ *                                                       genre: …/genres/persoon keeps persons
  *   limit        results per source                     default: 20
  *   placeholder  text in the empty search field
  *   api          GraphQL endpoint                       default: the production API
  *   theme        light | dark | inherit                 default: light
  *
  * Events (CustomEvent, bubbling and composed, so a listener on the element or the document hears them):
- *   vtn:search  {query, sources, types}
+ *   vtn:search  {query, sources, genres}
  *   vtn:select  {uri, prefLabel, source: {uri, name}, resultType, language}
  *   vtn:error   {source, type, message}  per unreachable source, or source null for the API itself
  */
@@ -35,7 +37,7 @@ export interface VtnSelectDetail {
 export interface VtnSearchDetail {
   query: string;
   sources: string[];
-  types: string[];
+  genres: string[];
 }
 
 export interface VtnErrorDetail {
@@ -69,7 +71,7 @@ const pageLang = (): WidgetLang => {
 type Phase = 'idle' | 'loading' | 'done' | 'failed';
 
 export class VtnSearchElement extends HTMLElement {
-  static readonly observedAttributes = ['sources', 'lang', 'types', 'limit', 'placeholder', 'api', 'theme'];
+  static readonly observedAttributes = ['sources', 'lang', 'genres', 'limit', 'placeholder', 'api', 'theme'];
 
   private readonly root: ShadowRoot;
   private readonly ids = `vtn-${Math.random().toString(36).slice(2, 8)}`;
@@ -153,7 +155,7 @@ export class VtnSearchElement extends HTMLElement {
     if (oldValue === newValue || !this.isConnected) {
       return;
     }
-    if (name === 'api') {
+    if (name === 'api' || name === 'genres') {
       this.allSources = null;
       void this.loadSources();
     }
@@ -182,10 +184,13 @@ export class VtnSearchElement extends HTMLElement {
     return Number.isFinite(limit) && limit > 0 ? Math.min(limit, 100) : 20;
   }
 
-  private get types(): string[] {
-    return splitList(this.getAttribute('types'))
-      .map(type => type.toUpperCase())
-      .filter((type): type is typeof RESULT_TYPES[number] => (RESULT_TYPES as readonly string[]).includes(type));
+  /**
+   * Genre URIs to filter on. The API lists the sources that have them and filters inside mixed sources.
+   * Not named `genres`: a framework that finds a property of that name on the element sets it instead of the
+   * attribute, and this one cannot be set.
+   */
+  private get genreUris(): string[] {
+    return splitList(this.getAttribute('genres'));
   }
 
   private get sourceUris(): string[] {
@@ -202,14 +207,17 @@ export class VtnSearchElement extends HTMLElement {
 
   private async loadSources(): Promise<void> {
     const api = this.api;
+    const genres = this.genreUris;
+    // An answer for an endpoint or genres that an attribute has since replaced is dropped.
+    const current = () => api === this.api && genres.join() === this.genreUris.join();
     try {
-      const sources = await fetchSources(api, this.widgetLang);
-      if (api === this.api) {
+      const sources = await fetchSources(api, this.widgetLang, genres);
+      if (current()) {
         this.allSources = sources;
         this.sourcesFailed = false;
       }
     } catch {
-      if (api === this.api) {
+      if (current()) {
         this.sourcesFailed = true;
       }
     }
@@ -227,7 +235,7 @@ export class VtnSearchElement extends HTMLElement {
       await this.loadSources();
     }
     const sources = this.sourceUris;
-    const types = this.types;
+    const genres = this.genreUris;
 
     this.controller?.abort();
     const controller = new AbortController();
@@ -235,10 +243,10 @@ export class VtnSearchElement extends HTMLElement {
     this.phase = 'loading';
     this.failure = '';
     this.render();
-    this.emit<VtnSearchDetail>('vtn:search', {query, sources, types});
+    this.emit<VtnSearchDetail>('vtn:search', {query, sources, genres});
 
     try {
-      const entries = await fetchTerms({api: this.api, sources, query, lang: this.widgetLang, types, limit: this.limit, signal: controller.signal});
+      const entries = await fetchTerms({api: this.api, sources, query, lang: this.widgetLang, genres, limit: this.limit, signal: controller.signal});
       if (controller.signal.aborted) {
         return;
       }
@@ -397,9 +405,11 @@ export class VtnSearchElement extends HTMLElement {
       : sourceCount === undefined
         ? `<span>${escape(m.sourcesLoading)}</span>`
         : `<span>${escape(format(m.sourcesCount, {n: sourceCount}))}</span>`;
-    const types = this.types;
-    const typesLine = types.length > 0
-      ? `<span>· ${types.map(type => escape(m.types[type] ?? type)).join(', ')}</span>`
+    // The genres by the name the API gives them; until the sources are in, by the end of their URI.
+    const names = new Map((this.allSources ?? []).flatMap(source => source.genres ?? []).map(genre => [genre.uri, genre.name]));
+    const genres = this.genreUris;
+    const genresLine = genres.length > 0
+      ? `<span>· ${genres.map(uri => escape(names.get(uri) ?? uri.replace(/\/+$/, '').split('/').pop())).join(', ')}</span>`
       : '';
 
     return `
@@ -415,7 +425,7 @@ export class VtnSearchElement extends HTMLElement {
             </div>
             <button class="btn btn--primary" type="submit" ${loading ? 'disabled' : ''}>${escape(loading ? m.searching : m.search)}</button>
           </div>
-          <p class="meta" aria-live="polite">${sourcesLine}${typesLine}</p>
+          <p class="meta" aria-live="polite">${sourcesLine}${genresLine}</p>
         </form>
         ${this.body()}
         <p class="foot"><a href="${SITE_URL}/${this.widgetLang}" target="_blank" rel="noopener"><i></i>${escape(m.poweredBy)}<span class="sr-only"> (${escape(m.externalLink)})</span></a></p>

@@ -1,4 +1,5 @@
 import type {ApiCapabilities, RequestKind, RequestRecord, SimRun, SimSettings, SourceRecord, SourceStatus} from './types';
+import {SOURCES_BY_GENRE_QUERY, genresOfTypes} from '../genres';
 
 /**
  * Client-side session runner. Fires one `terms` (search) or `lookup` query per
@@ -42,23 +43,39 @@ export async function probeCapabilities(url: string, signal?: AbortSignal): Prom
     const termFields = new Set(((json?.data?.t?.fields ?? []) as {name: string}[]).map(field => field.name));
     const resultFields = (key: 'r' | 'l') => new Set(((json?.data?.[key]?.fields ?? []) as {name: string}[]).map(field => field.name));
     return {
-      types: termArgs.has('types'),
+      genres: termArgs.has('genres'),
       limit: termArgs.has('limit'),
       timeoutMs: termArgs.has('timeoutMs'),
       resultType: termFields.has('resultType'),
       cached: resultFields('r').has('cached') && resultFields('l').has('cached'),
     };
   } catch {
-    return {types: false, limit: false, timeoutMs: false, resultType: false, cached: false};
+    return {genres: false, limit: false, timeoutMs: false, resultType: false, cached: false};
+  }
+}
+
+/** The chosen sources that have one of the genres, as `sources(genres:)` lists them; all of them if the API cannot say. */
+async function sourcesWithGenres(url: string, sources: string[], genres: string[], signal?: AbortSignal): Promise<string[]> {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Simulation': '1'},
+      body: JSON.stringify({query: SOURCES_BY_GENRE_QUERY, variables: {genres}}),
+      signal,
+    });
+    const listed: {uri: string}[] = (await response.json())?.data?.sources ?? [];
+    return listed.length > 0 ? sources.filter(uri => listed.some(source => source.uri === uri)) : sources;
+  } catch {
+    return sources;
   }
 }
 
 function buildSearchQuery(capabilities: ApiCapabilities) {
   const vars = ['$sources: [ID]!', '$query: String!', '$languages: [Language!]'];
   const args = ['sources: $sources', 'query: $query', 'languages: $languages'];
-  if (capabilities.types) {
-    vars.push('$types: [ResultType!]');
-    args.push('types: $types');
+  if (capabilities.genres) {
+    vars.push('$genres: [ID]');
+    args.push('genres: $genres');
   }
   if (capabilities.limit) {
     vars.push('$limit: Int');
@@ -133,7 +150,10 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
   const startedAt = performance.now();
   const total = settings.sizeMode === 'count' ? settings.count : null;
   const durationMs = settings.minutes * 60_000;
-  let capabilities: ApiCapabilities = {types: false, limit: false, timeoutMs: false, resultType: false, cached: false};
+  let capabilities: ApiCapabilities = {genres: false, limit: false, timeoutMs: false, resultType: false, cached: false};
+  // A chosen result type is asked for as a genre, in the sources that have that genre.
+  const typeGenres = genresOfTypes(settings.types);
+  let sources = settings.sources;
 
   const timeIsUp = () => settings.sizeMode === 'duration' && performance.now() - startedAt >= durationMs;
   const allStarted = () => total !== null && started >= total;
@@ -153,12 +173,12 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
 
   function searchVariables(term: string) {
     const variables: Record<string, unknown> = {
-      sources: settings.sources,
+      sources,
       query: term,
       languages: [...new Set([settings.lang, 'nl', 'en'])],
     };
-    if (capabilities.types && settings.types.length > 0) {
-      variables.types = settings.types;
+    if (capabilities.genres && typeGenres.length > 0) {
+      variables.genres = typeGenres;
     }
     if (capabilities.limit) {
       variables.limit = settings.limit;
@@ -275,6 +295,9 @@ export function createRunner(url: string, settings: SimSettings, sourceNames: Ma
 
   async function loop() {
     capabilities = await probeCapabilities(url, signal);
+    if (capabilities.genres && typeGenres.length > 0) {
+      sources = await sourcesWithGenres(url, settings.sources, typeGenres, signal);
+    }
     while (!signal.aborted && !allStarted() && !timeIsUp()) {
       if (inFlight >= settings.tempo.concurrency) {
         await sleep(50, signal);

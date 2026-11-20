@@ -1,6 +1,7 @@
 /**
  * The slice of the Vlaams Termennetwerk GraphQL API the widget uses: the sources and a federated
- * `terms` search. Plain fetch, no client library, so the embed stays small.
+ * `terms` search, both with the optional `genres`. Plain fetch, no client library, so the embed
+ * stays small.
  */
 
 export interface LanguageString {
@@ -26,11 +27,18 @@ export interface WidgetTerm {
   exactMatch: RelatedTerm[];
 }
 
+export interface WidgetGenre {
+  uri: string;
+  name: string;
+}
+
 export interface WidgetSource {
   uri: string;
   name: string;
   alternateName: string | null;
   mainEntityOfPage?: string | null;
+  /** Only on the sources list, where the widget reads the names of the genres it was given. */
+  genres?: WidgetGenre[];
 }
 
 export interface TermsError {
@@ -46,8 +54,6 @@ export interface TermsEntry {
 
 export type SourceState = 'ok' | 'none' | 'error' | 'timeout';
 
-export const RESULT_TYPES = ['CONCEPT', 'PERSON', 'ORGANIZATION', 'PLACE', 'EVENT'] as const;
-
 export const sourceState = (result: TermsEntry['result']): SourceState => {
   if ('terms' in result) {
     return result.terms.length > 0 ? 'ok' : 'none';
@@ -56,12 +62,12 @@ export const sourceState = (result: TermsEntry['result']): SourceState => {
   return result.__typename === 'TimeoutError' ? 'timeout' : 'error';
 };
 
-const SOURCES_QUERY = `query WidgetSources {
-  sources { uri name alternateName mainEntityOfPage }
+const SOURCES_QUERY = `query WidgetSources ($genres: [ID]) {
+  sources (genres: $genres) { uri name alternateName mainEntityOfPage genres { uri name } }
 }`;
 
-const TERMS_QUERY = `query WidgetTerms ($sources: [ID]!, $query: String!, $languages: [Language!], $types: [ResultType!], $limit: Int) {
-  terms (sources: $sources query: $query languages: $languages types: $types limit: $limit) {
+const TERMS_QUERY = `query WidgetTerms ($sources: [ID]!, $query: String!, $languages: [Language!], $genres: [ID], $limit: Int) {
+  terms (sources: $sources query: $query languages: $languages genres: $genres limit: $limit) {
     source { uri name alternateName mainEntityOfPage }
     result {
       ... on TranslatedTerms {
@@ -101,19 +107,22 @@ async function graphql<T>(api: string, query: string, variables: Record<string, 
   return body.data;
 }
 
-// The source list hardly changes: one request per endpoint per page, shared by every widget on it.
+// The source list hardly changes: one request per endpoint and set of genres per page, shared by
+// every widget on it.
 const sourcesCache = new Map<string, Promise<WidgetSource[]>>();
 
-export function fetchSources(api: string, lang: string): Promise<WidgetSource[]> {
-  let pending = sourcesCache.get(api);
+/** The sources of the API; with genres, the sources that have one of them (`sources(genres:)`). */
+export function fetchSources(api: string, lang: string, genres: string[] = []): Promise<WidgetSource[]> {
+  const key = [api, lang, ...genres].join(' ');
+  let pending = sourcesCache.get(key);
   if (!pending) {
-    pending = graphql<{sources: WidgetSource[]}>(api, SOURCES_QUERY, {}, lang)
+    pending = graphql<{sources: WidgetSource[]}>(api, SOURCES_QUERY, genres.length > 0 ? {genres} : {}, lang)
       .then(data => data.sources)
       .catch((error: unknown) => {
-        sourcesCache.delete(api);
+        sourcesCache.delete(key);
         throw error;
       });
-    sourcesCache.set(api, pending);
+    sourcesCache.set(key, pending);
   }
 
   return pending;
@@ -124,7 +133,8 @@ export interface TermsRequest {
   sources: string[];
   query: string;
   lang: string;
-  types: string[];
+  /** Genre URIs; a result type is a genre too. */
+  genres: string[];
   limit: number;
   signal?: AbortSignal;
 }
@@ -134,7 +144,7 @@ export async function fetchTerms(request: TermsRequest): Promise<TermsEntry[]> {
     sources: request.sources,
     query: request.query,
     languages: [request.lang],
-    ...(request.types.length > 0 ? {types: request.types} : {}),
+    ...(request.genres.length > 0 ? {genres: request.genres} : {}),
     limit: request.limit,
   }, request.lang, request.signal);
 

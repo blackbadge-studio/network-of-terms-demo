@@ -247,7 +247,7 @@
                       :style="widgetVars"
                       :lang="options.lang"
                       :sources="options.sources.length > 0 ? options.sources.join(',') : null"
-                      :types="options.types.length > 0 ? options.types.map(x => x.toLowerCase()).join(',') : null"
+                      :genres="options.types.length > 0 ? genresOfTypes(options.types).join(',') : null"
                       :limit="options.limit !== 20 ? options.limit : null"
                       :placeholder="options.placeholder || null"
                       :theme="style.theme"
@@ -326,7 +326,7 @@
                             :style="widgetVars"
                             :lang="options.lang"
                             :sources="options.sources.length > 0 ? options.sources.join(',') : null"
-                            :types="options.types.length > 0 ? options.types.map(x => x.toLowerCase()).join(',') : null"
+                            :genres="options.types.length > 0 ? genresOfTypes(options.types).join(',') : null"
                             :limit="options.limit !== 20 ? options.limit : null"
                             :placeholder="options.placeholder || null"
                             :theme="style.theme"
@@ -414,7 +414,7 @@ import {computed, onBeforeUnmount, onMounted, reactive, ref, useId, watch} from 
 import {useI18n} from 'vue-i18n';
 import {useQuery} from 'villus';
 import {ArrowPathIcon} from '@heroicons/vue/16/solid';
-import {RESULT_TYPES} from '../widget/api';
+import {RESULT_TYPES, genresOfTypes} from '../genres';
 import {VtnSelectDetail, VtnSearchDetail, VtnErrorDetail, defineVtnSearch} from '../widget/element';
 import ColorField from './widget-v2/ColorField.vue';
 import SegmentedControl from './widget-v2/SegmentedControl.vue';
@@ -661,8 +661,9 @@ const elementTag = computed(() => {
   if (options.sources.length > 0) {
     attributes.push(['sources', options.sources.join(',')]);
   }
+  // A type is asked for as a genre of the Flemish genre list.
   if (options.types.length > 0) {
-    attributes.push(['types', options.types.map(x => x.toLowerCase()).join(',')]);
+    attributes.push(['genres', genresOfTypes(options.types).join(',')]);
   }
   if (options.limit !== 20) {
     attributes.push(['limit', String(options.limit)]);

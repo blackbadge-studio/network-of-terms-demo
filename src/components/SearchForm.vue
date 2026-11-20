@@ -153,6 +153,14 @@
           </p>
         </div>
 
+        <div class="field">
+          <span class="field__label">{{ t('search.typesLabel') }}</span>
+          <TypeToggles />
+          <p class="field__hint">
+            {{ t('search.typesHint') }}
+          </p>
+        </div>
+
         <div
           v-if="showGenresFilter"
           class="field"
@@ -175,7 +183,6 @@
       :q="submitted.q"
       :datasets="submitted.datasets"
       :genres="submitted.genres"
-      :types="submitted.types"
       :compact="isMinimal"
     />
   </div>
@@ -187,6 +194,7 @@ import {computed, ref, watch} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {MagnifyingGlassIcon} from '@heroicons/vue/16/solid';
 import state from '../store';
+import {isTypeGenre} from '../genres';
 import {useTheme} from '../theme';
 import TheHome from './TheHome.vue';
 import SourcePicker from './SourcePicker.vue';
@@ -209,27 +217,26 @@ const fromUrl = route.query.datasets as string;
 state.selectedDatasets = fromUrl ? fromUrl.split(',') : [];
 const genresFromUrl = route.query.genres as string;
 state.selectedGenres = genresFromUrl ? genresFromUrl.split(',') : [];
-const typesFromUrl = route.query.types as string;
-state.selectedTypes = typesFromUrl ? typesFromUrl.split(',') : [];
 
 // What is searched for is what the URL says; the form only edits the next search.
 const submitted = {
   q: (route.query.q as string) ?? '',
   datasets: [...state.selectedDatasets],
   genres: [...state.selectedGenres],
-  types: [...state.selectedTypes],
 };
 
+// The subject row shows when a chosen source filters on genre and has subjects to filter on.
 const showGenresFilter = computed(() =>
   state.sources.some(source =>
     state.selectedDatasets.includes(source.uri)
-    && source.features.some(f => f.type === 'GENRE_FILTER'),
+    && source.features.some(f => f.type === 'GENRE_FILTER')
+    && source.genres.some(genre => !isTypeGenre(genre.uri)),
   ),
 );
 
 watch(showGenresFilter, (show) => {
   if (!show) {
-    state.selectedGenres = [];
+    state.selectedGenres = state.selectedGenres.filter(isTypeGenre);
   }
 });
 
@@ -259,9 +266,6 @@ function onSubmit() {
   };
   if (state.selectedGenres.length > 0) {
     query.genres = state.selectedGenres.join(',');
-  }
-  if (state.selectedTypes.length > 0) {
-    query.types = state.selectedTypes.join(',');
   }
   router.replace({name: 'home', query});
 }

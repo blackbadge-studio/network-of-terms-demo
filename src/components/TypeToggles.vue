@@ -3,37 +3,46 @@
     class="chip-row"
     role="group"
     :aria-label="t('search.typesLabel')"
-    :title="t('search.typesNotLive')"
   >
     <label class="chip chip-toggle">
       <input
         type="checkbox"
-        :checked="state.selectedTypes.length === 0"
-        @change="state.selectedTypes = []"
+        :checked="selectedTypes.length === 0"
+        @change="selectedTypes = []"
       >
       {{ t('search.typeAll') }}
     </label>
     <label
-      v-for="type in TYPES"
+      v-for="type in RESULT_TYPES"
       :key="type"
       class="chip chip-toggle"
     >
       <input
-        v-model="state.selectedTypes"
+        v-model="selectedTypes"
         type="checkbox"
         :value="type"
       >
       {{ t(`types.${type}_pl`) }}
     </label>
-    <span class="sr-only">{{ t('search.typesNotLive') }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
+import {computed} from 'vue';
 import {useI18n} from 'vue-i18n';
 import state from '../store';
+import {RESULT_TYPES, TYPE_GENRES, genresOfTypes, isTypeGenre} from '../genres';
 
-// The API's result types; the choice is kept in the store and sent as `terms(types:)`.
-const TYPES = ['CONCEPT', 'PERSON', 'ORGANIZATION', 'PLACE', 'EVENT'];
 const {t} = useI18n();
+
+// A type is a genre: the choice lives among the selected genres and is sent to the API as `genres`.
+const selectedTypes = computed<string[]>({
+  get: () => RESULT_TYPES.filter(type => state.selectedGenres.includes(TYPE_GENRES[type])),
+  set: (types) => {
+    state.selectedGenres = [
+      ...genresOfTypes(types),
+      ...state.selectedGenres.filter(uri => !isTypeGenre(uri)),
+    ];
+  },
+});
 </script>

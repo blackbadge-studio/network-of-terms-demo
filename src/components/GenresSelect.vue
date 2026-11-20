@@ -25,6 +25,7 @@ import {useI18n} from 'vue-i18n';
 import state from '../store';
 import {computed, watch} from 'vue';
 import {Genre} from '../query';
+import {isTypeGenre} from '../genres';
 
 const {t, locale} = useI18n();
 
@@ -35,10 +36,11 @@ const availableGenres = computed(() => {
   const genreSourcesWithFeature = selectedSources.filter(source =>
     source.features.some(f => f.type === 'GENRE_FILTER'),
   );
+  // The subjects only: the genres that are result types have their own row (TypeToggles).
   const genreMap = new Map<string, Genre>();
   for (const source of genreSourcesWithFeature) {
     for (const genre of source.genres) {
-      if (!genreMap.has(genre.uri)) {
+      if (!isTypeGenre(genre.uri) && !genreMap.has(genre.uri)) {
         genreMap.set(genre.uri, genre);
       }
     }
@@ -46,9 +48,9 @@ const availableGenres = computed(() => {
   return [...genreMap.values()].sort((a, b) => a.name.localeCompare(b.name, locale.value));
 });
 
-// Prune selections that are no longer available.
+// Prune subject selections that are no longer available; the chosen types stay.
 watch(availableGenres, (genres) => {
   const availableUris = new Set(genres.map(g => g.uri));
-  state.selectedGenres = state.selectedGenres.filter(uri => availableUris.has(uri));
+  state.selectedGenres = state.selectedGenres.filter(uri => isTypeGenre(uri) || availableUris.has(uri));
 });
 </script>
