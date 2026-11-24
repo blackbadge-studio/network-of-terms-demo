@@ -4,6 +4,8 @@
  * the API URL from the script origin) and only accepts origins registered on
  * the project behind the public `data-key`.
  */
+import {router} from './router';
+
 const DEFAULT_SCRIPT = 'https://app.blackbadge.studio/feedback-widget.js';
 const SCRIPT_ID = 'bbs-feedback-widget';
 
@@ -28,7 +30,25 @@ export function mountFeedbackWidget() {
   script.dataset.theme = 'light';
   script.dataset.icon = 'bbs';
   script.dataset.version = import.meta.env.VITE_APP_VERSION || __BUILD_TIME__;
+  // The acceptance tab: the points of the tender that are checked in this interface (group ui of
+  // the acceptance list the API serves). "Try" opens the test's page through the router, so the
+  // panel stays open on the test.
+  script.dataset.tests = 'ui';
+  window.addEventListener('bbs-feedback:try', openTestPage);
   document.body.appendChild(script);
   // Lets the layout keep content clear of the floating button on small screens.
   document.documentElement.classList.add('has-feedback-widget');
+}
+
+function openTestPage(event: Event) {
+  const url = (event as CustomEvent<{url?: string | null}>).detail?.url;
+  if (!url) {
+    return;
+  }
+  const target = new URL(url, window.location.href);
+  if (target.origin !== window.location.origin) {
+    return;
+  }
+  event.preventDefault();
+  void router.push(target.pathname + target.search + target.hash);
 }
