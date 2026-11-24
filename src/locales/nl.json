@@ -219,6 +219,10 @@
     "minimaal": {
       "name": "Minimaal",
       "description": "Zoekmachine-stijl: één groot zoekveld, compacte resultaten."
+    },
+    "meemoo": {
+      "name": "meemoo",
+      "description": "Huisstijl van meemoo: lichtturquoise band met cirkels, witte kaarten."
     }
   },
   "simulator": {

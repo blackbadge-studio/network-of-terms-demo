@@ -4,7 +4,7 @@ import {computed, ref, watch} from 'vue';
  * Visual themes. The id is the `data-theme` attribute on <html>; the tokens and
  * layout variants live in src/index.css. `helder` is the baseline look.
  */
-export const THEME_IDS = ['helder', 'mint', 'netwerk', 'minimaal'] as const;
+export const THEME_IDS = ['helder', 'mint', 'netwerk', 'minimaal', 'meemoo'] as const;
 export type ThemeId = typeof THEME_IDS[number];
 
 export const THEME_STORAGE_KEY = 'vtn-theme';

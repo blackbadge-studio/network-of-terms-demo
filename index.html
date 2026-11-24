@@ -24,7 +24,7 @@
   <script>
     // Apply the saved visual theme before first paint (see src/theme.ts).
     (function () {
-      var themes = ['helder', 'mint', 'netwerk', 'minimaal'];
+      var themes = ['helder', 'mint', 'netwerk', 'minimaal', 'meemoo'];
       var theme = 'helder';
       try { var stored = localStorage.getItem('vtn-theme'); if (themes.indexOf(stored) !== -1) { theme = stored; } } catch (e) {}
       document.documentElement.setAttribute('data-theme', theme);

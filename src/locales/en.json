@@ -219,6 +219,10 @@
     "minimaal": {
       "name": "Minimal",
       "description": "Search-engine style: one large search field, compact results."
+    },
+    "meemoo": {
+      "name": "meemoo",
+      "description": "meemoo house style: light-turquoise band with circles, white cards."
     }
   },
   "simulator": {

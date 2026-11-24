@@ -374,7 +374,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .picker__selected { display: flex; flex-wrap: wrap; gap: var(--s-2); }
 
 /* ---------- results ---------- */
-.results { display: grid; gap: var(--s-5); margin-top: var(--s-7); }
+.results { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); margin-top: var(--s-7); }
 .results__bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--s-2) var(--s-4); padding-bottom: var(--s-3); border-bottom: 1px solid var(--vtn-border); }
 .results__summary { font-size: var(--fs-lg); font-weight: 700; }
 .results__meta { font-size: var(--fs-sm); color: var(--vtn-muted); }
@@ -405,7 +405,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 }
 .term:hover { border-color: var(--vtn-primary); box-shadow: var(--shadow-sm); }
 .term__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
-.term__title { font-size: var(--fs-xl); font-weight: 700; }
+.term__title { font-size: var(--fs-xl); font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
 .term__title a { color: var(--vtn-text); text-decoration: none; }
 .term__title a:hover { color: var(--vtn-primary-strong); text-decoration: underline; text-decoration-color: var(--vtn-primary-hover); }
 .term__type { margin-left: auto; }
@@ -581,6 +581,7 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .theme__swatch[data-swatch="mint"] { background: linear-gradient(135deg, #e6f7f4, #00c8aa); border-radius: 40%; }
 .theme__swatch[data-swatch="netwerk"] { background: radial-gradient(circle, #0f172a 1px, transparent 1.2px) 0 0 / 6px 6px, #fff; border-radius: 4px; }
 .theme__swatch[data-swatch="minimaal"] { background: #fff; box-shadow: inset 0 0 0 3px #f3f4f6; }
+.theme__swatch[data-swatch="meemoo"] { background: radial-gradient(circle at 30% -5%, #009690 0 42%, transparent 43%), radial-gradient(circle at 105% 70%, #28a0c8 0 32%, transparent 33%), #ebf7f6; border-color: #c4ebe7; }
 @media (max-width: 69.99em) {
   .nav--open .theme { margin: var(--s-2) 0 0; }
   .nav--open .theme__btn { width: 100%; justify-content: space-between; }
@@ -749,6 +750,132 @@ a.chip:hover, button.chip:hover { border-color: var(--vtn-primary); background: 
 .site-footer--mini a { color: var(--vtn-text-2); font-size: var(--fs-xs); }
 .site-footer--mini a:hover { color: var(--vtn-primary-strong); }
 .site-footer--mini .site-footer__poc { color: var(--vtn-primary-strong); }
+
+/* =====================================================================
+   THEME: meemoo — the meemoo house style (support.meemoo.be, verrijkjedata)
+   White header with bold black links, a light-turquoise hero band with big
+   circles peeking in from the edges, square white cards with a soft grey
+   shadow, pill buttons and a near-black footer. SofiaPro is used when the
+   visitor has it; otherwise the bundled Figtree stands in. No meemoo artwork:
+   the circles are CSS gradients.
+   ===================================================================== */
+:root[data-theme="meemoo"] {
+  --vtn-font: "SofiaPro", "Sofia Pro", "Figtree Variable", Helvetica, Arial, sans-serif;
+  --vtn-text: #111111; --vtn-text-2: #333333; --vtn-muted: #5f5f5f;
+  --vtn-surface-2: #f5f5f5; --vtn-surface-3: #e6e6e6;
+  --vtn-border: #e6e6e6; --vtn-border-strong: #a3a3a3;
+  --vtn-mint-light: #ebf7f6; --vtn-mint: #c4ebe7; --vtn-neutral-bg: #f0f0f0;
+  --vtn-black: #111111;
+  --meemoo-teal: #009690; --meemoo-mint: #00c8aa; --meemoo-blue: #28a0c8; --meemoo-green: #82e678;
+  --r-sm: 4px; --r-md: 0px; --r-lg: 0px; --r-btn: 2.4rem; --r-chip: 999px; --r-input: 1.625rem;
+  --shadow-sm: 0 5px 20px rgba(139, 139, 139, 0.15);
+  --shadow-md: 0 10px 30px rgba(139, 139, 139, 0.28);
+}
+:root[data-theme="meemoo"] h1, :root[data-theme="meemoo"] h2, :root[data-theme="meemoo"] h3 { letter-spacing: 0; }
+:root[data-theme="meemoo"] textarea.input { border-radius: var(--r-sm); }
+/* Bands and circles run to the window edge; clip them without making a scroll container. */
+:root[data-theme="meemoo"] .app { overflow-x: clip; }
+
+/* header */
+:root[data-theme="meemoo"] .site-header { border-bottom: 0; }
+:root[data-theme="meemoo"] .site-header::after { display: none; }
+:root[data-theme="meemoo"] .site-header__row { min-height: 4.5rem; }
+:root[data-theme="meemoo"] .brand__name { font-weight: 700; letter-spacing: 0; }
+:root[data-theme="meemoo"] .brand__mark { background: var(--meemoo-teal); }
+:root[data-theme="meemoo"] .brand__mark::after { background: var(--meemoo-mint); }
+:root[data-theme="meemoo"] .nav__link { font-weight: 700; font-size: var(--fs-md); color: var(--vtn-text); }
+:root[data-theme="meemoo"] .nav__link:hover { background: transparent; color: var(--vtn-primary-strong); }
+:root[data-theme="meemoo"] .nav__link.router-link-active { color: var(--vtn-primary-strong); }
+:root[data-theme="meemoo"] .theme__btn, :root[data-theme="meemoo"] .nav__toggle, :root[data-theme="meemoo"] .lang { border-color: var(--vtn-border-strong); }
+@media (min-width: 70em) { :root[data-theme="meemoo"] .site-header__row { min-height: 5.5rem; } }
+
+/* home hero: the band with circles; the search panel's tabs sit on it like meemoo's category tabs */
+:root[data-theme="meemoo"] .hero {
+  --c-mint: 6rem; --c-blue: 0rem; --c-green: 4rem;
+  border-bottom: 0;
+  background:
+    radial-gradient(circle var(--c-mint) at 90% calc(var(--c-mint) * -0.6), var(--meemoo-mint) 99%, transparent 100%),
+    radial-gradient(circle var(--c-blue) at 64% calc(var(--c-blue) * -0.35), var(--meemoo-blue) 99%, transparent 100%),
+    radial-gradient(circle var(--c-green) at calc(100% + var(--c-green) * 0.55) 72%, var(--meemoo-green) 99%, transparent 100%),
+    var(--vtn-mint-light);
+  background-repeat: no-repeat;
+}
+:root[data-theme="meemoo"] .hero__inner { padding-top: var(--s-6); }
+:root[data-theme="meemoo"] .hero__title { max-width: 22ch; }
+@media (min-width: 48em) {
+  :root[data-theme="meemoo"] .hero { --c-mint: 14rem; --c-blue: 6.5rem; --c-green: 10rem; }
+  :root[data-theme="meemoo"] .hero__inner { padding-top: var(--s-7); }
+  :root[data-theme="meemoo"] .hero__title { max-width: 24ch; }
+}
+:root[data-theme="meemoo"] .panel { border: 0; box-shadow: var(--shadow-md); }
+:root[data-theme="meemoo"] .panel__tabs { gap: 0; padding: 0; border-bottom: 0; background: var(--vtn-mint-light); }
+:root[data-theme="meemoo"] .panel__tab { margin: 0; border: 0; border-radius: 0; color: var(--vtn-primary-strong); font-weight: 700; }
+:root[data-theme="meemoo"] .panel__tab:hover { background: rgba(255, 255, 255, 0.6); color: var(--vtn-text); }
+:root[data-theme="meemoo"] .panel__tab.is-active { background: var(--vtn-surface); color: #003c3c; }
+
+/* content pages: the title (and lead) sit on the same band. The band is a grid item behind them,
+   so it grows with the text, and it reaches the window edges. */
+:root[data-theme="meemoo"] .page:has(> .page__title) {
+  --page-pt: var(--s-7);
+  --band-after: var(--s-6);
+  --c-top: 4.5rem; --c-top2: 3rem; --c-side: 2.5rem; --c-side-out: 0.65;
+  display: grid; grid-template-columns: minmax(0, 1fr); align-content: start;
+  position: relative; z-index: 0; padding-top: var(--page-pt);
+}
+:root[data-theme="meemoo"] .page:has(> .page__title)::before {
+  content: ""; grid-area: 1 / 1 / span 1 / span 1; z-index: -1;
+  margin: calc(var(--page-pt) * -1) calc(50% - 50vw) 0;
+  background:
+    radial-gradient(circle var(--c-top) at 24% calc(var(--c-top) * -0.68), var(--meemoo-teal) 99%, transparent 100%),
+    radial-gradient(circle var(--c-top2) at 77% calc(var(--c-top2) * -0.5), var(--meemoo-teal) 99%, transparent 100%),
+    radial-gradient(circle var(--c-side) at calc(100% + var(--c-side) * var(--c-side-out)) 50%, var(--meemoo-blue) 99%, transparent 100%),
+    var(--vtn-mint-light);
+  background-repeat: no-repeat;
+}
+:root[data-theme="meemoo"] .page:has(> .page__title:first-child) > .page__title { grid-area: 1 / 1; }
+:root[data-theme="meemoo"] .page:has(> .page__title:first-child + .page__lead) > .page__lead { grid-area: 2 / 1; }
+:root[data-theme="meemoo"] .page:has(> .page__title:first-child + .page__lead)::before { grid-row: 1 / span 2; }
+/* FAQ answers: back link, then the title */
+:root[data-theme="meemoo"] .page:has(> .back-link:first-child + .page__title) > .back-link { grid-area: 1 / 1; justify-self: start; }
+:root[data-theme="meemoo"] .page:has(> .back-link:first-child + .page__title) > .page__title { grid-area: 2 / 1; }
+:root[data-theme="meemoo"] .page:has(> .back-link:first-child + .page__title)::before { grid-row: 1 / span 2; }
+/* The last line of the band keeps room below it; content starts after a white gap. */
+:root[data-theme="meemoo"] .page > .page__title { margin-bottom: var(--s-6); max-width: 32ch; }
+:root[data-theme="meemoo"] .page > .page__title + .page__lead { margin-top: calc(var(--s-6) * -1 + var(--s-3)); margin-bottom: var(--s-6); color: var(--vtn-text); }
+:root[data-theme="meemoo"] .page > .page__title ~ * { min-width: 0; }
+:root[data-theme="meemoo"] .page > .page__title + :not(.page__lead),
+:root[data-theme="meemoo"] .page > .page__title + .page__lead + * { margin-top: var(--band-after); }
+@media (min-width: 48em) {
+  :root[data-theme="meemoo"] .page:has(> .page__title) { --page-pt: var(--s-8); --band-after: var(--s-7); --c-top: 13rem; --c-top2: 7.5rem; --c-side: 9.5rem; --c-side-out: 0.5; }
+  :root[data-theme="meemoo"] .page > .page__title { margin-bottom: var(--s-7); }
+  :root[data-theme="meemoo"] .page > .page__title + .page__lead { margin-top: calc(var(--s-7) * -1 + var(--s-4)); margin-bottom: var(--s-7); }
+}
+
+/* cards: white, square, soft grey shadow instead of a border */
+:root[data-theme="meemoo"] .term,
+:root[data-theme="meemoo"] .source-card,
+:root[data-theme="meemoo"] .faq-cards a { border-color: transparent; box-shadow: var(--shadow-sm); }
+:root[data-theme="meemoo"] .term:hover,
+:root[data-theme="meemoo"] .faq-cards a:hover { border-color: transparent; box-shadow: var(--shadow-md); }
+:root[data-theme="meemoo"] .uptime__banner,
+:root[data-theme="meemoo"] .uptime__totals div,
+:root[data-theme="meemoo"] .uptime__list { border-color: transparent; border-radius: 0; box-shadow: var(--shadow-sm); }
+:root[data-theme="meemoo"] .browse__tree { border-color: transparent; border-radius: 0; box-shadow: var(--shadow-sm); }
+:root[data-theme="meemoo"] .uptime__day,
+:root[data-theme="meemoo"] .browse__paths { border-radius: 0; }
+:root[data-theme="meemoo"] .term__facts { background: var(--vtn-mint-light); }
+:root[data-theme="meemoo"] .chip--tag { background: var(--vtn-mint-light); color: #003c3c; }
+
+/* links and buttons: teal, bold buttons; mint hover with black text as on meemoo.be */
+:root[data-theme="meemoo"] .btn { font-weight: 700; }
+:root[data-theme="meemoo"] .btn--secondary { border-width: 1px; }
+:root[data-theme="meemoo"] .input { border-width: 1px; }
+:root[data-theme="meemoo"] .picker__trigger { border-width: 1px; }
+:root[data-theme="meemoo"] .picker__panel { border-radius: var(--r-sm); }
+:root[data-theme="meemoo"] .theme__menu { border-radius: var(--r-sm); }
+
+/* footer */
+:root[data-theme="meemoo"] .site-footer { background: #111111; }
 
 /* =====================================================================
    SIMULATOR (developer tool)
